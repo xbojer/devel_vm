@@ -111,19 +111,19 @@
             this.toolStripMenuItem5,
             this.closeToolStripMenuItem});
             this.menuZasobnik.Name = "menuZasobnik";
-            this.menuZasobnik.Size = new System.Drawing.Size(129, 126);
+            this.menuZasobnik.Size = new System.Drawing.Size(153, 148);
             // 
             // showToolStripMenuItem
             // 
             this.showToolStripMenuItem.Name = "showToolStripMenuItem";
-            this.showToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.showToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.showToolStripMenuItem.Text = "Show";
             this.showToolStripMenuItem.Click += new System.EventHandler(this.showToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(125, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(149, 6);
             // 
             // vMToolStripMenuItem
             // 
@@ -137,7 +137,7 @@
             this.toolStripMenuItem4,
             this.installToolStripMenuItem});
             this.vMToolStripMenuItem.Name = "vMToolStripMenuItem";
-            this.vMToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.vMToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.vMToolStripMenuItem.Text = "VM";
             // 
             // startToolStripMenuItem
@@ -164,6 +164,7 @@
             this.stoppoweroffToolStripMenuItem.Name = "stoppoweroffToolStripMenuItem";
             this.stoppoweroffToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.stoppoweroffToolStripMenuItem.Text = "Stop (power-off)";
+            this.stoppoweroffToolStripMenuItem.Click += new System.EventHandler(this.bStopPower_Click);
             // 
             // toolStripMenuItem3
             // 
@@ -175,6 +176,7 @@
             this.restartToolStripMenuItem.Name = "restartToolStripMenuItem";
             this.restartToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.restartToolStripMenuItem.Text = "Restart";
+            this.restartToolStripMenuItem.Click += new System.EventHandler(this.restartToolStripMenuItem_Click);
             // 
             // toolStripMenuItem4
             // 
@@ -186,6 +188,7 @@
             this.installToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.runInstallerToolStripMenuItem,
             this.updateToolStripMenuItem});
+            this.installToolStripMenuItem.Enabled = false;
             this.installToolStripMenuItem.Name = "installToolStripMenuItem";
             this.installToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.installToolStripMenuItem.Text = "Install";
@@ -207,8 +210,9 @@
             this.zasobyToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aLFAToolStripMenuItem,
             this.bETA100ToolStripMenuItem});
+            this.zasobyToolStripMenuItem.Enabled = false;
             this.zasobyToolStripMenuItem.Name = "zasobyToolStripMenuItem";
-            this.zasobyToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.zasobyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.zasobyToolStripMenuItem.Text = "Przejdź do";
             // 
             // aLFAToolStripMenuItem
@@ -225,19 +229,20 @@
             // 
             // bETAToolStripMenuItem
             // 
+            this.bETAToolStripMenuItem.Enabled = false;
             this.bETAToolStripMenuItem.Name = "bETAToolStripMenuItem";
-            this.bETAToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.bETAToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.bETAToolStripMenuItem.Text = "BETA";
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(125, 6);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(149, 6);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.bExit_Click);
             // 

@@ -5,13 +5,14 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace Devel_VM
 {
     public partial class fMain : Form
     {
         bool VMstarted = false;
-        bool VMclosing = false;
+        //bool VMclosing = false;
 
         public fMain()
         {
@@ -48,7 +49,8 @@ namespace Devel_VM
             if (VMstarted)
             {
                 vmACPI();
-                bool t =processVM.WaitForExit(10000);
+                Hide();
+                bool t = processVM.WaitForExit(5000);
                 if (t == true)
                 {
                     vmPowerOff();
@@ -92,6 +94,7 @@ namespace Devel_VM
         private void vmReset()
         {
             vmPowerOff();
+            Thread.Sleep(3000);
             vmStart();
         }
 
@@ -125,6 +128,11 @@ namespace Devel_VM
         private void bHide_Click(object sender, EventArgs e)
         {
             Hide();
+        }
+
+        private void restartToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            vmReset();
         }
     }
 }
