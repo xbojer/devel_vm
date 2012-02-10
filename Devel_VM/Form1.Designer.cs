@@ -332,6 +332,7 @@
             this.MaximizeBox = false;
             this.Name = "fMain";
             this.Text = "Devel VM Controller";
+            this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
             this.Load += new System.EventHandler(this.fMain_Load);
             this.menuZasobnik.ResumeLayout(false);
             this.ResumeLayout(false);

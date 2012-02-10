@@ -113,13 +113,13 @@ namespace Devel_VM
         private void showToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Show();
+            WindowState = FormWindowState.Normal;
         }
 
         private void fMain_Load(object sender, EventArgs e)
         {
             Hide();
             Visible = false;
-            
         }
 
         private void bHide_Click(object sender, EventArgs e)
