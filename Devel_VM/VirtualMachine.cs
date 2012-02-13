@@ -41,6 +41,77 @@ namespace Devel_VM
                 throw new Exception("Nie znaleziono maszyny Devel.");
             }
             Session = new Session();
+            Sanitize();
+        }
+        public void Start()
+        {
+            if (Session.State != SessionState.SessionState_Locked)
+            {
+                try
+                {
+                    Machine.LockMachine(Session, LockType.LockType_Shared);
+                }
+                catch (Exception)
+                {
+                    throw new Exception("Nie udało się dobrać do maszyny.");
+                }
+            }
+            if (Machine.State != MachineState.MachineState_PoweredOff)
+            {
+                if (Machine.State == MachineState.MachineState_Running)
+                {
+                    IEventSource es = Session.Console.EventSource;
+                    IEventListener listener = es.CreateListener();
+                    VBoxEventType[] aTypes = { VBoxEventType.VBoxEventType_OnStateChanged};
+                    es.RegisterListener(listener, aTypes, 0);
+                    Session.Console.PowerButton();
+                    do
+                    {
+                        IEvent ev = es.GetEvent(listener, 30000);
+                        if (ev == null)
+                        {
+                            IStateChangedEvent me = (IStateChangedEvent)ev;
+                            Session.Console.PowerDown().WaitForCompletion(10000);
+                            //break;
+                            //System.Windows.Forms.MessageBox.Show(me.State.ToString());
+                            ev.SetProcessed();
+                        }
+                    } while (true);
+                }
+                else
+                {
+                    Sanitize();
+                }
+            }
+            if (Machine.SessionState != SessionState.SessionState_Unlocked)
+            {
+                Session.UnlockMachine();
+            }
+            Machine.LaunchVMProcess(Session, "headless", "VBETAM=1").WaitForCompletion(-1);
+        }
+        public void PowerOff(bool kill)
+        {
+            if (Session.State != SessionState.SessionState_Locked) return;
+            IConsole con = Session.Console;
+            if (kill)
+            {
+                con.PowerDown();
+            }
+            else
+            {
+                con.PowerButton();
+            }
+        }
+
+
+        internal void Restart()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Sanitize()
+        {
+            unlock();
             try
             {
                 Machine.LockMachine(Session, LockType.LockType_Shared);
@@ -57,28 +128,6 @@ namespace Devel_VM
             {
                 Session.UnlockMachine();
             }
-        }
-        public void Start()
-        {
-            Machine.LaunchVMProcess(Session, "headless", "VBETAM=1").WaitForCompletion(-1);
-        }
-        public void PowerOff(bool kill)
-        {
-            IConsole con = Session.Console;
-            if (kill)
-            {
-                con.PowerDown();
-            }
-            else
-            {
-                con.PowerButton();
-            }
-        }
-
-
-        internal void Restart()
-        {
-            throw new NotImplementedException();
         }
 
         public void Tick()
@@ -148,7 +197,10 @@ namespace Devel_VM
 
         internal void unlock()
         {
-            Session.UnlockMachine();
+            if (Session.State == SessionState.SessionState_Locked)
+            {
+                Session.UnlockMachine();
+            }
         }
     }
 }
