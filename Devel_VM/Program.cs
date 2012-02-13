@@ -10,12 +10,18 @@ namespace Devel_VM
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
+
+        static public VirtualMachine VM;
+
         [STAThread]
         static void Main()
         {
+            VM = new VirtualMachine();
+
+            //(new Thread(new ThreadStart(updater.go))).Start();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            (new Thread(new ThreadStart(updater.go))).Start();
             Application.Run(new fMain());
         }
     }

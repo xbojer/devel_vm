@@ -11,128 +11,74 @@ namespace Devel_VM
 {
     public partial class fMain : Form
     {
-        bool VMstarted = false;
-        //bool VMclosing = false;
 
         public fMain()
         {
             InitializeComponent();
             zasobnik.Visible = true;
         }
-
+        /*
         private void button2_Click(object sender, EventArgs e)
         {
             zasobnik.ShowBalloonTip(5000, "title", "text", ToolTipIcon.Info);
         }
+        */
 
-        private void button2_Click_1(object sender, EventArgs e)
+        #region Tray options
+        private void showToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            folderBrowse.SelectedPath = tPath.Text;
-            if (folderBrowse.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                tPath.Text = folderBrowse.SelectedPath;
-            }
+            Show();
+            WindowState = FormWindowState.Normal;
         }
-
-        private void softstopToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-                vmACPI();
-                bool t = processVM.WaitForExit(10000);
-                if (t == true)
-                {
-                    vmPowerOff();
-                }
-        }
-
-        private void bExit_Click(object sender, EventArgs e)
-        {
-            if (VMstarted)
-            {
-                vmACPI();
-                Hide();
-                bool t = processVM.WaitForExit(5000);
-                if (t == true)
-                {
-                    vmPowerOff();
-                }
-            }
-            Close();
-            Application.Exit();
-        }
-
         private void startToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            vmStart();
+            Program.VM.Start();
         }
-        private void vmStart()
+        private void restartToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            processVM.Refresh();
-            processVM.StartInfo.Arguments = "-s Devel";
-            processVM.StartInfo.FileName = tPath.Text + "\\VBoxHeadless.exe";
-            processVM.StartInfo.WorkingDirectory = tPath.Text;
-            if (processVM.Start())
-            {
-                VMstarted = true;
-            }
+            Program.VM.Restart();
         }
-        private void vmACPI()
+        private void softstopToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            processMGMT.Refresh();
-            processMGMT.StartInfo.Arguments = "controlvm Devel acpipowerbutton";
-            processMGMT.StartInfo.FileName = tPath.Text + "\\VBoxManage.exe";
-            processMGMT.StartInfo.WorkingDirectory = tPath.Text;
-            processMGMT.Start();
+            Program.VM.PowerOff(false);
         }
-        private void vmPowerOff()
+        private void stoppoweroffToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            processMGMT.Refresh();
-            processMGMT.StartInfo.Arguments = "controlvm Devel poweroff";
-            processMGMT.StartInfo.FileName = tPath.Text + "\\VBoxManage.exe";
-            processMGMT.StartInfo.WorkingDirectory = tPath.Text;
-            processMGMT.Start();
-        }
-        private void vmReset()
-        {
-            vmPowerOff();
-            Thread.Sleep(3000);
-            vmStart();
+            Program.VM.PowerOff(true);
         }
 
         private void zasobnik_DoubleClick(object sender, EventArgs e)
         {
             Show();
         }
-
-        private void processVM_Exited(object sender, EventArgs e)
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            VMstarted = false;
+            Close();
+            Application.Exit();
         }
+        #endregion
 
-        private void bStopPower_Click(object sender, EventArgs e)
-        {
-            vmPowerOff();
-        }
-
-        private void showToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Show();
-            WindowState = FormWindowState.Normal;
-        }
-
+        #region Form control
         private void fMain_Load(object sender, EventArgs e)
         {
             Hide();
             Visible = false;
         }
-
         private void bHide_Click(object sender, EventArgs e)
         {
             Hide();
         }
+        #endregion
 
-        private void restartToolStripMenuItem_Click(object sender, EventArgs e)
+        private void tState_Tick(object sender, EventArgs e)
         {
-            vmReset();
+            Program.VM.Tick();
+            
         }
+
+        
+
+        
+
     }
 }

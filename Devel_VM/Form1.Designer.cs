@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(fMain));
             this.bExit = new System.Windows.Forms.Button();
-            this.processVM = new System.Diagnostics.Process();
             this.zasobnik = new System.Windows.Forms.NotifyIcon(this.components);
             this.menuZasobnik = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.showToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,43 +52,27 @@
             this.bETAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.folderBrowse = new System.Windows.Forms.FolderBrowserDialog();
-            this.tPath = new System.Windows.Forms.TextBox();
-            this.bBrowse = new System.Windows.Forms.Button();
-            this.processMGMT = new System.Diagnostics.Process();
             this.bStart = new System.Windows.Forms.Button();
             this.bSoftStop = new System.Windows.Forms.Button();
             this.bStopPower = new System.Windows.Forms.Button();
             this.bHide = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.lStateLabel = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lState = new System.Windows.Forms.Label();
+            this.tState = new System.Windows.Forms.Timer(this.components);
             this.menuZasobnik.SuspendLayout();
             this.SuspendLayout();
             // 
             // bExit
             // 
-            this.bExit.Location = new System.Drawing.Point(422, 132);
+            this.bExit.Location = new System.Drawing.Point(243, 7);
             this.bExit.Name = "bExit";
             this.bExit.Size = new System.Drawing.Size(102, 25);
             this.bExit.TabIndex = 0;
             this.bExit.Text = "Exit";
             this.bExit.UseVisualStyleBackColor = true;
-            this.bExit.Click += new System.EventHandler(this.bExit_Click);
-            // 
-            // processVM
-            // 
-            this.processVM.StartInfo.CreateNoWindow = true;
-            this.processVM.StartInfo.Domain = "";
-            this.processVM.StartInfo.LoadUserProfile = false;
-            this.processVM.StartInfo.Password = null;
-            this.processVM.StartInfo.RedirectStandardError = true;
-            this.processVM.StartInfo.RedirectStandardInput = true;
-            this.processVM.StartInfo.RedirectStandardOutput = true;
-            this.processVM.StartInfo.StandardErrorEncoding = null;
-            this.processVM.StartInfo.StandardOutputEncoding = null;
-            this.processVM.StartInfo.UserName = "";
-            this.processVM.StartInfo.UseShellExecute = false;
-            this.processVM.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            this.processVM.SynchronizingObject = this;
-            this.processVM.Exited += new System.EventHandler(this.processVM_Exited);
+            this.bExit.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
             // zasobnik
             // 
@@ -111,19 +94,19 @@
             this.toolStripMenuItem5,
             this.closeToolStripMenuItem});
             this.menuZasobnik.Name = "menuZasobnik";
-            this.menuZasobnik.Size = new System.Drawing.Size(153, 148);
+            this.menuZasobnik.Size = new System.Drawing.Size(115, 126);
             // 
             // showToolStripMenuItem
             // 
             this.showToolStripMenuItem.Name = "showToolStripMenuItem";
-            this.showToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.showToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.showToolStripMenuItem.Text = "Show";
             this.showToolStripMenuItem.Click += new System.EventHandler(this.showToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(111, 6);
             // 
             // vMToolStripMenuItem
             // 
@@ -137,7 +120,7 @@
             this.toolStripMenuItem4,
             this.installToolStripMenuItem});
             this.vMToolStripMenuItem.Name = "vMToolStripMenuItem";
-            this.vMToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.vMToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.vMToolStripMenuItem.Text = "VM";
             // 
             // startToolStripMenuItem
@@ -164,7 +147,7 @@
             this.stoppoweroffToolStripMenuItem.Name = "stoppoweroffToolStripMenuItem";
             this.stoppoweroffToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.stoppoweroffToolStripMenuItem.Text = "Stop (power-off)";
-            this.stoppoweroffToolStripMenuItem.Click += new System.EventHandler(this.bStopPower_Click);
+            this.stoppoweroffToolStripMenuItem.Click += new System.EventHandler(this.stoppoweroffToolStripMenuItem_Click);
             // 
             // toolStripMenuItem3
             // 
@@ -212,8 +195,8 @@
             this.bETA100ToolStripMenuItem});
             this.zasobyToolStripMenuItem.Enabled = false;
             this.zasobyToolStripMenuItem.Name = "zasobyToolStripMenuItem";
-            this.zasobyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.zasobyToolStripMenuItem.Text = "Przejdź do";
+            this.zasobyToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.zasobyToolStripMenuItem.Text = "SAMBA";
             // 
             // aLFAToolStripMenuItem
             // 
@@ -231,58 +214,24 @@
             // 
             this.bETAToolStripMenuItem.Enabled = false;
             this.bETAToolStripMenuItem.Name = "bETAToolStripMenuItem";
-            this.bETAToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.bETAToolStripMenuItem.Text = "BETA";
+            this.bETAToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.bETAToolStripMenuItem.Text = "WWW";
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(149, 6);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(111, 6);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.closeToolStripMenuItem.Text = "Close";
-            this.closeToolStripMenuItem.Click += new System.EventHandler(this.bExit_Click);
-            // 
-            // tPath
-            // 
-            this.tPath.Location = new System.Drawing.Point(12, 12);
-            this.tPath.Name = "tPath";
-            this.tPath.Size = new System.Drawing.Size(451, 20);
-            this.tPath.TabIndex = 1;
-            this.tPath.Text = "C:\\Program Files\\Oracle\\VirtualBox";
-            // 
-            // bBrowse
-            // 
-            this.bBrowse.Location = new System.Drawing.Point(469, 12);
-            this.bBrowse.Name = "bBrowse";
-            this.bBrowse.Size = new System.Drawing.Size(55, 20);
-            this.bBrowse.TabIndex = 2;
-            this.bBrowse.Text = "Browse";
-            this.bBrowse.UseVisualStyleBackColor = true;
-            this.bBrowse.Click += new System.EventHandler(this.button2_Click_1);
-            // 
-            // processMGMT
-            // 
-            this.processMGMT.StartInfo.CreateNoWindow = true;
-            this.processMGMT.StartInfo.Domain = "";
-            this.processMGMT.StartInfo.LoadUserProfile = false;
-            this.processMGMT.StartInfo.Password = null;
-            this.processMGMT.StartInfo.RedirectStandardError = true;
-            this.processMGMT.StartInfo.RedirectStandardInput = true;
-            this.processMGMT.StartInfo.RedirectStandardOutput = true;
-            this.processMGMT.StartInfo.StandardErrorEncoding = null;
-            this.processMGMT.StartInfo.StandardOutputEncoding = null;
-            this.processMGMT.StartInfo.UserName = "";
-            this.processMGMT.StartInfo.UseShellExecute = false;
-            this.processMGMT.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            this.processMGMT.SynchronizingObject = this;
+            this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
             // bStart
             // 
-            this.bStart.Location = new System.Drawing.Point(12, 132);
+            this.bStart.Location = new System.Drawing.Point(12, 38);
             this.bStart.Name = "bStart";
             this.bStart.Size = new System.Drawing.Size(75, 23);
             this.bStart.TabIndex = 4;
@@ -292,7 +241,7 @@
             // 
             // bSoftStop
             // 
-            this.bSoftStop.Location = new System.Drawing.Point(93, 132);
+            this.bSoftStop.Location = new System.Drawing.Point(93, 38);
             this.bSoftStop.Name = "bSoftStop";
             this.bSoftStop.Size = new System.Drawing.Size(75, 23);
             this.bSoftStop.TabIndex = 5;
@@ -302,17 +251,16 @@
             // 
             // bStopPower
             // 
-            this.bStopPower.Location = new System.Drawing.Point(174, 132);
+            this.bStopPower.Location = new System.Drawing.Point(174, 38);
             this.bStopPower.Name = "bStopPower";
             this.bStopPower.Size = new System.Drawing.Size(90, 23);
             this.bStopPower.TabIndex = 6;
             this.bStopPower.Text = "Stop (poweroff)";
             this.bStopPower.UseVisualStyleBackColor = true;
-            this.bStopPower.Click += new System.EventHandler(this.bStopPower_Click);
             // 
             // bHide
             // 
-            this.bHide.Location = new System.Drawing.Point(449, 103);
+            this.bHide.Location = new System.Drawing.Point(270, 38);
             this.bHide.Name = "bHide";
             this.bHide.Size = new System.Drawing.Size(75, 23);
             this.bHide.TabIndex = 7;
@@ -320,18 +268,63 @@
             this.bHide.UseVisualStyleBackColor = true;
             this.bHide.Click += new System.EventHandler(this.bHide_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(162, 9);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 8;
+            this.button1.Text = "debug";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // lStateLabel
+            // 
+            this.lStateLabel.AutoSize = true;
+            this.lStateLabel.Location = new System.Drawing.Point(12, 9);
+            this.lStateLabel.Name = "lStateLabel";
+            this.lStateLabel.Size = new System.Drawing.Size(40, 13);
+            this.lStateLabel.TabIndex = 9;
+            this.lStateLabel.Text = "Status:";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 22);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(0, 13);
+            this.label1.TabIndex = 10;
+            // 
+            // lState
+            // 
+            this.lState.AutoSize = true;
+            this.lState.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.lState.ForeColor = System.Drawing.Color.Black;
+            this.lState.Location = new System.Drawing.Point(18, 22);
+            this.lState.Name = "lState";
+            this.lState.Size = new System.Drawing.Size(37, 13);
+            this.lState.TabIndex = 11;
+            this.lState.Text = "iError";
+            // 
+            // tState
+            // 
+            this.tState.Enabled = true;
+            this.tState.Interval = 1000;
+            this.tState.Tick += new System.EventHandler(this.tState_Tick);
+            // 
             // fMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(536, 169);
+            this.ClientSize = new System.Drawing.Size(352, 67);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lState);
             this.Controls.Add(this.bHide);
-            this.Controls.Add(this.bBrowse);
+            this.Controls.Add(this.lStateLabel);
             this.Controls.Add(this.bStopPower);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.bSoftStop);
-            this.Controls.Add(this.bStart);
-            this.Controls.Add(this.tPath);
             this.Controls.Add(this.bExit);
+            this.Controls.Add(this.bStart);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -348,11 +341,7 @@
         #endregion
 
         private System.Windows.Forms.Button bExit;
-        private System.Diagnostics.Process processVM;
         private System.Windows.Forms.NotifyIcon zasobnik;
-        private System.Windows.Forms.Button bBrowse;
-        private System.Windows.Forms.TextBox tPath;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowse;
         private System.Windows.Forms.ContextMenuStrip menuZasobnik;
         private System.Windows.Forms.ToolStripMenuItem showToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
@@ -373,11 +362,15 @@
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aLFAToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bETA100ToolStripMenuItem;
-        private System.Diagnostics.Process processMGMT;
         private System.Windows.Forms.Button bStart;
         private System.Windows.Forms.Button bSoftStop;
         private System.Windows.Forms.Button bStopPower;
         private System.Windows.Forms.Button bHide;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label lStateLabel;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lState;
+        internal System.Windows.Forms.Timer tState;
     }
 }
 
