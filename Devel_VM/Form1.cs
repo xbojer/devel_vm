@@ -70,13 +70,39 @@ namespace Devel_VM
         }
         #endregion
 
+        #region Timers' Events
         private void tState_Tick(object sender, EventArgs e)
         {
             Program.VM.Tick();
             
         }
+        private void tUpdateState_Tick(object sender, EventArgs e)
+        {
+            switch (Program.VM.Status)
+            {
+                case VirtualMachine.State.Off:
+                    lState.Text = "Off";
+                    break;
+                case VirtualMachine.State.Busy:
+                    lState.Text = "Busy";
+                    break;
+                case VirtualMachine.State.Operational:
+                    lState.Text = "Operational";
+                    break;
+                case VirtualMachine.State.Error:
+                    lState.Text = "Error";
+                    break;
+                default:
+                    lState.Text = "Unknown";
+                    break;
+            }
+        }
+        #endregion
 
-        
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Program.VM.unlock();
+        }
 
         
 

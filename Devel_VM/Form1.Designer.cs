@@ -61,6 +61,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.lState = new System.Windows.Forms.Label();
             this.tState = new System.Windows.Forms.Timer(this.components);
+            this.tUpdateState = new System.Windows.Forms.Timer(this.components);
             this.menuZasobnik.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -257,6 +258,7 @@
             this.bStopPower.TabIndex = 6;
             this.bStopPower.Text = "Stop (poweroff)";
             this.bStopPower.UseVisualStyleBackColor = true;
+            this.bStopPower.Click += new System.EventHandler(this.stoppoweroffToolStripMenuItem_Click);
             // 
             // bHide
             // 
@@ -276,6 +278,7 @@
             this.button1.TabIndex = 8;
             this.button1.Text = "debug";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // lStateLabel
             // 
@@ -310,6 +313,12 @@
             this.tState.Enabled = true;
             this.tState.Interval = 1000;
             this.tState.Tick += new System.EventHandler(this.tState_Tick);
+            // 
+            // tUpdateState
+            // 
+            this.tUpdateState.Enabled = true;
+            this.tUpdateState.Interval = 2000;
+            this.tUpdateState.Tick += new System.EventHandler(this.tUpdateState_Tick);
             // 
             // fMain
             // 
@@ -371,6 +380,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lState;
         internal System.Windows.Forms.Timer tState;
+        private System.Windows.Forms.Timer tUpdateState;
     }
 }
 
