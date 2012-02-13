@@ -79,7 +79,7 @@
             this.zasobnik.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.zasobnik.ContextMenuStrip = this.menuZasobnik;
             this.zasobnik.Icon = ((System.Drawing.Icon)(resources.GetObject("zasobnik.Icon")));
-            this.zasobnik.Text = "Devel Control";
+            this.zasobnik.Text = "Beta Manager";
             this.zasobnik.Visible = true;
             this.zasobnik.DoubleClick += new System.EventHandler(this.zasobnik_DoubleClick);
             // 
