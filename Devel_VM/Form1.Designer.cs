@@ -338,7 +338,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "fMain";
-            this.Text = "Devel VM Controller";
+            this.Text = "Beta Manager";
             this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
             this.Load += new System.EventHandler(this.fMain_Load);
             this.menuZasobnik.ResumeLayout(false);
