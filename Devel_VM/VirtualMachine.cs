@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using VirtualBox;
+using System.Threading;
 
 namespace Devel_VM
 {
@@ -45,53 +46,58 @@ namespace Devel_VM
         }
         public void Start()
         {
-            if (Session.State != SessionState.SessionState_Locked)
-            {
-                try
-                {
-                    Machine.LockMachine(Session, LockType.LockType_Shared);
-                }
-                catch (Exception)
-                {
-                    throw new Exception("Nie udało się dobrać do maszyny.");
-                }
-            }
+            gracefulShutdown();
+            Machine.LaunchVMProcess(Session, "headless", "VBETAM=1").WaitForCompletion(-1);
+        }
+
+        private void gracefulShutdown()
+        {
+            lock_share();
             if (Machine.State != MachineState.MachineState_PoweredOff)
             {
                 if (Machine.State == MachineState.MachineState_Running)
                 {
                     IEventSource es = Session.Console.EventSource;
                     IEventListener listener = es.CreateListener();
-                    VBoxEventType[] aTypes = { VBoxEventType.VBoxEventType_OnStateChanged};
+                    VBoxEventType[] aTypes = { VBoxEventType.VBoxEventType_OnStateChanged };
                     es.RegisterListener(listener, aTypes, 0);
                     Session.Console.PowerButton();
                     do
                     {
                         IEvent ev = es.GetEvent(listener, 30000);
-                        if (ev == null)
+                        if (ev != null)
                         {
                             IStateChangedEvent me = (IStateChangedEvent)ev;
-                            Session.Console.PowerDown().WaitForCompletion(10000);
-                            //break;
-                            //System.Windows.Forms.MessageBox.Show(me.State.ToString());
                             ev.SetProcessed();
+                            if (me.State == MachineState.MachineState_PoweredOff)
+                            {
+                                break;
+                            }
                         }
-                    } while (true);
+                        else
+                        {
+                            Session.Console.PowerDown().WaitForCompletion(10000);
+                        }
+                    } while (Machine.State != MachineState.MachineState_PoweredOff);
                 }
                 else
                 {
                     Sanitize();
                 }
+                for (int timeout = 1; timeout < 25; timeout++)
+                {
+                    Thread.Sleep(200);
+                    if (Machine.State == MachineState.MachineState_PoweredOff && Session.State == SessionState.SessionState_Unlocked && Machine.SessionState == SessionState.SessionState_Unlocked)
+                    {
+                        break;
+                    }
+                }
             }
-            if (Machine.SessionState != SessionState.SessionState_Unlocked)
-            {
-                Session.UnlockMachine();
-            }
-            Machine.LaunchVMProcess(Session, "headless", "VBETAM=1").WaitForCompletion(-1);
+            unlock();
         }
         public void PowerOff(bool kill)
         {
-            if (Session.State != SessionState.SessionState_Locked) return;
+            lock_share();
             IConsole con = Session.Console;
             if (kill)
             {
@@ -111,6 +117,16 @@ namespace Devel_VM
 
         private void Sanitize()
         {
+            lock_share();
+            if (Machine.State != MachineState.MachineState_PoweredOff && Session.State == SessionState.SessionState_Locked)
+            {
+                Session.Console.PowerDown().WaitForCompletion(-1);
+            }
+            unlock();
+        }
+
+        private void lock_share()
+        {
             unlock();
             try
             {
@@ -119,14 +135,6 @@ namespace Devel_VM
             catch (Exception)
             {
                 throw new Exception("Nie udało się dobrać do maszyny.");
-            }
-            if (Machine.State != MachineState.MachineState_PoweredOff && Session.State == SessionState.SessionState_Locked)
-            {
-                Session.Console.PowerDown().WaitForCompletion(-1);
-            }
-            if (Session.State == SessionState.SessionState_Locked)
-            {
-                Session.UnlockMachine();
             }
         }
 
