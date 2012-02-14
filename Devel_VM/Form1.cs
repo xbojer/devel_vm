@@ -17,12 +17,28 @@ namespace Devel_VM
             InitializeComponent();
             zasobnik.Visible = true;
         }
-        /*
-        private void button2_Click(object sender, EventArgs e)
+        
+        private void showBaloon(String msg, int priority)
         {
-            zasobnik.ShowBalloonTip(5000, "title", "text", ToolTipIcon.Info);
+            ToolTipIcon ico;
+
+            switch(priority) {
+                case 1:
+                    ico = ToolTipIcon.Info;
+                    break;
+                case 2:
+                    ico = ToolTipIcon.Warning;
+                    break;
+                case 3:
+                    ico = ToolTipIcon.Error;
+                    break;
+                default:
+                    ico = ToolTipIcon.None;
+                    break;
+            }
+
+            zasobnik.ShowBalloonTip(4000, "Beta Manager Event", msg, ico);
         }
-        */
 
         #region Tray options
         private void showToolStripMenuItem_Click(object sender, EventArgs e)
@@ -63,6 +79,7 @@ namespace Devel_VM
         {
             Hide();
             Visible = false;
+            Program.VM.OnVmEvent += new VirtualMachine.VmEvent(this.showBaloon);
         }
         private void bHide_Click(object sender, EventArgs e)
         {

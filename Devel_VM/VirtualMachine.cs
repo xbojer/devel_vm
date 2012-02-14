@@ -13,6 +13,8 @@ namespace Devel_VM
         private IMachine Machine;
         private Session Session;
 
+        public VmEvent OnVmEvent;
+
         public enum State
         {
             Off,
@@ -21,6 +23,9 @@ namespace Devel_VM
             Error,
             Unknown
         }
+
+        private IEventListener EvListener;
+        VBoxEventType[] EvTypes = { VBoxEventType.VBoxEventType_OnStateChanged };
 
         public State Status;
 
@@ -48,6 +53,8 @@ namespace Devel_VM
         {
             gracefulShutdown();
             Machine.LaunchVMProcess(Session, "headless", "VBETAM=1").WaitForCompletion(-1);
+            EvListener = Session.Console.EventSource.CreateListener();
+            Session.Console.EventSource.RegisterListener(EvListener, EvTypes, 0);
         }
 
         private void gracefulShutdown()
@@ -140,6 +147,7 @@ namespace Devel_VM
 
         public void Tick()
         {
+            #region Translate MachineState
             switch (Machine.State)
             {
                 case MachineState.MachineState_Aborted:
@@ -200,6 +208,18 @@ namespace Devel_VM
                     Status = State.Unknown;
                     break;
             }
+            #endregion
+
+            if (Session.State == SessionState.SessionState_Locked)
+            {
+                IEvent ev = Session.Console.EventSource.GetEvent(EvListener, 0);
+                if (ev != null)
+                {
+                    IStateChangedEvent me = (IStateChangedEvent)ev;
+                    ev.SetProcessed();
+                    OnEvent(me.State.ToString(), 1);
+                }
+            }
         }
 
 
@@ -210,5 +230,15 @@ namespace Devel_VM
                 Session.UnlockMachine();
             }
         }
+
+        private void OnEvent(String msg, int priority)
+        {
+            if (OnVmEvent != null)
+            {
+                OnVmEvent(msg, priority);
+            }
+        }
+
+        public delegate void VmEvent(String msg, int priority);
     }
 }
