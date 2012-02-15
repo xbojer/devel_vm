@@ -62,6 +62,7 @@
             this.lState = new System.Windows.Forms.Label();
             this.tState = new System.Windows.Forms.Timer(this.components);
             this.tUpdateState = new System.Windows.Forms.Timer(this.components);
+            this.tAutoStart = new System.Windows.Forms.Timer(this.components);
             this.menuZasobnik.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -320,6 +321,12 @@
             this.tUpdateState.Interval = 2000;
             this.tUpdateState.Tick += new System.EventHandler(this.tUpdateState_Tick);
             // 
+            // tAutoStart
+            // 
+            this.tAutoStart.Enabled = true;
+            this.tAutoStart.Interval = 60000;
+            this.tAutoStart.Tick += new System.EventHandler(this.tAutoStart_Tick);
+            // 
             // fMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -339,7 +346,6 @@
             this.MaximizeBox = false;
             this.Name = "fMain";
             this.Text = "Beta Manager";
-            this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
             this.Load += new System.EventHandler(this.fMain_Load);
             this.menuZasobnik.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -381,6 +387,7 @@
         private System.Windows.Forms.Label lState;
         internal System.Windows.Forms.Timer tState;
         private System.Windows.Forms.Timer tUpdateState;
+        private System.Windows.Forms.Timer tAutoStart;
     }
 }
 

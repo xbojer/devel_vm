@@ -77,8 +77,8 @@ namespace Devel_VM
         #region Form control
         private void fMain_Load(object sender, EventArgs e)
         {
-            Hide();
-            Visible = false;
+            //Hide();
+            //Visible = false;
             Program.VM.OnVmEvent += new VirtualMachine.VmEvent(this.showBaloon);
         }
         private void bHide_Click(object sender, EventArgs e)
@@ -95,30 +95,19 @@ namespace Devel_VM
         }
         private void tUpdateState_Tick(object sender, EventArgs e)
         {
-            switch (Program.VM.Status)
-            {
-                case VirtualMachine.State.Off:
-                    lState.Text = "Off";
-                    break;
-                case VirtualMachine.State.Busy:
-                    lState.Text = "Busy";
-                    break;
-                case VirtualMachine.State.Operational:
-                    lState.Text = "Operational";
-                    break;
-                case VirtualMachine.State.Error:
-                    lState.Text = "Error";
-                    break;
-                default:
-                    lState.Text = "Unknown";
-                    break;
-            }
+            lState.Text = Program.VM.Status.ToString();
         }
         #endregion
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Program.VM.unlock();
+            MessageBox.Show(Program.VM.exec("/bin/ls", "/"));
+        }
+
+        private void tAutoStart_Tick(object sender, EventArgs e)
+        {
+            tAutoStart.Enabled = false;
+            Program.VM.Start();
         }
 
         

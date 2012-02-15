@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using VirtualBox;
 using System.Threading;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
+using System.IO;
 
 namespace Devel_VM
 {
@@ -19,6 +22,7 @@ namespace Devel_VM
         {
             Off,
             Busy,
+            On,
             Operational,
             Error,
             Unknown
@@ -56,7 +60,6 @@ namespace Devel_VM
             EvListener = Session.Console.EventSource.CreateListener();
             Session.Console.EventSource.RegisterListener(EvListener, EvTypes, 0);
         }
-
         private void gracefulShutdown()
         {
             lock_share();
@@ -115,23 +118,21 @@ namespace Devel_VM
                 con.PowerButton();
             }
         }
-
-
         internal void Restart()
         {
-            throw new NotImplementedException();
+            lock_share();
+            IConsole con = Session.Console;
+            con.Reset();
         }
-
         private void Sanitize()
         {
             lock_share();
             if (Machine.State != MachineState.MachineState_PoweredOff && Session.State == SessionState.SessionState_Locked)
             {
-                Session.Console.PowerDown().WaitForCompletion(-1);
+                //Session.Console.PowerDown().WaitForCompletion(-1);
             }
             unlock();
         }
-
         private void lock_share()
         {
             unlock();
@@ -144,7 +145,13 @@ namespace Devel_VM
                 throw new Exception("Nie udało się dobrać do maszyny.");
             }
         }
-
+        internal void unlock()
+        {
+            if (Session.State == SessionState.SessionState_Locked)
+            {
+                Session.UnlockMachine();
+            }
+        }
         public void Tick()
         {
             #region Translate MachineState
@@ -202,16 +209,19 @@ namespace Devel_VM
                     Status = State.Error;
                     break;
                 case MachineState.MachineState_Running:
-                    Status = State.Operational;
+                    Status = State.On;
                     break;
                 default:
                     Status = State.Unknown;
                     break;
             }
             #endregion
-
             if (Session.State == SessionState.SessionState_Locked)
             {
+                if (Status == State.On && Session.Console.Guest.AdditionsRunLevel==AdditionsRunLevelType.AdditionsRunLevelType_Userland)
+                {
+                    Status = State.Operational;
+                }
                 IEvent ev = Session.Console.EventSource.GetEvent(EvListener, 0);
                 if (ev != null)
                 {
@@ -221,16 +231,6 @@ namespace Devel_VM
                 }
             }
         }
-
-
-        internal void unlock()
-        {
-            if (Session.State == SessionState.SessionState_Locked)
-            {
-                Session.UnlockMachine();
-            }
-        }
-
         private void OnEvent(String msg, int priority)
         {
             if (OnVmEvent != null)
@@ -240,5 +240,48 @@ namespace Devel_VM
         }
 
         public delegate void VmEvent(String msg, int priority);
+
+        public void exec2(String cmd, String[] args)
+        {
+            /*lock_share();
+            if(Session.Console.Guest.AdditionsRunLevel!=AdditionsRunLevelType.AdditionsRunLevelType_Userland) return;
+            uint pid = 0;
+            String[] env = {"BETAMGR=1"};
+            IProgress progress = Session.Console.Guest.ExecuteProcess(cmd, 0, args, env, "fotka", "@fotka", 0, out pid);
+
+            IGuest gu = Session.Console.Guest;
+            byte[] asd = (byte[])gu.GetProcessOutput(pid, 0, 5000, (long)100);
+            
+            progress.WaitForCompletion(-1);
+             */
+            throw new Exception("VirtualBox COM API error?");
+        }
+
+        public string exec(String cmd, String args)
+        {
+            string retMessage = String.Empty;
+
+            /*
+             * C:\Program Files\Oracle\VirtualBox\VBoxManage.exe guestcontrol "Devel" execute --image "/bin/ls" --username="fotka" --password="@fotka" --wait-exit --wait-stdout /tmp
+             */
+            string vbm = @"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe";
+            string vbargs = " guestcontrol \"Devel\" execute --image \"" + cmd + "\" --username=\"fotka\" --password=\"@fotka\" --wait-exit --wait-stdout ";
+
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            Process p = new Process();
+
+            startInfo.CreateNoWindow = true;
+            startInfo.RedirectStandardOutput = true;
+
+            startInfo.UseShellExecute = false;
+            startInfo.Arguments = vbargs;
+            startInfo.FileName = vbm;
+
+            p.StartInfo = startInfo;
+            p.Start();
+            p.WaitForExit();
+
+            return p.StandardOutput.ReadToEnd();
+        }
     }
 }
