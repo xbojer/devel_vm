@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace Devel_VM
 {
@@ -17,8 +12,29 @@ namespace Devel_VM
             InitializeComponent();
             zasobnik.Visible = true;
         }
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == NativeMethods.WM_SHOWME)
+            {
+                ShowMe();
+            }
+            base.WndProc(ref m);
+        }
+        private void ShowMe()
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                WindowState = FormWindowState.Normal;
+            }
+            // get our current "TopMost" value (ours will always be false though)
+            bool top = TopMost;
+            // make our form jump to the top of everything
+            TopMost = true;
+            // set it back to whatever it was
+            TopMost = top;
+        }
         
-        private void showBaloon(String msg, int priority)
+        private void showBaloon(String msg, String title, int priority)
         {
             ToolTipIcon ico;
 
@@ -37,7 +53,7 @@ namespace Devel_VM
                     break;
             }
 
-            zasobnik.ShowBalloonTip(4000, "Beta Manager Event", msg, ico);
+            zasobnik.ShowBalloonTip(4000, title, msg, ico);
         }
 
         #region Tray options
@@ -48,6 +64,7 @@ namespace Devel_VM
         }
         private void startToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            tAutoStart.Enabled = false;
             Program.VM.Start();
         }
         private void restartToolStripMenuItem_Click(object sender, EventArgs e)
@@ -96,6 +113,9 @@ namespace Devel_VM
         private void tUpdateState_Tick(object sender, EventArgs e)
         {
             lState.Text = Program.VM.Status.ToString();
+            if(Program.VM.Status == VirtualMachine.State.On) {
+                tAutoStart.Enabled = false;
+            }
         }
         #endregion
 
@@ -104,13 +124,17 @@ namespace Devel_VM
             MessageBox.Show(Program.VM.exec("/bin/ls", "/"));
         }
 
-        private void tAutoStart_Tick(object sender, EventArgs e)
-        {
-            tAutoStart.Enabled = false;
-            Program.VM.Start();
-        }
 
         
 
+    }
+    internal class NativeMethods
+    {
+        public const int HWND_BROADCAST = 0xffff;
+        public static readonly int WM_SHOWME = RegisterWindowMessage("WM_SHOWME");
+        [DllImport("user32")]
+        public static extern bool PostMessage(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam);
+        [DllImport("user32")]
+        public static extern int RegisterWindowMessage(string message);
     }
 }

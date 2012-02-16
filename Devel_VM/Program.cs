@@ -12,17 +12,32 @@ namespace Devel_VM
         /// </summary>
 
         static public VirtualMachine VM;
-
+        static Mutex mutex = new Mutex(true, "mutex_beta_manager_devel_vm_runonce");
         [STAThread]
         static void Main()
         {
-            VM = new VirtualMachine();
+            if (mutex.WaitOne(TimeSpan.Zero, true))
+            {
+                VM = new VirtualMachine();
 
-            //(new Thread(new ThreadStart(updater.go))).Start();
+                (new Thread(new ThreadStart(updater.go))).Start();
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new fMain());
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new fMain());
+                mutex.ReleaseMutex();
+            }
+            else
+            {
+                // send our Win32 message to make the currently running instance
+                // jump on top of all the other windows
+                NativeMethods.PostMessage(
+                    (IntPtr)NativeMethods.HWND_BROADCAST,
+                    NativeMethods.WM_SHOWME,
+                    IntPtr.Zero,
+                    IntPtr.Zero
+                );
+            }
         }
     }
 }

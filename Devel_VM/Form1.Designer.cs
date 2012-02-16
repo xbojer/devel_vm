@@ -68,9 +68,9 @@
             // 
             // bExit
             // 
-            this.bExit.Location = new System.Drawing.Point(243, 7);
+            this.bExit.Location = new System.Drawing.Point(270, 36);
             this.bExit.Name = "bExit";
-            this.bExit.Size = new System.Drawing.Size(102, 25);
+            this.bExit.Size = new System.Drawing.Size(79, 26);
             this.bExit.TabIndex = 0;
             this.bExit.Text = "Exit";
             this.bExit.UseVisualStyleBackColor = true;
@@ -263,9 +263,9 @@
             // 
             // bHide
             // 
-            this.bHide.Location = new System.Drawing.Point(270, 38);
+            this.bHide.Location = new System.Drawing.Point(247, 9);
             this.bHide.Name = "bHide";
-            this.bHide.Size = new System.Drawing.Size(75, 23);
+            this.bHide.Size = new System.Drawing.Size(102, 23);
             this.bHide.TabIndex = 7;
             this.bHide.Text = "Hide";
             this.bHide.UseVisualStyleBackColor = true;
@@ -305,9 +305,9 @@
             this.lState.ForeColor = System.Drawing.Color.Black;
             this.lState.Location = new System.Drawing.Point(18, 22);
             this.lState.Name = "lState";
-            this.lState.Size = new System.Drawing.Size(37, 13);
+            this.lState.Size = new System.Drawing.Size(60, 13);
             this.lState.TabIndex = 11;
-            this.lState.Text = "iError";
+            this.lState.Text = "Checking";
             // 
             // tState
             // 
@@ -325,7 +325,7 @@
             // 
             this.tAutoStart.Enabled = true;
             this.tAutoStart.Interval = 60000;
-            this.tAutoStart.Tick += new System.EventHandler(this.tAutoStart_Tick);
+            this.tAutoStart.Tick += new System.EventHandler(this.startToolStripMenuItem_Click);
             // 
             // fMain
             // 
@@ -334,13 +334,13 @@
             this.ClientSize = new System.Drawing.Size(352, 67);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lState);
-            this.Controls.Add(this.bHide);
             this.Controls.Add(this.lStateLabel);
             this.Controls.Add(this.bStopPower);
+            this.Controls.Add(this.bHide);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.bSoftStop);
-            this.Controls.Add(this.bExit);
             this.Controls.Add(this.bStart);
+            this.Controls.Add(this.bExit);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;

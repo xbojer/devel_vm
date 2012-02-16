@@ -18,6 +18,8 @@ namespace Devel_VM
 
         public VmEvent OnVmEvent;
 
+        public delegate void VmEvent(String msg, String title, int priority);
+
         public enum State
         {
             Off,
@@ -28,12 +30,20 @@ namespace Devel_VM
             Unknown
         }
 
-        private IEventListener EvListener;
-        VBoxEventType[] EvTypes = { VBoxEventType.VBoxEventType_OnStateChanged };
+        private VBoXEventL1 EvListener;
+        VBoxEventType[] EvTypes = { VBoxEventType.VBoxEventType_Any };
 
         public State Status;
 
         private string api_ver = "4_1";
+
+        public void OnEvent(String msg, String title, int priority)
+        {
+            if (OnVmEvent != null)
+            {
+                OnVmEvent(msg, title, priority);
+            }
+        }
 
         public VirtualMachine()
         {
@@ -51,59 +61,47 @@ namespace Devel_VM
                 throw new Exception("Nie znaleziono maszyny Devel.");
             }
             Session = new Session();
-            Sanitize();
+            lock_share();
         }
+        #region Machine locking
+        private void lock_share()
+        {
+            unlock();
+            try
+            {
+                Machine.LockMachine(Session, LockType.LockType_Shared);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Nie udało się dobrać do maszyny.");
+            }
+        }
+        internal void unlock()
+        {
+            if (Session.State == SessionState.SessionState_Locked)
+            {
+                Session.UnlockMachine();
+            }
+        }
+        #endregion
+        #region Machine state control
         public void Start()
         {
-            gracefulShutdown();
-            Machine.LaunchVMProcess(Session, "headless", "VBETAM=1").WaitForCompletion(-1);
-            EvListener = Session.Console.EventSource.CreateListener();
-            Session.Console.EventSource.RegisterListener(EvListener, EvTypes, 0);
-        }
-        private void gracefulShutdown()
-        {
             lock_share();
-            if (Machine.State != MachineState.MachineState_PoweredOff)
+            if (Machine.State != MachineState.MachineState_Running)
             {
-                if (Machine.State == MachineState.MachineState_Running)
+                if (Machine.State != MachineState.MachineState_PoweredOff && Machine.State != MachineState.MachineState_Aborted)
                 {
-                    IEventSource es = Session.Console.EventSource;
-                    IEventListener listener = es.CreateListener();
-                    VBoxEventType[] aTypes = { VBoxEventType.VBoxEventType_OnStateChanged };
-                    es.RegisterListener(listener, aTypes, 0);
-                    Session.Console.PowerButton();
-                    do
-                    {
-                        IEvent ev = es.GetEvent(listener, 30000);
-                        if (ev != null)
-                        {
-                            IStateChangedEvent me = (IStateChangedEvent)ev;
-                            ev.SetProcessed();
-                            if (me.State == MachineState.MachineState_PoweredOff)
-                            {
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            Session.Console.PowerDown().WaitForCompletion(10000);
-                        }
-                    } while (Machine.State != MachineState.MachineState_PoweredOff);
+                    Session.Console.PowerDown();
                 }
-                else
-                {
-                    Sanitize();
-                }
-                for (int timeout = 1; timeout < 25; timeout++)
-                {
-                    Thread.Sleep(200);
-                    if (Machine.State == MachineState.MachineState_PoweredOff && Session.State == SessionState.SessionState_Unlocked && Machine.SessionState == SessionState.SessionState_Unlocked)
-                    {
-                        break;
-                    }
-                }
+                unlock();
+                OnEvent("Starting", "Beta state", 1);
+                Machine.LaunchVMProcess(Session, "headless", "VBETAM=1").WaitForCompletion(-1);
             }
-            unlock();
+            else
+            {
+                OnEvent("Already running", "Beta state", 1);
+            }
         }
         public void PowerOff(bool kill)
         {
@@ -124,36 +122,20 @@ namespace Devel_VM
             IConsole con = Session.Console;
             con.Reset();
         }
-        private void Sanitize()
+        #endregion
+        #region Events handling
+        private void AssureEvents()
         {
             lock_share();
-            if (Machine.State != MachineState.MachineState_PoweredOff && Session.State == SessionState.SessionState_Locked)
-            {
-                //Session.Console.PowerDown().WaitForCompletion(-1);
-            }
-            unlock();
+            if (EvListener != null) return;
+            EvListener = new VBoXEventL1(this);
+            Session.Console.EventSource.RegisterListener(EvListener, EvTypes, 1);
+            
         }
-        private void lock_share()
-        {
-            unlock();
-            try
-            {
-                Machine.LockMachine(Session, LockType.LockType_Shared);
-            }
-            catch (Exception)
-            {
-                throw new Exception("Nie udało się dobrać do maszyny.");
-            }
-        }
-        internal void unlock()
-        {
-            if (Session.State == SessionState.SessionState_Locked)
-            {
-                Session.UnlockMachine();
-            }
-        }
+        #endregion
         public void Tick()
         {
+            lock_share();
             #region Translate MachineState
             switch (Machine.State)
             {
@@ -216,32 +198,14 @@ namespace Devel_VM
                     break;
             }
             #endregion
-            if (Session.State == SessionState.SessionState_Locked)
+            if (Status == State.On && Session.Console.Guest.AdditionsRunLevel==AdditionsRunLevelType.AdditionsRunLevelType_Userland)
             {
-                if (Status == State.On && Session.Console.Guest.AdditionsRunLevel==AdditionsRunLevelType.AdditionsRunLevelType_Userland)
-                {
-                    Status = State.Operational;
-                }
-                IEvent ev = Session.Console.EventSource.GetEvent(EvListener, 0);
-                if (ev != null)
-                {
-                    IStateChangedEvent me = (IStateChangedEvent)ev;
-                    ev.SetProcessed();
-                    OnEvent(me.State.ToString(), 1);
-                }
+                Status = State.Operational;
+                AssureEvents();
             }
         }
-        private void OnEvent(String msg, int priority)
-        {
-            if (OnVmEvent != null)
-            {
-                OnVmEvent(msg, priority);
-            }
-        }
-
-        public delegate void VmEvent(String msg, int priority);
-
-        public void exec2(String cmd, String[] args)
+        #region Remote process execution
+        public void exec_api(String cmd, String[] args)
         {
             /*lock_share();
             if(Session.Console.Guest.AdditionsRunLevel!=AdditionsRunLevelType.AdditionsRunLevelType_Userland) return;
@@ -256,32 +220,41 @@ namespace Devel_VM
              */
             throw new Exception("VirtualBox COM API error?");
         }
-
         public string exec(String cmd, String args)
         {
-            string retMessage = String.Empty;
-
-            /*
-             * C:\Program Files\Oracle\VirtualBox\VBoxManage.exe guestcontrol "Devel" execute --image "/bin/ls" --username="fotka" --password="@fotka" --wait-exit --wait-stdout /tmp
-             */
-            string vbm = @"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe";
-            string vbargs = " guestcontrol \"Devel\" execute --image \"" + cmd + "\" --username=\"fotka\" --password=\"@fotka\" --wait-exit --wait-stdout ";
+            string filename = @"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe";
+            args = " guestcontrol \"Devel\" execute --image \"" + cmd + "\" --username=\"fotka\" --password=\"@fotka\" --wait-exit --wait-stdout " + args;
 
             ProcessStartInfo startInfo = new ProcessStartInfo();
             Process p = new Process();
 
             startInfo.CreateNoWindow = true;
+            startInfo.UseShellExecute = false;
             startInfo.RedirectStandardOutput = true;
 
-            startInfo.UseShellExecute = false;
-            startInfo.Arguments = vbargs;
-            startInfo.FileName = vbm;
-
+            startInfo.FileName = filename;
+            startInfo.Arguments = args;
+            
             p.StartInfo = startInfo;
             p.Start();
             p.WaitForExit();
 
             return p.StandardOutput.ReadToEnd();
+        }
+        #endregion
+    }
+
+    internal class VBoXEventL1 : IEventListener
+    {
+        VirtualMachine that;
+        
+        public VBoXEventL1(VirtualMachine that)
+        {
+            this.that = that;
+        }
+        public void HandleEvent(IEvent aEvent)
+        {
+            that.OnEvent(aEvent.Type.ToString(), "VBox Event", 0);
         }
     }
 }
