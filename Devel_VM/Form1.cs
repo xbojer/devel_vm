@@ -121,12 +121,61 @@ namespace Devel_VM
 
         private void button1_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(Program.VM.exec("/bin/ls", "/"));
+            //MessageBox.Show(Program.VM.exec("/bin/ls", "/"));
+            
         }
 
+        private void restartToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            String result = Program.VM.exec("/bin/sh", "/opt/fotka/bin/control_httpd.sh restart");
+            if (result.Trim() != "OK")
+            {
+                showBaloon("Error while restarting HTTPD: "+ result, "HTTPD", 3);
+            }
+            else
+            {
+                showBaloon("Service restarted", "HTTPD", 1);
+            }
+        }
 
-        
+        private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            String result = Program.VM.exec("/bin/sh", "/opt/fotka/bin/control_httpd.sh reload");
+            if (result.Trim() != "OK")
+            {
+                showBaloon("Error while reloading HTTPD: " + result, "HTTPD", 3);
+            }
+            else
+            {
+                showBaloon("Service reloaded", "HTTPD", 1);
+            }
+        }
 
+        private void startToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            String result = Program.VM.exec("/bin/sh", "/opt/fotka/bin/control_httpd.sh start");
+            if (result.Trim() != "OK")
+            {
+                showBaloon("Error while starting HTTPD: " + result, "HTTPD", 3);
+            }
+            else
+            {
+                showBaloon("Service started", "HTTPD", 1);
+            }
+        }
+
+        private void stopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            String result = Program.VM.exec("/bin/sh", "/opt/fotka/bin/control_httpd.sh reload");
+            if (result.Trim() != "OK")
+            {
+                showBaloon("Error while stopping HTTPD: " + result, "HTTPD", 3);
+            }
+            else
+            {
+                showBaloon("Service stopped", "HTTPD", 1);
+            }
+        }
     }
     internal class NativeMethods
     {

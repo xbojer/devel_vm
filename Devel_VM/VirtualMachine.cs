@@ -109,10 +109,12 @@ namespace Devel_VM
             IConsole con = Session.Console;
             if (kill)
             {
+                OnEvent("Power Down", "Beta state", 1);
                 con.PowerDown();
             }
             else
             {
+                OnEvent("Shutting down", "Beta state", 1);
                 con.PowerButton();
             }
         }
@@ -120,6 +122,7 @@ namespace Devel_VM
         {
             lock_share();
             IConsole con = Session.Console;
+            OnEvent("Reset", "Beta state", 1);
             con.Reset();
         }
         #endregion
@@ -254,7 +257,17 @@ namespace Devel_VM
         }
         public void HandleEvent(IEvent aEvent)
         {
-            that.OnEvent(aEvent.Type.ToString(), "VBox Event", 0);
+            if (aEvent.Type == VBoxEventType.VBoxEventType_OnEventSourceChanged)
+            {
+                IEventSourceChangedEvent ev = (IEventSourceChangedEvent)aEvent;
+                
+                if(ev.Add==0)
+                    that.OnEvent(ev.Type.ToString(), "VBox Event1", 0);
+            }
+            else
+            {
+                that.OnEvent(aEvent.Type.ToString(), "VBox Event", 0);
+            }
         }
     }
 }
