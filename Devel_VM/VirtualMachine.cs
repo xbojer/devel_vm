@@ -14,7 +14,7 @@ namespace Devel_VM
         private VirtualBoxClass vb;
 
         private IMachine Machine;
-        private Session Session;
+        private static Session Session;
 
         public VmEvent OnVmEvent;
 
@@ -63,6 +63,19 @@ namespace Devel_VM
             Session = new Session();
             lock_share();
         }
+
+        public int getVersion()
+        {
+            string result = Program.VM.exec("/bin/cat", "/etc/devel_version").Trim();
+            int v = -1;
+            bool valid = int.TryParse(result, out v);
+            if (!valid)
+            {
+                throw new Exception("Nie udało się ustalić wersji wirtualnej maszyny");
+            }
+            return v;
+        }
+
         #region Machine locking
         private void lock_share()
         {
@@ -131,7 +144,7 @@ namespace Devel_VM
         {
             lock_share();
             if (EvListener != null) return;
-            EvListener = new VBoXEventL1(this);
+            EvListener = new VBoXEventL1();
             Session.Console.EventSource.RegisterListener(EvListener, EvTypes, 1);
             
         }
@@ -245,29 +258,40 @@ namespace Devel_VM
             return p.StandardOutput.ReadToEnd();
         }
         #endregion
+        internal class VBoXEventL1 : IEventListener
+        {
+            public void HandleEvent(IEvent aEvent)
+            {
+                if (aEvent.Type == VBoxEventType.VBoxEventType_OnEventSourceChanged)
+                {
+                    IEventSourceChangedEvent ev = (IEventSourceChangedEvent)aEvent;
+
+                    if (ev.Add == 0)
+                    {
+                        //Program.VM.OnEvent(ev.Type.ToString(), "VBox Event1", 0);
+                    }
+                }
+                else if(aEvent.Type == VBoxEventType.VBoxEventType_OnStateChanged) 
+                {
+                    IStateChangedEvent ev = (IStateChangedEvent)aEvent;
+                    if (ev.State == MachineState.MachineState_PoweredOff)
+                    {
+                        Program.VM.OnEvent("Powered down", "Beta state", 1);
+                    }
+                    else
+                    {
+                        Program.VM.OnEvent(aEvent.Type.ToString(), "VBox Event", 0);
+                    }
+                }
+                else if(aEvent.Type == VBoxEventType.VBoxEventType_OnAdditionsStateChanged)
+                {
+                    if(VirtualMachine.Session.Console.Guest.AdditionsRunLevel==AdditionsRunLevelType.AdditionsRunLevelType_Userland) {
+                        Program.VM.OnEvent("Operational", "Beta state", 0);
+                    }
+                }
+            }
+        }
     }
 
-    internal class VBoXEventL1 : IEventListener
-    {
-        VirtualMachine that;
-        
-        public VBoXEventL1(VirtualMachine that)
-        {
-            this.that = that;
-        }
-        public void HandleEvent(IEvent aEvent)
-        {
-            if (aEvent.Type == VBoxEventType.VBoxEventType_OnEventSourceChanged)
-            {
-                IEventSourceChangedEvent ev = (IEventSourceChangedEvent)aEvent;
-                
-                if(ev.Add==0)
-                    that.OnEvent(ev.Type.ToString(), "VBox Event1", 0);
-            }
-            else
-            {
-                that.OnEvent(aEvent.Type.ToString(), "VBox Event", 0);
-            }
-        }
-    }
+    
 }

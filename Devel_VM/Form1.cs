@@ -121,14 +121,15 @@ namespace Devel_VM
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //MessageBox.Show(Program.VM.exec("/bin/ls", "/"));
+            int result = Program.VM.getVersion();
+            MessageBox.Show(result.ToString());
             
         }
 
         private void restartToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            String result = Program.VM.exec("/bin/sh", "/opt/fotka/bin/control_httpd.sh restart");
-            if (result.Trim() != "OK")
+            String result = Program.VM.exec("/bin/sh", "/opt/fotka/bin/control_httpd.sh restart").Trim();
+            if (result != "OK")
             {
                 showBaloon("Error while restarting HTTPD: "+ result, "HTTPD", 3);
             }
@@ -140,8 +141,8 @@ namespace Devel_VM
 
         private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            String result = Program.VM.exec("/bin/sh", "/opt/fotka/bin/control_httpd.sh reload");
-            if (result.Trim() != "OK")
+            String result = Program.VM.exec("/bin/sh", "/opt/fotka/bin/control_httpd.sh reload").Trim();
+            if (result != "OK")
             {
                 showBaloon("Error while reloading HTTPD: " + result, "HTTPD", 3);
             }
@@ -153,8 +154,8 @@ namespace Devel_VM
 
         private void startToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            String result = Program.VM.exec("/bin/sh", "/opt/fotka/bin/control_httpd.sh start");
-            if (result.Trim() != "OK")
+            String result = Program.VM.exec("/bin/sh", "/opt/fotka/bin/control_httpd.sh start").Trim();
+            if (result != "OK")
             {
                 showBaloon("Error while starting HTTPD: " + result, "HTTPD", 3);
             }
@@ -166,8 +167,8 @@ namespace Devel_VM
 
         private void stopToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            String result = Program.VM.exec("/bin/sh", "/opt/fotka/bin/control_httpd.sh reload");
-            if (result.Trim() != "OK")
+            String result = Program.VM.exec("/bin/sh", "/opt/fotka/bin/control_httpd.sh reload").Trim();
+            if (result != "OK")
             {
                 showBaloon("Error while stopping HTTPD: " + result, "HTTPD", 3);
             }
