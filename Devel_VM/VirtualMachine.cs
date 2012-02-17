@@ -11,10 +11,10 @@ namespace Devel_VM
 {
     class VirtualMachine
     {
-        private VirtualBoxClass vb;
+        private VirtualBox.VirtualBox vb;
 
         private IMachine Machine;
-        private static Session Session;
+        public Session Session;
 
         public VmEvent OnVmEvent;
 
@@ -31,7 +31,7 @@ namespace Devel_VM
         }
 
         private VBoXEventL1 EvListener;
-        VBoxEventType[] EvTypes = { VBoxEventType.VBoxEventType_Any };
+        private VBoxEventType[] EvTypes = { VBoxEventType.VBoxEventType_Any };
 
         public State Status;
 
@@ -47,7 +47,7 @@ namespace Devel_VM
 
         public VirtualMachine()
         {
-            vb = new VirtualBoxClass();
+            vb = new VirtualBox.VirtualBox();
             if (api_ver != vb.APIVersion)
             {
                 throw new Exception("Program nie jest zgodny z zainstalowana wersja VirtualBoxa.");
@@ -115,6 +115,7 @@ namespace Devel_VM
             {
                 OnEvent("Already running", "Beta state", 1);
             }
+            AssureEvents();
         }
         public void PowerOff(bool kill)
         {
@@ -217,7 +218,6 @@ namespace Devel_VM
             if (Status == State.On && Session.Console.Guest.AdditionsRunLevel==AdditionsRunLevelType.AdditionsRunLevelType_Userland)
             {
                 Status = State.Operational;
-                AssureEvents();
             }
         }
         #region Remote process execution
@@ -268,7 +268,11 @@ namespace Devel_VM
 
                     if (ev.Add == 0)
                     {
-                        //Program.VM.OnEvent(ev.Type.ToString(), "VBox Event1", 0);
+                        //Program.VM.OnEvent("Eventy off", "VBox Event1", 0);
+                    }
+                    else
+                    {
+                        //Program.VM.OnEvent("Eventy on", "VBox Event1", 0);
                     }
                 }
                 else if(aEvent.Type == VBoxEventType.VBoxEventType_OnStateChanged) 
@@ -285,7 +289,7 @@ namespace Devel_VM
                 }
                 else if(aEvent.Type == VBoxEventType.VBoxEventType_OnAdditionsStateChanged)
                 {
-                    if(VirtualMachine.Session.Console.Guest.AdditionsRunLevel==AdditionsRunLevelType.AdditionsRunLevelType_Userland) {
+                    if(Program.VM.Session.Console.Guest.AdditionsRunLevel==AdditionsRunLevelType.AdditionsRunLevelType_Userland) {
                         Program.VM.OnEvent("Operational", "Beta state", 0);
                     }
                 }
