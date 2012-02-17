@@ -94,8 +94,8 @@ namespace Devel_VM
         #region Form control
         private void fMain_Load(object sender, EventArgs e)
         {
-            //Hide();
-            //Visible = false;
+            Hide();
+            Visible = false;
             Program.VM.OnVmEvent += new VirtualMachine.VmEvent(this.showBaloon);
         }
         private void bHide_Click(object sender, EventArgs e)

@@ -80,13 +80,16 @@ namespace Devel_VM
         private void lock_share()
         {
             unlock();
-            try
+            if (Session.State == SessionState.SessionState_Unlocked)
             {
-                Machine.LockMachine(Session, LockType.LockType_Shared);
-            }
-            catch (Exception)
-            {
-                throw new Exception("Nie udało się dobrać do maszyny.");
+                try
+                {
+                    Machine.LockMachine(Session, LockType.LockType_Shared);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
             }
         }
         internal void unlock()
@@ -97,6 +100,41 @@ namespace Devel_VM
             }
         }
         #endregion
+        void MachineConfig()
+        {
+            try
+            {
+                lock_share();
+                Session.Machine.MemorySize = 1024;
+                Session.Machine.VRAMSize = 24;
+                Session.Machine.SetBootOrder(1, DeviceType.DeviceType_HardDisk);
+                Session.Machine.SetBootOrder(2, DeviceType.DeviceType_Null);
+                Session.Machine.SetBootOrder(3, DeviceType.DeviceType_Null);
+                Session.Machine.SetBootOrder(4, DeviceType.DeviceType_Null);
+                if (vb.Host.ProcessorOnlineCount > 1)
+                {
+                    Session.Machine.CPUCount = 2;
+                    if (vb.Host.ProcessorOnlineCount > 2)
+                    {
+                        Session.Machine.CPUExecutionCap = 100;
+                    }
+                    else
+                    {
+                        Session.Machine.CPUExecutionCap = 80;
+                    }
+                }
+                else
+                {
+                    Session.Machine.CPUCount = 1;
+                }
+                Session.Machine.SaveSettings();
+                unlock();
+            }
+            catch (Exception)
+            {
+                OnEvent("Error configuring machine", "VirtualMachine Config", 3);
+            }
+        }
         #region Machine state control
         public void Start()
         {
@@ -108,6 +146,7 @@ namespace Devel_VM
                     Session.Console.PowerDown();
                 }
                 unlock();
+                MachineConfig();
                 OnEvent("Starting", "Beta state", 1);
                 Machine.LaunchVMProcess(Session, "headless", "VBETAM=1").WaitForCompletion(-1);
             }
@@ -120,6 +159,7 @@ namespace Devel_VM
         public void PowerOff(bool kill)
         {
             lock_share();
+            if (Machine.State == MachineState.MachineState_PoweredOff || Machine.State == MachineState.MachineState_Aborted) return;
             IConsole con = Session.Console;
             if (kill)
             {
@@ -148,6 +188,44 @@ namespace Devel_VM
             EvListener = new VBoXEventL1();
             Session.Console.EventSource.RegisterListener(EvListener, EvTypes, 1);
             
+        }
+        internal class VBoXEventL1 : IEventListener
+        {
+            public void HandleEvent(IEvent aEvent)
+            {
+                if (aEvent.Type == VBoxEventType.VBoxEventType_OnEventSourceChanged)
+                {
+                    IEventSourceChangedEvent ev = (IEventSourceChangedEvent)aEvent;
+
+                    if (ev.Add == 0)
+                    {
+                        //Program.VM.OnEvent("Eventy off", "VBox Event1", 0);
+                    }
+                    else
+                    {
+                        //Program.VM.OnEvent("Eventy on", "VBox Event1", 0);
+                    }
+                }
+                else if (aEvent.Type == VBoxEventType.VBoxEventType_OnStateChanged)
+                {
+                    IStateChangedEvent ev = (IStateChangedEvent)aEvent;
+                    if (ev.State == MachineState.MachineState_PoweredOff)
+                    {
+                        Program.VM.OnEvent("Powered down", "Beta state", 1);
+                    }
+                    else
+                    {
+                        Program.VM.OnEvent(aEvent.Type.ToString(), "VBox Event", 0);
+                    }
+                }
+                else if (aEvent.Type == VBoxEventType.VBoxEventType_OnAdditionsStateChanged)
+                {
+                    if (Program.VM.Session.Console.Guest.AdditionsRunLevel == AdditionsRunLevelType.AdditionsRunLevelType_Userland)
+                    {
+                        Program.VM.OnEvent("Operational", "Beta state", 0);
+                    }
+                }
+            }
         }
         #endregion
         public void Tick()
@@ -258,43 +336,7 @@ namespace Devel_VM
             return p.StandardOutput.ReadToEnd();
         }
         #endregion
-        internal class VBoXEventL1 : IEventListener
-        {
-            public void HandleEvent(IEvent aEvent)
-            {
-                if (aEvent.Type == VBoxEventType.VBoxEventType_OnEventSourceChanged)
-                {
-                    IEventSourceChangedEvent ev = (IEventSourceChangedEvent)aEvent;
-
-                    if (ev.Add == 0)
-                    {
-                        //Program.VM.OnEvent("Eventy off", "VBox Event1", 0);
-                    }
-                    else
-                    {
-                        //Program.VM.OnEvent("Eventy on", "VBox Event1", 0);
-                    }
-                }
-                else if(aEvent.Type == VBoxEventType.VBoxEventType_OnStateChanged) 
-                {
-                    IStateChangedEvent ev = (IStateChangedEvent)aEvent;
-                    if (ev.State == MachineState.MachineState_PoweredOff)
-                    {
-                        Program.VM.OnEvent("Powered down", "Beta state", 1);
-                    }
-                    else
-                    {
-                        Program.VM.OnEvent(aEvent.Type.ToString(), "VBox Event", 0);
-                    }
-                }
-                else if(aEvent.Type == VBoxEventType.VBoxEventType_OnAdditionsStateChanged)
-                {
-                    if(Program.VM.Session.Console.Guest.AdditionsRunLevel==AdditionsRunLevelType.AdditionsRunLevelType_Userland) {
-                        Program.VM.OnEvent("Operational", "Beta state", 0);
-                    }
-                }
-            }
-        }
+        
     }
 
     
