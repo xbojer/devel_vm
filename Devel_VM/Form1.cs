@@ -7,6 +7,8 @@ namespace Devel_VM
     public partial class fMain : Form
     {
 
+        
+
         public fMain()
         {
             InitializeComponent();
@@ -96,6 +98,8 @@ namespace Devel_VM
         {
             Hide();
             Visible = false;
+            Program.NL = new Network_listener();
+
             Program.VM.OnVmEvent += new VirtualMachine.VmEvent(this.showBaloon);
         }
         private void bHide_Click(object sender, EventArgs e)

@@ -12,6 +12,7 @@ namespace Devel_VM
         /// </summary>
 
         static public VirtualMachine VM;
+        static public Network_listener NL;
         static Mutex mutex = new Mutex(true, "mutex_beta_manager_devel_vm_runonce");
         [STAThread]
         static void Main()
