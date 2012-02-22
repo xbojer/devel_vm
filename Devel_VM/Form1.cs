@@ -96,8 +96,12 @@ namespace Devel_VM
         #region Form control
         private void fMain_Load(object sender, EventArgs e)
         {
+            #if !DEBUG
             Hide();
             Visible = false;
+            WindowState = FormWindowState.Minimized;
+            #endif
+
             Program.NL = new Network_listener();
 
             Program.VM.OnVmEvent += new VirtualMachine.VmEvent(this.showBaloon);

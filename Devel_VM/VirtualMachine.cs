@@ -111,7 +111,7 @@ namespace Devel_VM
                 Session.Machine.SetBootOrder(2, DeviceType.DeviceType_Null);
                 Session.Machine.SetBootOrder(3, DeviceType.DeviceType_Null);
                 Session.Machine.SetBootOrder(4, DeviceType.DeviceType_Null);
-                if (vb.Host.ProcessorOnlineCount > 1)
+                if (vb.Host.ProcessorOnlineCount > 1 && false)
                 {
                     Session.Machine.CPUCount = 2;
                     if (vb.Host.ProcessorOnlineCount > 2)
@@ -126,6 +126,7 @@ namespace Devel_VM
                 else
                 {
                     Session.Machine.CPUCount = 1;
+                    Session.Machine.CPUExecutionCap = 100;
                 }
                 Session.Machine.SaveSettings();
                 unlock();

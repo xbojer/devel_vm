@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devel_VM", "Devel_VM\Devel_VM.csproj", "{6B7FAC71-56A2-48E6-B119-BCADCF9CF9FC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfoSender", "InfoSender\InfoSender.csproj", "{8B5A4581-938D-4747-96B9-01EA48CDE32F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,12 @@ Global
 		{6B7FAC71-56A2-48E6-B119-BCADCF9CF9FC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6B7FAC71-56A2-48E6-B119-BCADCF9CF9FC}.Release|x86.ActiveCfg = Release|x86
 		{6B7FAC71-56A2-48E6-B119-BCADCF9CF9FC}.Release|x86.Build.0 = Release|x86
+		{8B5A4581-938D-4747-96B9-01EA48CDE32F}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{8B5A4581-938D-4747-96B9-01EA48CDE32F}.Debug|x86.ActiveCfg = Debug|x86
+		{8B5A4581-938D-4747-96B9-01EA48CDE32F}.Debug|x86.Build.0 = Debug|x86
+		{8B5A4581-938D-4747-96B9-01EA48CDE32F}.Release|Any CPU.ActiveCfg = Release|x86
+		{8B5A4581-938D-4747-96B9-01EA48CDE32F}.Release|x86.ActiveCfg = Release|x86
+		{8B5A4581-938D-4747-96B9-01EA48CDE32F}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
