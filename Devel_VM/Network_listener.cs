@@ -75,16 +75,16 @@ namespace Devel_VM
         {
             if (OnUpdate != null)
             {
-                OnUpdate(auth, ver);
+                OnUpdate(auth, cmd);
             }
         }
-        private void onExecuteEvent(String auth, String cmd)
+        /*private void onExecuteEvent(String auth, String cmd)
         {
             if (OnUpdate != null)
             {
                 OnUpdate(auth, ver);
             }
-        }
+        }*/
         
         public Network_listener()
         {
