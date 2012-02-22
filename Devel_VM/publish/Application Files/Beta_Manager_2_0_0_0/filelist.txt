@@ -1,0 +1,7 @@
+﻿Beta_Manager.application
+Beta_Manager.exe.manifest
+Beta_Manager.exe
+Interop.VirtualBox.dll
+Beta_Manager.exe.config
+beta.ico
+filelist.txt
