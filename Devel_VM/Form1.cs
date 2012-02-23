@@ -148,8 +148,31 @@ namespace Devel_VM
         private void tUpdateState_Tick(object sender, EventArgs e)
         {
             lState.Text = Program.VM.Status.ToString();
-            if(Program.VM.Status == VirtualMachine.State.On) {
-                tAutoStart.Enabled = false;
+            switch (Program.VM.Status)
+            {
+                case VirtualMachine.State.On:
+                    tAutoStart.Enabled = false;
+                    hTTPDToolStripMenuItem.Enabled = false;
+                    startToolStripMenuItem.Enabled = false;
+                    softstopToolStripMenuItem.Enabled = false;
+                    restartToolStripMenuItem.Enabled = true;
+                    stoppoweroffToolStripMenuItem.Enabled = true;
+                    break;
+                case VirtualMachine.State.Operational:
+                    tAutoStart.Enabled = false;
+                    hTTPDToolStripMenuItem.Enabled = true;
+                    startToolStripMenuItem.Enabled = false;
+                    softstopToolStripMenuItem.Enabled = true;
+                    restartToolStripMenuItem.Enabled = true;
+                    stoppoweroffToolStripMenuItem.Enabled = true;
+                    break;
+                default://off?
+                    hTTPDToolStripMenuItem.Enabled = false;
+                    startToolStripMenuItem.Enabled = true;
+                    softstopToolStripMenuItem.Enabled = false;
+                    restartToolStripMenuItem.Enabled = false;
+                    stoppoweroffToolStripMenuItem.Enabled = false;
+                    break;
             }
         }
         #endregion
@@ -163,7 +186,6 @@ namespace Devel_VM
             p.dataIdentifier = Packet.DataIdentifier.Pong;
             p.message = "Debug";
             Network_Broadcast.send(p);
-            
         }
 
         private void restartToolStripMenuItem1_Click(object sender, EventArgs e)

@@ -205,6 +205,7 @@
             this.toolStripMenuItem6,
             this.startToolStripMenuItem1,
             this.stopToolStripMenuItem});
+            this.hTTPDToolStripMenuItem.Enabled = false;
             this.hTTPDToolStripMenuItem.Name = "hTTPDToolStripMenuItem";
             this.hTTPDToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.hTTPDToolStripMenuItem.Text = "HTTPD";
