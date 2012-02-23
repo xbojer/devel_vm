@@ -38,24 +38,33 @@ namespace Devel_VM
         
         private void showBaloon(String msg, String title, int priority)
         {
-            ToolTipIcon ico;
+            MethodInvoker method = delegate
+            {
+                ToolTipIcon ico;
 
-            switch(priority) {
-                case 1:
-                    ico = ToolTipIcon.Info;
-                    break;
-                case 2:
-                    ico = ToolTipIcon.Warning;
-                    break;
-                case 3:
-                    ico = ToolTipIcon.Error;
-                    break;
-                default:
-                    ico = ToolTipIcon.None;
-                    break;
-            }
+                switch (priority)
+                {
+                    case 1:
+                        ico = ToolTipIcon.Info;
+                        break;
+                    case 2:
+                        ico = ToolTipIcon.Warning;
+                        break;
+                    case 3:
+                        ico = ToolTipIcon.Error;
+                        break;
+                    default:
+                        ico = ToolTipIcon.None;
+                        break;
+                }
 
-            zasobnik.ShowBalloonTip(3500, title, msg, ico);
+                zasobnik.ShowBalloonTip(3500, title, msg, ico);
+            };
+
+            if (InvokeRequired)
+                BeginInvoke(method);
+            else
+                method.Invoke();
         }
 
         #region Tray options
@@ -105,6 +114,23 @@ namespace Devel_VM
 
             Program.NL = new Network_listener();
 
+            Program.NL.OnInfo += delegate(string auth, string msg)
+            {
+                showBaloon(msg, "Info od admina "+auth, 1);
+            };
+            Program.NL.OnError += delegate(string auth, string msg)
+            {
+                showBaloon(msg, "WAŻNE (" + auth + ")", 2);
+            };
+            Program.NL.OnPing += delegate(string auth, string msg)
+            {
+                //showBaloon(msg, "WAŻNE (" + auth + ")", 2);
+                Packet p = new Packet();
+                p.dataIdentifier = Packet.DataIdentifier.Pong;
+                p.message = auth + "+" + msg;
+                Network_Broadcast.send(p);
+            };
+
             Program.VM.OnVmEvent += new VirtualMachine.VmEvent(this.showBaloon);
         }
         private void bHide_Click(object sender, EventArgs e)
@@ -130,8 +156,13 @@ namespace Devel_VM
 
         private void button1_Click(object sender, EventArgs e)
         {
-            int result = Program.VM.getVersion();
-            MessageBox.Show(result.ToString());
+            //int result = Program.VM.getVersion();
+            //string result = Program.identity;
+            //MessageBox.Show(result.ToString());
+            Packet p = new Packet();
+            p.dataIdentifier = Packet.DataIdentifier.Pong;
+            p.message = "Debug";
+            Network_Broadcast.send(p);
             
         }
 

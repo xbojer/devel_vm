@@ -253,6 +253,7 @@ namespace Devel_VM
 
         public static void send(Packet pack)
         {
+            pack.auth = Program.identity;
             send(pack.GetDataStream());
         }
         public static void send(byte[] packet)

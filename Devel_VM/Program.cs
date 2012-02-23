@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Threading;
+using System.Net;
 
 namespace Devel_VM
 {
@@ -13,10 +14,13 @@ namespace Devel_VM
 
         static public VirtualMachine VM;
         static public Network_listener NL;
+        static public string identity = "NOT YET KNOWN";
+
         static Mutex mutex = new Mutex(true, "mutex_beta_manager_devel_vm_runonce");
         [STAThread]
         static void Main()
         {
+            identity = getIdentity();
             if (mutex.WaitOne(TimeSpan.Zero, true))
             {
                 VM = new VirtualMachine();
@@ -39,6 +43,24 @@ namespace Devel_VM
                     IntPtr.Zero
                 );
             }
+        }
+
+        static string getIdentity()
+        {
+            string user = "NYI";
+            string host = Dns.GetHostName();
+            List<string> ips = new List<string>();
+
+            IPAddress[] lips = Dns.GetHostAddresses(Dns.GetHostName());
+            foreach (IPAddress ip in lips)
+            {
+                if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                {
+                    if(ip.ToString().StartsWith("10."))
+                        ips.Add(ip.ToString());
+                }
+            }
+            return String.Format("{0} ({1} / {2})", user, host, string.Join(",", ips.ToArray()));
         }
     }
 }

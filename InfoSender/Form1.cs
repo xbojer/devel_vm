@@ -63,7 +63,15 @@ namespace InfoSender
 
         void Any(String t, string a, string m)
         {
-            richTextBox1.Text += "\r\n [" + t + "] " + a + ": " + m;
+            MethodInvoker method = delegate
+            {
+                richTextBox1.Text += "\r\n [" + t + "] " + a + ": " + m;
+            };
+
+            if (InvokeRequired)
+                BeginInvoke(method);
+            else
+                method.Invoke();
         }
     }
 }
