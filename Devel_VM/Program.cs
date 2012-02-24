@@ -47,7 +47,7 @@ namespace Devel_VM
 
         static string getIdentity()
         {
-            string user = "NYI";
+            string user = Properties.Settings.Default.User;
             string host = Dns.GetHostName();
             List<string> ips = new List<string>();
 

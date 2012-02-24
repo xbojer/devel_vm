@@ -18,22 +18,27 @@ namespace Devel_VM
         {
             if (m.Msg == NativeMethods.WM_SHOWME)
             {
-                ShowMe();
+                WmShowMe();
+            }
+            if (m.Msg == NativeMethods.WM_UPDATING)
+            {
+                WmUpdating();
             }
             base.WndProc(ref m);
         }
-        private void ShowMe()
+        private void WmShowMe()
         {
             if (WindowState == FormWindowState.Minimized)
             {
                 WindowState = FormWindowState.Normal;
             }
-            // get our current "TopMost" value (ours will always be false though)
-            bool top = TopMost;
-            // make our form jump to the top of everything
-            TopMost = true;
-            // set it back to whatever it was
-            TopMost = top;
+            bool top = TopMost; // get our current "TopMost" value (ours will always be false though)
+            TopMost = true; // make our form jump to the top of everything
+            TopMost = top; // set it back to whatever it was
+        }
+        private void WmUpdating()
+        {
+            showBaloon("Updating...", "Beta Manager Updater", 1);
         }
         
         private void showBaloon(String msg, String title, int priority)
@@ -153,25 +158,25 @@ namespace Devel_VM
                 case VirtualMachine.State.On:
                     tAutoStart.Enabled = false;
                     hTTPDToolStripMenuItem.Enabled = false;
-                    startToolStripMenuItem.Enabled = false;
-                    softstopToolStripMenuItem.Enabled = false;
+                    bStart.Enabled = startToolStripMenuItem.Enabled = false;
+                    bSoftStop.Enabled = softstopToolStripMenuItem.Enabled = false;
+                    bStopPower.Enabled = stoppoweroffToolStripMenuItem.Enabled = true;
                     restartToolStripMenuItem.Enabled = true;
-                    stoppoweroffToolStripMenuItem.Enabled = true;
                     break;
                 case VirtualMachine.State.Operational:
                     tAutoStart.Enabled = false;
                     hTTPDToolStripMenuItem.Enabled = true;
-                    startToolStripMenuItem.Enabled = false;
-                    softstopToolStripMenuItem.Enabled = true;
+                    bStart.Enabled = startToolStripMenuItem.Enabled = false;
+                    bSoftStop.Enabled = softstopToolStripMenuItem.Enabled = true;
+                    bStopPower.Enabled = stoppoweroffToolStripMenuItem.Enabled = true;
                     restartToolStripMenuItem.Enabled = true;
-                    stoppoweroffToolStripMenuItem.Enabled = true;
                     break;
                 default://off?
                     hTTPDToolStripMenuItem.Enabled = false;
-                    startToolStripMenuItem.Enabled = true;
-                    softstopToolStripMenuItem.Enabled = false;
+                    bStart.Enabled = startToolStripMenuItem.Enabled = true;
+                    bSoftStop.Enabled = softstopToolStripMenuItem.Enabled = false;
+                    bStopPower.Enabled = stoppoweroffToolStripMenuItem.Enabled = false;
                     restartToolStripMenuItem.Enabled = false;
-                    stoppoweroffToolStripMenuItem.Enabled = false;
                     break;
             }
         }
@@ -186,6 +191,10 @@ namespace Devel_VM
             p.dataIdentifier = Packet.DataIdentifier.Pong;
             p.message = "Debug";
             Network_Broadcast.send(p);
+
+            //Properties.Settings.Default.Save();
+
+            Program.VM.Uninstall();
         }
 
         private void restartToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -244,6 +253,7 @@ namespace Devel_VM
     {
         public const int HWND_BROADCAST = 0xffff;
         public static readonly int WM_SHOWME = RegisterWindowMessage("WM_SHOWME");
+        public static readonly int WM_UPDATING = RegisterWindowMessage("WM_UPDATING");
         [DllImport("user32")]
         public static extern bool PostMessage(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam);
         [DllImport("user32")]

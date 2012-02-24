@@ -6,19 +6,20 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.IO;
+using System.Windows.Forms;
 
 namespace Devel_VM
 {
     class VirtualMachine
     {
+        private const String imgpath = @"\\alpha\instale\Devel.102.ova";
+
         private VirtualBox.VirtualBox vb;
 
         private IMachine Machine;
         public Session Session;
 
-        public VmEvent OnVmEvent;
-
-        public delegate void VmEvent(String msg, String title, int priority);
+        public bool MachineReady = false;
 
         public enum State
         {
@@ -30,13 +31,12 @@ namespace Devel_VM
             Unknown
         }
 
+        #region Events
         private VBoXEventL1 EvListener;
         private VBoxEventType[] EvTypes = { VBoxEventType.VBoxEventType_Any };
 
-        public State Status;
-
-        private string api_ver = "4_1";
-
+        public VmEvent OnVmEvent;
+        public delegate void VmEvent(String msg, String title, int priority);
         public void OnEvent(String msg, String title, int priority)
         {
             if (OnVmEvent != null)
@@ -44,6 +44,11 @@ namespace Devel_VM
                 OnVmEvent(msg, title, priority);
             }
         }
+        #endregion
+
+        public State Status;
+
+        private string api_ver = "4_1";
 
         public VirtualMachine()
         {
@@ -52,18 +57,23 @@ namespace Devel_VM
             {
                 throw new Exception("Program nie jest zgodny z zainstalowana wersja VirtualBoxa.");
             }
-            try
+            while (!MachineReady)
             {
-                Machine = vb.FindMachine("Devel");
-            }
-            catch (Exception)
-            {
-                throw new Exception("Nie znaleziono maszyny Devel.");
+                Application.DoEvents();
+                try
+                {
+                    Machine = vb.FindMachine("Devel");
+                    MachineReady = true;
+                }
+                catch (Exception)
+                {
+                    Install();
+                    //throw new Exception("Nie znaleziono maszyny Devel.");
+                }
             }
             Session = new Session();
             lock_share();
         }
-
         public int getVersion()
         {
             string result = Program.VM.exec("/bin/cat", "/etc/devel_version").Trim();
@@ -75,7 +85,6 @@ namespace Devel_VM
             }
             return v;
         }
-
         #region Machine locking
         private void lock_share()
         {
@@ -88,7 +97,7 @@ namespace Devel_VM
                 }
                 catch (Exception)
                 {
-                    throw;
+                    //throw;
                 }
             }
         }
@@ -231,6 +240,11 @@ namespace Devel_VM
         #endregion
         public void Tick()
         {
+            if (!MachineReady)
+            {
+                Status = State.Busy;
+                return;
+            }
             lock_share();
             #region Translate MachineState
             switch (Machine.State)
@@ -337,8 +351,58 @@ namespace Devel_VM
             return p.StandardOutput.ReadToEnd();
         }
         #endregion
-        
+        #region 
+        public void Install()
+        {
+            IAppliance ia = vb.CreateAppliance();
+            ia.Read(imgpath).WaitForCompletion(-1);
+            ia.Interpret();
+            IVirtualSystemDescription[] descs = (IVirtualSystemDescription[])ia.VirtualSystemDescriptions;
+            if (descs.Length != 1)
+            {
+                throw new Exception("Bledny obraz maszyny");
+            }
+
+            System.Array aRefs, aOvfValues, aVBoxValues, aExtraConfigValues, aTypes;
+            VirtualSystemDescriptionType[] Types;
+            String[] VBoxValues, ExtraConfigValues;
+            IVirtualSystemDescription desc = descs[0];
+
+            desc.GetDescription(out aTypes, out aRefs, out aOvfValues, out aVBoxValues, out aExtraConfigValues);
+
+            Types = (VirtualSystemDescriptionType[])aTypes;
+            VBoxValues = (String[])aVBoxValues;
+            ExtraConfigValues = (String[])aExtraConfigValues;
+            List<bool> enabled = new List<bool>();
+
+            for(int i=0; i<Types.Length;i++)
+	        {
+		        enabled.Add(true);
+                if (Types[i]== VirtualSystemDescriptionType.VirtualSystemDescriptionType_Name)
+                {
+                    VBoxValues[i] += "_installing";
+                }
+	        }
+
+            aVBoxValues = VBoxValues;
+            aExtraConfigValues = ExtraConfigValues;
+
+            descs[0].SetFinalValues(enabled.ToArray(), aVBoxValues, aExtraConfigValues);
+
+
+        }
+        public void Uninstall()
+        {
+            if (Status != State.Off)
+            {
+                PowerOff(true);
+            }
+            unlock();
+            IMedium[] med = (IMedium[]) Machine.Unregister(CleanupMode.CleanupMode_Full);
+            Machine.Delete(med);
+            Machine.SaveSettings();
+        }
+        #endregion
     }
 
-    
 }

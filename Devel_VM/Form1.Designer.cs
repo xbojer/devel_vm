@@ -69,6 +69,7 @@
             this.tState = new System.Windows.Forms.Timer(this.components);
             this.tUpdateState = new System.Windows.Forms.Timer(this.components);
             this.tAutoStart = new System.Windows.Forms.Timer(this.components);
+            this.button2 = new System.Windows.Forms.Button();
             this.menuZasobnik.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -326,11 +327,11 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(162, 9);
+            this.button1.Location = new System.Drawing.Point(210, 9);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(27, 23);
             this.button1.TabIndex = 8;
-            this.button1.Text = "debug";
+            this.button1.Text = "rm";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -380,11 +381,21 @@
             this.tAutoStart.Interval = 60000;
             this.tAutoStart.Tick += new System.EventHandler(this.startToolStripMenuItem_Click);
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(159, 9);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(45, 23);
+            this.button2.TabIndex = 12;
+            this.button2.Text = "debug";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
             // fMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(352, 67);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lState);
             this.Controls.Add(this.lStateLabel);
@@ -447,6 +458,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem6;
         private System.Windows.Forms.ToolStripMenuItem startToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem stopToolStripMenuItem;
+        private System.Windows.Forms.Button button2;
     }
 }
 
