@@ -194,7 +194,7 @@ namespace Devel_VM
 
             //Properties.Settings.Default.Save();
 
-            Program.VM.Uninstall();
+            Program.VM.Uninstall("Devel");
         }
 
         private void restartToolStripMenuItem1_Click(object sender, EventArgs e)

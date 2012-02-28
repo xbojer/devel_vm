@@ -23,12 +23,13 @@ namespace Devel_VM
             identity = getIdentity();
             if (mutex.WaitOne(TimeSpan.Zero, true))
             {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
                 VM = new VirtualMachine();
 
                 (new Thread(new ThreadStart(updater.go))).Start();
 
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
+                
                 Application.Run(new fMain());
                 mutex.ReleaseMutex();
             }

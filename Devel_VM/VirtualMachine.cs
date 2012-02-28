@@ -67,7 +67,15 @@ namespace Devel_VM
                 }
                 catch (Exception)
                 {
-                    Install();
+                    try
+                    {
+                        IMachine tmpmach = vb.FindMachine("Devel_installing");
+                        Rename("Devel_installing", "Devel");
+                    }
+                    catch (Exception)
+                    {
+                        Install();
+                    }
                     //throw new Exception("Nie znaleziono maszyny Devel.");
                 }
             }
@@ -316,17 +324,17 @@ namespace Devel_VM
         #region Remote process execution
         public void exec_api(String cmd, String[] args)
         {
-            /*lock_share();
+            lock_share();
             if(Session.Console.Guest.AdditionsRunLevel!=AdditionsRunLevelType.AdditionsRunLevelType_Userland) return;
             uint pid = 0;
             String[] env = {"BETAMGR=1"};
             IProgress progress = Session.Console.Guest.ExecuteProcess(cmd, 0, args, env, "fotka", "@fotka", 0, out pid);
 
             IGuest gu = Session.Console.Guest;
-            byte[] asd = (byte[])gu.GetProcessOutput(pid, 0, 5000, (long)100);
+            int[] asd = (int[])gu.GetProcessOutput(pid, 0, 5000, (long)100);
             
             progress.WaitForCompletion(-1);
-             */
+
             throw new Exception("VirtualBox COM API error?");
         }
         public string exec(String cmd, String args)
@@ -373,34 +381,80 @@ namespace Devel_VM
             Types = (VirtualSystemDescriptionType[])aTypes;
             VBoxValues = (String[])aVBoxValues;
             ExtraConfigValues = (String[])aExtraConfigValues;
-            List<bool> enabled = new List<bool>();
+            List<int> enabled = new List<int>();
 
             for(int i=0; i<Types.Length;i++)
 	        {
-		        enabled.Add(true);
+		        enabled.Add(1);
                 if (Types[i]== VirtualSystemDescriptionType.VirtualSystemDescriptionType_Name)
                 {
                     VBoxValues[i] += "_installing";
+                }
+                if (Types[i] == VirtualSystemDescriptionType.VirtualSystemDescriptionType_HardDiskImage)
+                {
+                    string[] deli = {@"\"};
+                    string[] path = VBoxValues[i].Split(deli, StringSplitOptions.RemoveEmptyEntries);
+                    path[(path.Length-2)] += "_installing";
+                    VBoxValues[i] = String.Join(@"\", path);
                 }
 	        }
 
             aVBoxValues = VBoxValues;
             aExtraConfigValues = ExtraConfigValues;
 
-            descs[0].SetFinalValues(enabled.ToArray(), aVBoxValues, aExtraConfigValues);
-
+            descs[0].SetFinalValues((Array)(enabled.ToArray()), aVBoxValues, aExtraConfigValues);
+            ImportOptions[] opts = {};
+            ia.ImportMachines(opts).WaitForCompletion(-1);
 
         }
-        public void Uninstall()
+        public bool Uninstall(string name)
         {
-            if (Status != State.Off)
+            if (Session != null)
+                Session.UnlockMachine();
+            try
             {
-                PowerOff(true);
+                IMachine mach = vb.FindMachine(name);
             }
-            unlock();
-            IMedium[] med = (IMedium[]) Machine.Unregister(CleanupMode.CleanupMode_Full);
-            Machine.Delete(med);
-            Machine.SaveSettings();
+            catch (Exception)
+            {
+                return false;
+            }
+            String t = Machine.SettingsFilePath;
+            IMedium[] med = (IMedium[])Machine.Unregister(CleanupMode.CleanupMode_Full);
+            Machine.Delete(med).WaitForCompletion(-1);
+            foreach(IMedium m in med) {
+                MediumState s = m.LockWrite();
+                if (s == MediumState.MediumState_LockedWrite)
+                {
+                    m.Reset().WaitForCompletion(-1);
+                }
+                m.UnlockWrite();
+                m.DeleteStorage().WaitForCompletion(-1);
+            }
+            DirectoryInfo di = Directory.GetParent(t);
+            di.Delete(true);
+            //File.Delete(t);
+            return true;
+        }
+        private void Rename(string _old, string _new)
+        {
+            if(Session != null)
+                Session.UnlockMachine();
+            try
+            {
+                IMachine mach = vb.FindMachine(_old);
+                Session tmps = new VirtualBox.Session();
+                mach.LockMachine(tmps, LockType.LockType_Write);
+
+                tmps.Machine.Name = _new;
+
+                tmps.Machine.SaveSettings();
+                tmps.UnlockMachine();
+            }
+            catch (Exception)
+            {
+                return;
+            }
         }
         #endregion
     }
