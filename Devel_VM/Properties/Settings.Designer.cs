@@ -34,5 +34,53 @@ namespace Devel_VM.Properties {
                 this["User"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\10.11.11.200\\instale\\Devel\\current_version.txt")]
+        public string path_imgver {
+            get {
+                return ((string)(this["path_imgver"]));
+            }
+            set {
+                this["path_imgver"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\10.11.11.200\\instale\\Devel\\Devel.ova")]
+        public string path_image {
+            get {
+                return ((string)(this["path_image"]));
+            }
+            set {
+                this["path_image"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://00.info.pl/devel/ov.xml")]
+        public string update_uri {
+            get {
+                return ((string)(this["update_uri"]));
+            }
+            set {
+                this["update_uri"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Devel")]
+        public string vm_name {
+            get {
+                return ((string)(this["vm_name"]));
+            }
+            set {
+                this["vm_name"] = value;
+            }
+        }
     }
 }

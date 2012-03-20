@@ -38,7 +38,7 @@ namespace Devel_VM
         }
         private void WmUpdating()
         {
-            showBaloon("Updating...", "Beta Manager Updater", 1);
+            showBaloon("Trwa aktualizacja programu", "Beta Manager: Aktualizator", 1);
         }
         
         private void showBaloon(String msg, String title, int priority)
@@ -121,11 +121,11 @@ namespace Devel_VM
 
             Program.NL.OnInfo += delegate(string auth, string msg)
             {
-                showBaloon(msg, "Info od admina "+auth, 1);
+                showBaloon(auth + ": " + msg, "Beta Manager: Informator", 1);
             };
             Program.NL.OnError += delegate(string auth, string msg)
             {
-                showBaloon(msg, "WAŻNE (" + auth + ")", 2);
+                showBaloon(String.Format("!!! $1 ($2) !!!", auth, msg), "Beta Manager: Informator", 2);
             };
             Program.NL.OnPing += delegate(string auth, string msg)
             {
@@ -137,6 +137,8 @@ namespace Devel_VM
             };
 
             Program.VM.OnVmEvent += new VirtualMachine.VmEvent(this.showBaloon);
+
+            Program.VM.initMachine();
         }
         private void bHide_Click(object sender, EventArgs e)
         {

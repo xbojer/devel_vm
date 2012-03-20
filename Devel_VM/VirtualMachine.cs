@@ -1,26 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using VirtualBox;
-using System.Threading;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using VirtualBox;
 
 namespace Devel_VM
 {
     class VirtualMachine
     {
-        private const String imgpath = @"\\alpha\instale\Devel.102.ova";
+        private String ImgPath;
+        private String MachineName;
+        private String VbApiVersion = "4_1";
+        
 
-        private VirtualBox.VirtualBox vb;
+        public class MachineReadiness
+        {
+            public bool VersionRemote = true;
+            public bool VersionLocal = true;
+            public bool Installed = false;
+            public bool API = false;
 
-        private IMachine Machine;
-        public Session Session;
-
-        public bool MachineReady = false;
-
+            public bool getReadyOnline()
+            {
+                return VersionLocal && VersionRemote && Installed && API;
+            }
+            public bool getReadyOffline()
+            {
+                return VersionRemote && Installed && API;
+            }
+        }
         public enum State
         {
             Off,
@@ -31,70 +40,73 @@ namespace Devel_VM
             Unknown
         }
 
+        public MachineReadiness MachineReady = new MachineReadiness();
+        public State Status;
+
+        private VirtualBox.VirtualBox vb;
+        private IMachine Machine;
+        public Session Session;
+
         #region Events
         private VBoXEventL1 EvListener;
         private VBoxEventType[] EvTypes = { VBoxEventType.VBoxEventType_Any };
 
-        public VmEvent OnVmEvent;
         public delegate void VmEvent(String msg, String title, int priority);
-        public void OnEvent(String msg, String title, int priority)
+        public VmEvent OnVmEvent;
+        public void OnEvent(String msg, int priority)
         {
             if (OnVmEvent != null)
             {
-                OnVmEvent(msg, title, priority);
+                OnVmEvent(msg, "BetaManager: VM", priority);
             }
         }
         #endregion
 
-        public State Status;
-
-        private string api_ver = "4_1";
-
+        #region Init
         public VirtualMachine()
         {
+            ImgPath = Properties.Settings.Default.path_image;
+            MachineName = Properties.Settings.Default.vm_name;
+        }
+
+        public void initMachine()
+        {
             vb = new VirtualBox.VirtualBox();
-            if (api_ver != vb.APIVersion)
+            if (VbApiVersion != vb.APIVersion)
             {
-                throw new Exception("Program nie jest zgodny z zainstalowana wersja VirtualBoxa.");
+                OnEvent("Niezgodna wersja API", 3);
+                return;
             }
-            while (!MachineReady)
+            MachineReady.API = true;
+            Session = new Session();
+
+
+            while (!MachineReady.Installed)
             {
                 Application.DoEvents();
                 try
                 {
-                    Machine = vb.FindMachine("Devel");
-                    MachineReady = true;
+                    Machine = vb.FindMachine(MachineName);
+                    MachineReady.Installed = true;
                 }
                 catch (Exception)
                 {
                     try
                     {
-                        IMachine tmpmach = vb.FindMachine("Devel_installing");
-                        Rename("Devel_installing", "Devel");
+                        IMachine tmpmach = vb.FindMachine(MachineName + "_installing");
+                        Rename(MachineName + "_installing", MachineName);
                     }
                     catch (Exception)
                     {
                         Install();
                     }
-                    //throw new Exception("Nie znaleziono maszyny Devel.");
                 }
             }
-            Session = new Session();
-            lock_share();
         }
-        public int getVersion()
-        {
-            string result = Program.VM.exec("/bin/cat", "/etc/devel_version").Trim();
-            int v = -1;
-            bool valid = int.TryParse(result, out v);
-            if (!valid)
-            {
-                throw new Exception("Nie udało się ustalić wersji wirtualnej maszyny");
-            }
-            return v;
-        }
+        #endregion
+
         #region Machine locking
-        private void lock_share()
+        private void relock()
         {
             unlock();
             if (Session.State == SessionState.SessionState_Unlocked)
@@ -105,7 +117,9 @@ namespace Devel_VM
                 }
                 catch (Exception)
                 {
-                    //throw;
+                    #if DEBUG
+                    throw;
+                    #endif
                 }
             }
         }
@@ -119,16 +133,17 @@ namespace Devel_VM
         #endregion
         void MachineConfig()
         {
+            if (!MachineReady.getReadyOffline() || Status != State.Off) return;
             try
             {
-                lock_share();
-                Session.Machine.MemorySize = 1024;
+                relock();
+                Session.Machine.MemorySize = 768;
                 Session.Machine.VRAMSize = 24;
                 Session.Machine.SetBootOrder(1, DeviceType.DeviceType_HardDisk);
                 Session.Machine.SetBootOrder(2, DeviceType.DeviceType_Null);
                 Session.Machine.SetBootOrder(3, DeviceType.DeviceType_Null);
                 Session.Machine.SetBootOrder(4, DeviceType.DeviceType_Null);
-                if (vb.Host.ProcessorOnlineCount > 1 && false)
+                if (vb.Host.ProcessorOnlineCount > 1 && false) //performance degradation with more than one core
                 {
                     Session.Machine.CPUCount = 2;
                     if (vb.Host.ProcessorOnlineCount > 2)
@@ -146,17 +161,39 @@ namespace Devel_VM
                     Session.Machine.CPUExecutionCap = 100;
                 }
                 Session.Machine.SaveSettings();
-                unlock();
             }
             catch (Exception)
             {
-                OnEvent("Error configuring machine", "VirtualMachine Config", 3);
+                OnEvent("Wystąpił problem podczas ustawiania maszyny", 2);
             }
+            unlock();
         }
         #region Machine state control
+        public int getVersion(bool offline = true)
+        {
+            int v = -1;
+            string ver = "0";
+            if (MachineReady.API && MachineReady.Installed && offline)
+            {
+                relock();
+                ver = Session.Machine.GetExtraData("BM/Version");
+            }
+            else
+            {
+                if (!MachineReady.getReadyOffline() || Status != State.Operational) return 0;
+                ver = Program.VM.exec("/bin/cat", "/etc/devel_version").Trim();
+            }
+            MachineReady.VersionLocal = int.TryParse(ver, out v);
+            return v;
+        }
         public void Start()
         {
-            lock_share();
+            if (!MachineReady.getReadyOffline())
+            {
+                OnEvent("Maszyna nie jest gotowa (Start)", 3);
+                return;
+            }
+            relock();
             if (Machine.State != MachineState.MachineState_Running)
             {
                 if (Machine.State != MachineState.MachineState_PoweredOff && Machine.State != MachineState.MachineState_Aborted)
@@ -165,43 +202,58 @@ namespace Devel_VM
                 }
                 unlock();
                 MachineConfig();
-                OnEvent("Starting", "Beta state", 1);
+                OnEvent("Uruchamianie maszyny", 1);
                 Machine.LaunchVMProcess(Session, "headless", "VBETAM=1").WaitForCompletion(-1);
             }
             else
             {
-                OnEvent("Already running", "Beta state", 1);
+                OnEvent("Maszyna uruchomiona", 1);
             }
             AssureEvents();
         }
         public void PowerOff(bool kill)
         {
-            lock_share();
+            if (!MachineReady.getReadyOffline())
+            {
+                OnEvent("Maszyna nie jest gotowa (PowerOff)", 3);
+                return;
+            }
+            relock();
             if (Machine.State == MachineState.MachineState_PoweredOff || Machine.State == MachineState.MachineState_Aborted) return;
             IConsole con = Session.Console;
             if (kill)
             {
-                OnEvent("Power Down", "Beta state", 1);
+                OnEvent("Odłączanie maszyny", 1);
                 con.PowerDown();
             }
             else
             {
-                OnEvent("Shutting down", "Beta state", 1);
+                OnEvent("Wyłączanie maszyny", 1);
                 con.PowerButton();
             }
         }
         internal void Restart()
         {
-            lock_share();
+            if (!MachineReady.getReadyOffline())
+            {
+                OnEvent("Maszyna nie jest gotowa (Restart)", 3);
+                return;
+            }
+            relock();
             IConsole con = Session.Console;
-            OnEvent("Reset", "Beta state", 1);
+            OnEvent("Restartowanie", 1);
             con.Reset();
         }
         #endregion
         #region Events handling
         private void AssureEvents()
         {
-            lock_share();
+            if (!MachineReady.getReadyOffline())
+            {
+                OnEvent("Maszyna nie jest gotowa (PowerOff)", 3);
+                return;
+            }
+            relock();
             if (EvListener != null) return;
             EvListener = new VBoXEventL1();
             Session.Console.EventSource.RegisterListener(EvListener, EvTypes, 1);
@@ -229,18 +281,20 @@ namespace Devel_VM
                     IStateChangedEvent ev = (IStateChangedEvent)aEvent;
                     if (ev.State == MachineState.MachineState_PoweredOff)
                     {
-                        Program.VM.OnEvent("Powered down", "Beta state", 1);
+                        Program.VM.OnEvent("Maszyna wyłączona", 1);
                     }
                     else
                     {
-                        Program.VM.OnEvent(aEvent.Type.ToString(), "VBox Event", 0);
+                        #if DEBUG
+                        Program.VM.OnEvent(aEvent.Type.ToString(), 0);
+                        #endif
                     }
                 }
                 else if (aEvent.Type == VBoxEventType.VBoxEventType_OnAdditionsStateChanged)
                 {
                     if (Program.VM.Session.Console.Guest.AdditionsRunLevel == AdditionsRunLevelType.AdditionsRunLevelType_Userland)
                     {
-                        Program.VM.OnEvent("Operational", "Beta state", 0);
+                        Program.VM.OnEvent("Maszyna gotowa do pracy", 1);
                     }
                 }
             }
@@ -248,12 +302,17 @@ namespace Devel_VM
         #endregion
         public void Tick()
         {
-            if (!MachineReady)
+            if (!MachineReady.getReadyOffline())
             {
                 Status = State.Busy;
                 return;
             }
-            lock_share();
+            if (!MachineReady.getReadyOnline())
+            {
+                Status = State.Busy;
+                return;
+            }
+            relock();
             #region Translate MachineState
             switch (Machine.State)
             {
@@ -324,7 +383,12 @@ namespace Devel_VM
         #region Remote process execution
         public void exec_api(String cmd, String[] args)
         {
-            lock_share();
+            if (!MachineReady.getReadyOffline())
+            {
+                OnEvent("Maszyna nie jest gotowa (Start)", 3);
+                return;
+            }
+            relock();
             if(Session.Console.Guest.AdditionsRunLevel!=AdditionsRunLevelType.AdditionsRunLevelType_Userland) return;
             uint pid = 0;
             String[] env = {"BETAMGR=1"};
@@ -340,7 +404,7 @@ namespace Devel_VM
         public string exec(String cmd, String args)
         {
             string filename = @"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe";
-            args = " guestcontrol \"Devel\" execute --image \"" + cmd + "\" --username=\"fotka\" --password=\"@fotka\" --wait-exit --wait-stdout " + args;
+            args = " guestcontrol \"" + MachineName + "\" execute --image \"" + cmd + "\" --username=\"fotka\" --password=\"@fotka\" --wait-exit --wait-stdout " + args;
 
             ProcessStartInfo startInfo = new ProcessStartInfo();
             Process p = new Process();
@@ -362,8 +426,9 @@ namespace Devel_VM
         #region 
         public void Install()
         {
+            if (!MachineReady.API || !MachineReady.VersionRemote) return;
             IAppliance ia = vb.CreateAppliance();
-            ia.Read(imgpath).WaitForCompletion(-1);
+            ia.Read(ImgPath).WaitForCompletion(-1);
             ia.Interpret();
             IVirtualSystemDescription[] descs = (IVirtualSystemDescription[])ia.VirtualSystemDescriptions;
             if (descs.Length != 1)
@@ -383,9 +448,18 @@ namespace Devel_VM
             ExtraConfigValues = (String[])aExtraConfigValues;
             List<int> enabled = new List<int>();
 
+            int imgversion = 0;
+
             for(int i=0; i<Types.Length;i++)
 	        {
 		        enabled.Add(1);
+                if (Types[i] == VirtualSystemDescriptionType.VirtualSystemDescriptionType_Version)
+                {
+                    if (!int.TryParse(VBoxValues[i], out imgversion))
+                    {
+                        imgversion = 0;
+                    }
+                }
                 if (Types[i]== VirtualSystemDescriptionType.VirtualSystemDescriptionType_Name)
                 {
                     VBoxValues[i] += "_installing";
@@ -403,7 +477,8 @@ namespace Devel_VM
             aExtraConfigValues = ExtraConfigValues;
 
             descs[0].SetFinalValues((Array)(enabled.ToArray()), aVBoxValues, aExtraConfigValues);
-            ImportOptions[] opts = {};
+            ImportOptions[] opts = {ImportOptions.ImportOptions_KeepAllMACs};
+            
             ia.ImportMachines(opts).WaitForCompletion(-1);
 
         }
@@ -411,17 +486,19 @@ namespace Devel_VM
         {
             if (Session != null)
                 Session.UnlockMachine();
+            IMachine mach;
             try
             {
-                IMachine mach = vb.FindMachine(name);
+                mach = vb.FindMachine(name);
             }
             catch (Exception)
             {
                 return false;
             }
-            String t = Machine.SettingsFilePath;
-            IMedium[] med = (IMedium[])Machine.Unregister(CleanupMode.CleanupMode_Full);
-            Machine.Delete(med).WaitForCompletion(-1);
+            String t = mach.SettingsFilePath;
+            IMedium[] med = (IMedium[])mach.Unregister(CleanupMode.CleanupMode_Full);
+            mach.Delete(med).WaitForCompletion(-1);
+            /* Due to some strange behaviour with VB API App needs to separately delete medium and direcotry */
             foreach(IMedium m in med) {
                 MediumState s = m.LockWrite();
                 if (s == MediumState.MediumState_LockedWrite)
@@ -433,17 +510,16 @@ namespace Devel_VM
             }
             DirectoryInfo di = Directory.GetParent(t);
             di.Delete(true);
-            //File.Delete(t);
             return true;
         }
         private void Rename(string _old, string _new)
         {
             if(Session != null)
                 Session.UnlockMachine();
+            Session tmps = new VirtualBox.Session();;
             try
             {
                 IMachine mach = vb.FindMachine(_old);
-                Session tmps = new VirtualBox.Session();
                 mach.LockMachine(tmps, LockType.LockType_Write);
 
                 tmps.Machine.Name = _new;
@@ -454,6 +530,11 @@ namespace Devel_VM
             catch (Exception)
             {
                 return;
+            }
+            finally
+            {
+                if(tmps.State==SessionState.SessionState_Locked)
+                    tmps.UnlockMachine();
             }
         }
         #endregion
