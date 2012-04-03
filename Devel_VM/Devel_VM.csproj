@@ -103,21 +103,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="Forms\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
+    <Compile Include="Forms\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="HTTPGet.cs" />
-    <Compile Include="ICustomGuest.cs" />
-    <Compile Include="Network_listener.cs" />
+    <Compile Include="Classes\HTTPGet.cs" />
+    <Compile Include="Classes\InputBox.cs" />
+    <Compile Include="Classes\Network_listener.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="updater.cs" />
-    <Compile Include="VirtualMachine.cs" />
-    <EmbeddedResource Include="Form1.resx">
+    <Compile Include="Classes\Robot.cs" />
+    <Compile Include="Classes\Settings.cs" />
+    <Compile Include="Classes\updater.cs" />
+    <Compile Include="Classes\VirtualMachine.cs" />
+    <EmbeddedResource Include="Forms\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -167,7 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="filelist.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +182,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

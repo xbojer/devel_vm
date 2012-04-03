@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Threading;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace Devel_VM
 {
@@ -15,21 +16,21 @@ namespace Devel_VM
         static public VirtualMachine VM;
         static public Network_listener NL;
         static public string identity = "NOT YET KNOWN";
+        static public string username = "NOT YET KNOWN";
 
         static Mutex mutex = new Mutex(true, "mutex_beta_manager_devel_vm_runonce");
         [STAThread]
         static void Main()
         {
-            identity = getIdentity();
             if (mutex.WaitOne(TimeSpan.Zero, true))
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
+                identity = getIdentity();
                 VM = new VirtualMachine();
 
                 (new Thread(new ThreadStart(updater.go))).Start();
 
-                
                 Application.Run(new fMain());
                 mutex.ReleaseMutex();
             }
@@ -48,7 +49,33 @@ namespace Devel_VM
 
         static string getIdentity()
         {
-            string user = Properties.Settings.Default.User;
+            username = Properties.Settings.Default.User;
+
+            if (String.IsNullOrEmpty(username))
+            {
+                InputBoxResult r = InputBox.Show("Wklej link z hashem do robota", "Beta Manager Auth");
+                if (r.ReturnCode == DialogResult.OK)
+                {
+                    if (!String.IsNullOrEmpty(r.Text))
+                    {
+                        username = Robot.getUsernameByLink(r.Text.Trim());
+                    }
+                }
+            }
+
+            if (String.IsNullOrEmpty(username))
+            {
+                MessageBox.Show("Błąd autoryzacji!");
+                Application.Exit();
+                Thread.CurrentThread.Abort();//XD
+                throw new Exception("Błąd autoryzacji!");
+            }
+
+            if (username != Properties.Settings.Default.User && username != Robot.user_unknown)
+            {
+                Properties.Settings.Default.Save();
+            }
+
             string host = Dns.GetHostName();
             List<string> ips = new List<string>();
 
@@ -61,7 +88,7 @@ namespace Devel_VM
                         ips.Add(ip.ToString());
                 }
             }
-            return String.Format("{0} ({1} / {2})", user, host, string.Join(",", ips.ToArray()));
+            return String.Format("{0} ({1} / {2})", username, host, string.Join(",", ips.ToArray()));
         }
     }
 }
