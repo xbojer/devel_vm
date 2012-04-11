@@ -13,7 +13,6 @@ namespace Devel_VM
         private String MachineName;
         private String VbApiVersion = "4_1";
         
-
         public class MachineReadiness
         {
             public bool VersionRemote = true;
@@ -23,11 +22,11 @@ namespace Devel_VM
 
             public bool getReadyOnline()
             {
-                return VersionLocal && VersionRemote && Installed && API;
+                return API && Installed && VersionLocal && VersionRemote;
             }
             public bool getReadyOffline()
             {
-                return VersionRemote && Installed && API;
+                return API && Installed && VersionRemote;
             }
         }
         public enum State
@@ -65,8 +64,9 @@ namespace Devel_VM
         #region Init
         public VirtualMachine()
         {
-            ImgPath = Properties.Settings.Default.path_image;
             MachineName = Properties.Settings.Default.vm_name;
+            ImgPath = Properties.Settings.Default.path_image.Replace("{vm_name}", MachineName);
+            
         }
 
         public void initMachine()
@@ -79,7 +79,6 @@ namespace Devel_VM
             }
             MachineReady.API = true;
             Session = new Session();
-
 
             while (!MachineReady.Installed)
             {
@@ -102,6 +101,14 @@ namespace Devel_VM
                     }
                 }
             }
+            Program.NL.OnReset += delegate(string auth)
+            {
+                Packet p = new Packet();
+                p.dataIdentifier = Packet.DataIdentifier.Pong;
+                p.message = "Resetting";
+                Network_Broadcast.send(p);
+                this.Restart();
+            };
         }
         #endregion
 
@@ -117,17 +124,28 @@ namespace Devel_VM
                 }
                 catch (Exception)
                 {
+                    OnEvent("Nie udało się założyć locka", 0);
                     #if DEBUG
                     throw;
                     #endif
                 }
             }
         }
-        internal void unlock()
+        private void unlock()
         {
+            if (Session == null) return;
             if (Session.State == SessionState.SessionState_Locked)
             {
+#if DEBUG
+                OnEvent("Zakładanie locka ok", 0);
+#endif
                 Session.UnlockMachine();
+            }
+            else
+            {
+#if DEBUG
+                OnEvent("Zakładanie locka nieudane", 0);
+#endif
             }
         }
         #endregion
@@ -161,6 +179,9 @@ namespace Devel_VM
                     Session.Machine.CPUExecutionCap = 100;
                 }
                 Session.Machine.SaveSettings();
+#if DEBUG
+                OnEvent("Config ok", 0);
+#endif
             }
             catch (Exception)
             {
@@ -294,6 +315,8 @@ namespace Devel_VM
                 {
                     if (Program.VM.Session.Console.Guest.AdditionsRunLevel == AdditionsRunLevelType.AdditionsRunLevelType_Userland)
                     {
+                        Program.VM.Session.Console.Machine.SetGuestPropertyValue("VBOX_USER_NAME", Program.username);
+                        Program.VM.Session.Console.Machine.SetGuestPropertyValue("VBOX_USER_IDENTITY", Program.identity);
                         Program.VM.OnEvent("Maszyna gotowa do pracy", 1);
                     }
                 }

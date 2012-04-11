@@ -34,18 +34,11 @@
             this.zasobnik = new System.Windows.Forms.NotifyIcon(this.components);
             this.menuZasobnik = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.showToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.vMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.startToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
-            this.softstopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.stoppoweroffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
-            this.restartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
-            this.installToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.runInstallerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hTTPDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.restartToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,14 +51,7 @@
             this.bETAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.bStart = new System.Windows.Forms.Button();
-            this.bSoftStop = new System.Windows.Forms.Button();
-            this.bStopPower = new System.Windows.Forms.Button();
             this.bHide = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.lStateLabel = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.lState = new System.Windows.Forms.Label();
             this.tState = new System.Windows.Forms.Timer(this.components);
             this.tUpdateState = new System.Windows.Forms.Timer(this.components);
             this.tAutoStart = new System.Windows.Forms.Timer(this.components);
@@ -75,9 +61,9 @@
             // 
             // bExit
             // 
-            this.bExit.Location = new System.Drawing.Point(270, 36);
+            this.bExit.Location = new System.Drawing.Point(160, 3);
             this.bExit.Name = "bExit";
-            this.bExit.Size = new System.Drawing.Size(79, 26);
+            this.bExit.Size = new System.Drawing.Size(79, 23);
             this.bExit.TabIndex = 0;
             this.bExit.Text = "Exit";
             this.bExit.UseVisualStyleBackColor = true;
@@ -96,15 +82,18 @@
             // 
             this.menuZasobnik.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.toolStripMenuItem2,
+            this.toolStripMenuItem3,
+            this.toolStripMenuItem4,
             this.toolStripMenuItem1,
-            this.vMToolStripMenuItem,
             this.hTTPDToolStripMenuItem,
             this.zasobyToolStripMenuItem,
             this.bETAToolStripMenuItem,
             this.toolStripMenuItem5,
             this.closeToolStripMenuItem});
             this.menuZasobnik.Name = "menuZasobnik";
-            this.menuZasobnik.Size = new System.Drawing.Size(153, 170);
+            this.menuZasobnik.Size = new System.Drawing.Size(153, 220);
             // 
             // showToolStripMenuItem
             // 
@@ -113,90 +102,41 @@
             this.showToolStripMenuItem.Text = "Show";
             this.showToolStripMenuItem.Click += new System.EventHandler(this.showToolStripMenuItem_Click);
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Enabled = false;
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem2.Text = "Wait";
+            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Enabled = false;
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem3.Text = "Wait";
+            this.toolStripMenuItem3.Visible = false;
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Enabled = false;
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem4.Text = "Wait";
+            this.toolStripMenuItem4.Visible = false;
+            this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
+            // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(149, 6);
-            // 
-            // vMToolStripMenuItem
-            // 
-            this.vMToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.startToolStripMenuItem,
-            this.toolStripMenuItem2,
-            this.softstopToolStripMenuItem,
-            this.stoppoweroffToolStripMenuItem,
-            this.toolStripMenuItem3,
-            this.restartToolStripMenuItem,
-            this.toolStripMenuItem4,
-            this.installToolStripMenuItem});
-            this.vMToolStripMenuItem.Name = "vMToolStripMenuItem";
-            this.vMToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.vMToolStripMenuItem.Text = "VM";
-            // 
-            // startToolStripMenuItem
-            // 
-            this.startToolStripMenuItem.Name = "startToolStripMenuItem";
-            this.startToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-            this.startToolStripMenuItem.Text = "Start";
-            this.startToolStripMenuItem.Click += new System.EventHandler(this.startToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(159, 6);
-            // 
-            // softstopToolStripMenuItem
-            // 
-            this.softstopToolStripMenuItem.Name = "softstopToolStripMenuItem";
-            this.softstopToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-            this.softstopToolStripMenuItem.Text = "Stop (soft)";
-            this.softstopToolStripMenuItem.Click += new System.EventHandler(this.softstopToolStripMenuItem_Click);
-            // 
-            // stoppoweroffToolStripMenuItem
-            // 
-            this.stoppoweroffToolStripMenuItem.Name = "stoppoweroffToolStripMenuItem";
-            this.stoppoweroffToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-            this.stoppoweroffToolStripMenuItem.Text = "Stop (power-off)";
-            this.stoppoweroffToolStripMenuItem.Click += new System.EventHandler(this.stoppoweroffToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(159, 6);
-            // 
-            // restartToolStripMenuItem
-            // 
-            this.restartToolStripMenuItem.Name = "restartToolStripMenuItem";
-            this.restartToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-            this.restartToolStripMenuItem.Text = "Restart";
-            this.restartToolStripMenuItem.Click += new System.EventHandler(this.restartToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem4
-            // 
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(159, 6);
-            // 
-            // installToolStripMenuItem
-            // 
-            this.installToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.runInstallerToolStripMenuItem,
-            this.updateToolStripMenuItem});
-            this.installToolStripMenuItem.Enabled = false;
-            this.installToolStripMenuItem.Name = "installToolStripMenuItem";
-            this.installToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-            this.installToolStripMenuItem.Text = "Install";
-            // 
-            // runInstallerToolStripMenuItem
-            // 
-            this.runInstallerToolStripMenuItem.Name = "runInstallerToolStripMenuItem";
-            this.runInstallerToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
-            this.runInstallerToolStripMenuItem.Text = "Run installer";
-            // 
-            // updateToolStripMenuItem
-            // 
-            this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
-            this.updateToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
-            this.updateToolStripMenuItem.Text = "Update";
             // 
             // hTTPDToolStripMenuItem
             // 
@@ -285,83 +225,15 @@
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
-            // bStart
-            // 
-            this.bStart.Location = new System.Drawing.Point(12, 38);
-            this.bStart.Name = "bStart";
-            this.bStart.Size = new System.Drawing.Size(75, 23);
-            this.bStart.TabIndex = 4;
-            this.bStart.Text = "Start VM";
-            this.bStart.UseVisualStyleBackColor = true;
-            this.bStart.Click += new System.EventHandler(this.startToolStripMenuItem_Click);
-            // 
-            // bSoftStop
-            // 
-            this.bSoftStop.Location = new System.Drawing.Point(93, 38);
-            this.bSoftStop.Name = "bSoftStop";
-            this.bSoftStop.Size = new System.Drawing.Size(75, 23);
-            this.bSoftStop.TabIndex = 5;
-            this.bSoftStop.Text = "Stop (soft)";
-            this.bSoftStop.UseVisualStyleBackColor = true;
-            this.bSoftStop.Click += new System.EventHandler(this.softstopToolStripMenuItem_Click);
-            // 
-            // bStopPower
-            // 
-            this.bStopPower.Location = new System.Drawing.Point(174, 38);
-            this.bStopPower.Name = "bStopPower";
-            this.bStopPower.Size = new System.Drawing.Size(90, 23);
-            this.bStopPower.TabIndex = 6;
-            this.bStopPower.Text = "Stop (poweroff)";
-            this.bStopPower.UseVisualStyleBackColor = true;
-            this.bStopPower.Click += new System.EventHandler(this.stoppoweroffToolStripMenuItem_Click);
-            // 
             // bHide
             // 
-            this.bHide.Location = new System.Drawing.Point(247, 9);
+            this.bHide.Location = new System.Drawing.Point(116, 3);
             this.bHide.Name = "bHide";
-            this.bHide.Size = new System.Drawing.Size(102, 23);
+            this.bHide.Size = new System.Drawing.Size(38, 23);
             this.bHide.TabIndex = 7;
             this.bHide.Text = "Hide";
             this.bHide.UseVisualStyleBackColor = true;
             this.bHide.Click += new System.EventHandler(this.bHide_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(210, 9);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(27, 23);
-            this.button1.TabIndex = 8;
-            this.button1.Text = "rm";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // lStateLabel
-            // 
-            this.lStateLabel.AutoSize = true;
-            this.lStateLabel.Location = new System.Drawing.Point(12, 9);
-            this.lStateLabel.Name = "lStateLabel";
-            this.lStateLabel.Size = new System.Drawing.Size(40, 13);
-            this.lStateLabel.TabIndex = 9;
-            this.lStateLabel.Text = "Status:";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 22);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(0, 13);
-            this.label1.TabIndex = 10;
-            // 
-            // lState
-            // 
-            this.lState.AutoSize = true;
-            this.lState.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.lState.ForeColor = System.Drawing.Color.Black;
-            this.lState.Location = new System.Drawing.Point(18, 22);
-            this.lState.Name = "lState";
-            this.lState.Size = new System.Drawing.Size(60, 13);
-            this.lState.TabIndex = 11;
-            this.lState.Text = "Checking";
             // 
             // tState
             // 
@@ -379,31 +251,24 @@
             // 
             this.tAutoStart.Enabled = true;
             this.tAutoStart.Interval = 60000;
-            this.tAutoStart.Tick += new System.EventHandler(this.startToolStripMenuItem_Click);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(159, 9);
+            this.button2.Location = new System.Drawing.Point(1, 3);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(45, 23);
+            this.button2.Size = new System.Drawing.Size(109, 23);
             this.button2.TabIndex = 12;
             this.button2.Text = "debug";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // fMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(352, 67);
+            this.ClientSize = new System.Drawing.Size(246, 28);
             this.Controls.Add(this.button2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.lState);
-            this.Controls.Add(this.lStateLabel);
-            this.Controls.Add(this.bStopPower);
             this.Controls.Add(this.bHide);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.bSoftStop);
-            this.Controls.Add(this.bStart);
             this.Controls.Add(this.bExit);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -413,7 +278,6 @@
             this.Load += new System.EventHandler(this.fMain_Load);
             this.menuZasobnik.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -424,31 +288,13 @@
         private System.Windows.Forms.ContextMenuStrip menuZasobnik;
         private System.Windows.Forms.ToolStripMenuItem showToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem vMToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem startToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem softstopToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem stoppoweroffToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem restartToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
-        private System.Windows.Forms.ToolStripMenuItem installToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem runInstallerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem updateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem zasobyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bETAToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aLFAToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bETA100ToolStripMenuItem;
-        private System.Windows.Forms.Button bStart;
-        private System.Windows.Forms.Button bSoftStop;
-        private System.Windows.Forms.Button bStopPower;
         private System.Windows.Forms.Button bHide;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label lStateLabel;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label lState;
         internal System.Windows.Forms.Timer tState;
         private System.Windows.Forms.Timer tUpdateState;
         private System.Windows.Forms.Timer tAutoStart;
@@ -459,6 +305,10 @@
         private System.Windows.Forms.ToolStripMenuItem startToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem stopToolStripMenuItem;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
     }
 }
 

@@ -15,6 +15,7 @@ namespace Devel_VM
 
         static public VirtualMachine VM;
         static public Network_listener NL;
+        static public Forms.Debug DBG;
         static public string identity = "NOT YET KNOWN";
         static public string username = "NOT YET KNOWN";
 
@@ -28,9 +29,10 @@ namespace Devel_VM
                 Application.SetCompatibleTextRenderingDefault(false);
                 identity = getIdentity();
                 VM = new VirtualMachine();
-
+#if !DEBUG
                 (new Thread(new ThreadStart(updater.go))).Start();
-
+#endif
+                DBG = new Forms.Debug();
                 Application.Run(new fMain());
                 mutex.ReleaseMutex();
             }
@@ -50,10 +52,11 @@ namespace Devel_VM
         static string getIdentity()
         {
             username = Properties.Settings.Default.User;
+            username = "";
 
             if (String.IsNullOrEmpty(username))
             {
-                InputBoxResult r = InputBox.Show("Wklej link z hashem do robota", "Beta Manager Auth");
+                InputBoxResult r = InputBox.Show("Wklej link z hashem do robota", "BetaManager: Auth");
                 if (r.ReturnCode == DialogResult.OK)
                 {
                     if (!String.IsNullOrEmpty(r.Text))
@@ -63,16 +66,23 @@ namespace Devel_VM
                 }
             }
 
-            if (String.IsNullOrEmpty(username))
+            if (String.IsNullOrEmpty(username) || Robot.user_unknown == username)
             {
                 MessageBox.Show("Błąd autoryzacji!");
-                Application.Exit();
-                Thread.CurrentThread.Abort();//XD
+                if (Application.MessageLoop == true)
+                {
+                    Application.Exit();
+                }
+                else
+                {
+                    System.Environment.Exit(1);
+                }
                 throw new Exception("Błąd autoryzacji!");
             }
 
             if (username != Properties.Settings.Default.User && username != Robot.user_unknown)
             {
+                Properties.Settings.Default.User = username;
                 Properties.Settings.Default.Save();
             }
 

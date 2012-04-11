@@ -6,9 +6,6 @@ namespace Devel_VM
 {
     public partial class fMain : Form
     {
-
-        
-
         public fMain()
         {
             InitializeComponent();
@@ -78,11 +75,6 @@ namespace Devel_VM
             Show();
             WindowState = FormWindowState.Normal;
         }
-        private void startToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            tAutoStart.Enabled = false;
-            Program.VM.Start();
-        }
         private void restartToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Program.VM.Restart();
@@ -98,7 +90,9 @@ namespace Devel_VM
 
         private void zasobnik_DoubleClick(object sender, EventArgs e)
         {
+#if DEBUG
             Show();
+#endif
         }
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -154,50 +148,23 @@ namespace Devel_VM
         }
         private void tUpdateState_Tick(object sender, EventArgs e)
         {
-            lState.Text = Program.VM.Status.ToString();
+            button2.Text = Program.VM.Status.ToString();
             switch (Program.VM.Status)
             {
                 case VirtualMachine.State.On:
                     tAutoStart.Enabled = false;
                     hTTPDToolStripMenuItem.Enabled = false;
-                    bStart.Enabled = startToolStripMenuItem.Enabled = false;
-                    bSoftStop.Enabled = softstopToolStripMenuItem.Enabled = false;
-                    bStopPower.Enabled = stoppoweroffToolStripMenuItem.Enabled = true;
-                    restartToolStripMenuItem.Enabled = true;
                     break;
                 case VirtualMachine.State.Operational:
                     tAutoStart.Enabled = false;
                     hTTPDToolStripMenuItem.Enabled = true;
-                    bStart.Enabled = startToolStripMenuItem.Enabled = false;
-                    bSoftStop.Enabled = softstopToolStripMenuItem.Enabled = true;
-                    bStopPower.Enabled = stoppoweroffToolStripMenuItem.Enabled = true;
-                    restartToolStripMenuItem.Enabled = true;
                     break;
                 default://off?
                     hTTPDToolStripMenuItem.Enabled = false;
-                    bStart.Enabled = startToolStripMenuItem.Enabled = true;
-                    bSoftStop.Enabled = softstopToolStripMenuItem.Enabled = false;
-                    bStopPower.Enabled = stoppoweroffToolStripMenuItem.Enabled = false;
-                    restartToolStripMenuItem.Enabled = false;
                     break;
             }
         }
         #endregion
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            //int result = Program.VM.getVersion();
-            //string result = Program.identity;
-            //MessageBox.Show(result.ToString());
-            Packet p = new Packet();
-            p.dataIdentifier = Packet.DataIdentifier.Pong;
-            p.message = "Debug";
-            Network_Broadcast.send(p);
-
-            //Properties.Settings.Default.Save();
-
-            Program.VM.Uninstall("Devel");
-        }
 
         private void restartToolStripMenuItem1_Click(object sender, EventArgs e)
         {
@@ -249,6 +216,26 @@ namespace Devel_VM
             {
                 showBaloon("Service stopped", "HTTPD", 1);
             }
+        }
+
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            
+            tAutoStart.Enabled = false;
+            Program.VM.Start();
+        }
+        private void toolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void toolStripMenuItem4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Program.DBG.Show();
         }
     }
     internal class NativeMethods

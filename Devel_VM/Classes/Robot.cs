@@ -12,7 +12,15 @@ namespace Devel_VM
         public static string getUsernameByLink(string url)
         {
             HTTPGet http = new HTTPGet();
-            http.Request(url);
+            try
+            {
+                http.Request(url);
+            }
+            catch (Exception)
+            {
+                return user_unknown;
+            }
+
             if (http.StatusCode != 200) return user_unknown;
             Match m = new Regex(uname_reg).Match(http.ResponseBody);
             if (m.Success)
