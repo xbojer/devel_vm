@@ -17,5 +17,8 @@
     <Setting Name="vm_name" Type="System.String" Scope="User">
       <Value Profile="(Default)">Devel</Value>
     </Setting>
+    <Setting Name="vm_multicore" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

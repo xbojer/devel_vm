@@ -82,5 +82,17 @@ namespace Devel_VM.Properties {
                 this["vm_name"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool vm_multicore {
+            get {
+                return ((bool)(this["vm_multicore"]));
+            }
+            set {
+                this["vm_multicore"] = value;
+            }
+        }
     }
 }

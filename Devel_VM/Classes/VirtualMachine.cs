@@ -137,14 +137,14 @@ namespace Devel_VM
             if (Session.State == SessionState.SessionState_Locked)
             {
 #if DEBUG
-                OnEvent("Zakładanie locka ok", 0);
+                OnEvent("Zdejmowanie locka ok", 0);
 #endif
                 Session.UnlockMachine();
             }
             else
             {
 #if DEBUG
-                OnEvent("Zakładanie locka nieudane", 0);
+                OnEvent("Zdejmowanie locka nieudane", 0);
 #endif
             }
         }
@@ -161,7 +161,7 @@ namespace Devel_VM
                 Session.Machine.SetBootOrder(2, DeviceType.DeviceType_Null);
                 Session.Machine.SetBootOrder(3, DeviceType.DeviceType_Null);
                 Session.Machine.SetBootOrder(4, DeviceType.DeviceType_Null);
-                if (vb.Host.ProcessorOnlineCount > 1 && false) //performance degradation with more than one core
+                if (vb.Host.ProcessorOnlineCount > 1 && Properties.Settings.Default.vm_multicore) //performance degradation with more than one core
                 {
                     Session.Machine.CPUCount = 2;
                     if (vb.Host.ProcessorOnlineCount > 2)
@@ -228,7 +228,7 @@ namespace Devel_VM
             }
             else
             {
-                OnEvent("Maszyna uruchomiona", 1);
+                OnEvent("Maszyna już uruchomiona", 1);
             }
             AssureEvents();
         }
@@ -271,7 +271,7 @@ namespace Devel_VM
         {
             if (!MachineReady.getReadyOffline())
             {
-                OnEvent("Maszyna nie jest gotowa (PowerOff)", 3);
+                OnEvent("Maszyna nie jest gotowa (Events)", 3);
                 return;
             }
             relock();
