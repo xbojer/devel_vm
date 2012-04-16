@@ -37,7 +37,6 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.hTTPDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.restartToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -85,7 +84,6 @@
             this.toolStripSeparator1,
             this.toolStripMenuItem2,
             this.toolStripMenuItem3,
-            this.toolStripMenuItem4,
             this.toolStripMenuItem1,
             this.hTTPDToolStripMenuItem,
             this.zasobyToolStripMenuItem,
@@ -93,7 +91,7 @@
             this.toolStripMenuItem5,
             this.closeToolStripMenuItem});
             this.menuZasobnik.Name = "menuZasobnik";
-            this.menuZasobnik.Size = new System.Drawing.Size(153, 220);
+            this.menuZasobnik.Size = new System.Drawing.Size(153, 198);
             // 
             // showToolStripMenuItem
             // 
@@ -123,15 +121,6 @@
             this.toolStripMenuItem3.Text = "Wait";
             this.toolStripMenuItem3.Visible = false;
             this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
-            // 
-            // toolStripMenuItem4
-            // 
-            this.toolStripMenuItem4.Enabled = false;
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(152, 22);
-            this.toolStripMenuItem4.Text = "Wait";
-            this.toolStripMenuItem4.Visible = false;
-            this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
             // 
             // toolStripMenuItem1
             // 
@@ -308,7 +297,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
     }
 }
 

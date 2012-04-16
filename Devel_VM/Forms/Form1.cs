@@ -108,7 +108,8 @@ namespace Devel_VM
             Hide();
             Visible = false;
             WindowState = FormWindowState.Minimized;
-            button1.Enabled = false;
+            showToolStripMenuItem.Visible = false;
+            toolStripSeparator1.Visible = false;
             #endif
 
             Program.NL = new Network_listener();

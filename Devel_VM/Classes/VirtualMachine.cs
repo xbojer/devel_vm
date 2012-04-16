@@ -450,6 +450,7 @@ namespace Devel_VM
         public void Install()
         {
             if (!MachineReady.API || !MachineReady.VersionRemote) return;
+            OnEvent("Pobieranie i instalacja obrazu", 1);
             IAppliance ia = vb.CreateAppliance();
             ia.Read(ImgPath).WaitForCompletion(-1);
             ia.Interpret();
@@ -501,7 +502,7 @@ namespace Devel_VM
 
             descs[0].SetFinalValues((Array)(enabled.ToArray()), aVBoxValues, aExtraConfigValues);
             ImportOptions[] opts = {ImportOptions.ImportOptions_KeepAllMACs};
-            
+            OnEvent("Import obrazu", 1);
             ia.ImportMachines(opts).WaitForCompletion(-1);
 
         }
@@ -509,6 +510,7 @@ namespace Devel_VM
         {
             if (Session != null)
                 Session.UnlockMachine();
+            OnEvent("Usuwanie obrazu", 1);
             IMachine mach;
             try
             {
@@ -531,15 +533,17 @@ namespace Devel_VM
                 m.UnlockWrite();
                 m.DeleteStorage().WaitForCompletion(-1);
             }
+            OnEvent("Usuwanie plików", 1);
             DirectoryInfo di = Directory.GetParent(t);
             di.Delete(true);
             return true;
         }
         private void Rename(string _old, string _new)
         {
+            OnEvent("Finalizowanie instalacji", 1);
             if(Session != null)
                 Session.UnlockMachine();
-            Session tmps = new VirtualBox.Session();;
+            Session tmps = new VirtualBox.Session();
             try
             {
                 IMachine mach = vb.FindMachine(_old);
@@ -559,6 +563,7 @@ namespace Devel_VM
                 if(tmps.State==SessionState.SessionState_Locked)
                     tmps.UnlockMachine();
             }
+            OnEvent("Zmieniono nazwe obrazu", 1);
         }
         #endregion
     }
