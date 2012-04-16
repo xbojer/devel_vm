@@ -33,8 +33,10 @@ namespace Devel_VM
                 (new Thread(new ThreadStart(updater.go))).Start();
 #endif
                 DBG = new Forms.Debug();
-                new fMain();
-                Application.Run();
+                fMain fM = new fMain();
+                ApplicationContext ac = new ApplicationContext();
+                ac.MainForm = fM;
+                Application.Run(ac);
                 mutex.ReleaseMutex();
             }
             else
