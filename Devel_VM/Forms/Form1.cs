@@ -253,7 +253,17 @@ namespace Devel_VM
         }
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
         {
-
+            switch (Program.VM.Status)
+            {
+                case VirtualMachine.State.On:
+                    Program.VM.PowerOff(true);
+                    break;
+                case VirtualMachine.State.Operational:
+                    Program.VM.PowerOff(false);
+                    break;
+                default://off?
+                    break;
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
