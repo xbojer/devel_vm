@@ -150,6 +150,7 @@ namespace Devel_VM
         private void tUpdateState_Tick(object sender, EventArgs e)
         {
             button2.Text = Program.VM.Status.ToString();
+            zasobnik.Text = "Beta Manager - " + Program.VM.Status.ToString();
             switch (Program.VM.Status)
             {
                 case VirtualMachine.State.On:
@@ -157,17 +158,24 @@ namespace Devel_VM
                     hTTPDToolStripMenuItem.Enabled = false;
                     toolStripMenuItem2.Enabled = true;
                     toolStripMenuItem2.Text = "Restart";
+                    toolStripMenuItem3.Text = "Wyłącz";
+                    toolStripMenuItem3.Enabled = true;
+                    toolStripMenuItem3.Visible = true;
                     break;
                 case VirtualMachine.State.Operational:
                     tAutoStart.Enabled = false;
                     hTTPDToolStripMenuItem.Enabled = true;
                     toolStripMenuItem2.Enabled = true;
                     toolStripMenuItem2.Text = "Restart";
+                    toolStripMenuItem3.Text = "Wyślij sygnał wyłączenia";
+                    toolStripMenuItem3.Enabled = true;
+                    toolStripMenuItem3.Visible = true;
                     break;
                 default://off?
                     hTTPDToolStripMenuItem.Enabled = false;
                     toolStripMenuItem2.Enabled = true;
                     toolStripMenuItem2.Text = "Uruchom";
+                    toolStripMenuItem3.Enabled = toolStripMenuItem3.Visible = false;
                     break;
             }
         }

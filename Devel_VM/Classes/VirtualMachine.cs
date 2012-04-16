@@ -131,7 +131,7 @@ namespace Devel_VM
                 }
             }
         }
-        private void unlock()
+        public void unlock()
         {
             if (Session == null) return;
             if (Session.State == SessionState.SessionState_Locked)

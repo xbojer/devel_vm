@@ -36,6 +36,7 @@ namespace Devel_VM
                 fMain fM = new fMain();
                 ApplicationContext ac = new ApplicationContext();
                 ac.MainForm = fM;
+                Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
                 Application.Run(ac);
                 mutex.ReleaseMutex();
             }
@@ -49,6 +50,14 @@ namespace Devel_VM
                     IntPtr.Zero,
                     IntPtr.Zero
                 );
+            }
+        }
+
+        static void Application_ApplicationExit(object sender, EventArgs e)
+        {
+            if (VM.MachineReady.getReadyOffline())
+            {
+                VM.unlock();
             }
         }
 
