@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using VirtualBox;
+using System.Threading;
 
 namespace Devel_VM
 {
@@ -505,7 +506,6 @@ namespace Devel_VM
             ImportOptions[] opts = {ImportOptions.ImportOptions_KeepAllMACs};
             OnEvent("Instalacja obrazu", 1);
             ia.ImportMachines(opts).WaitForCompletion(-1);
-
         }
         public bool Uninstall(string name)
         {
@@ -549,8 +549,12 @@ namespace Devel_VM
             try
             {
                 IMachine mach = vb.FindMachine(_old);
+                Thread.Sleep(1000);
                 mach.LockMachine(tmps, LockType.LockType_Write);
+                tmps.Machine.SaveSettings();
+                tmps.UnlockMachine();
 
+                mach.LockMachine(tmps, LockType.LockType_Write);
                 tmps.Machine.Name = _new;
 
                 tmps.Machine.SaveSettings();
