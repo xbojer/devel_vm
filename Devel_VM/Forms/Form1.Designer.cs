@@ -182,17 +182,18 @@
             this.zasobyToolStripMenuItem.Name = "zasobyToolStripMenuItem";
             this.zasobyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.zasobyToolStripMenuItem.Text = "SAMBA";
+            this.zasobyToolStripMenuItem.Visible = false;
             // 
             // aLFAToolStripMenuItem
             // 
             this.aLFAToolStripMenuItem.Name = "aLFAToolStripMenuItem";
-            this.aLFAToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            this.aLFAToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aLFAToolStripMenuItem.Text = "ALFA (200)";
             // 
             // bETA100ToolStripMenuItem
             // 
             this.bETA100ToolStripMenuItem.Name = "bETA100ToolStripMenuItem";
-            this.bETA100ToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            this.bETA100ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.bETA100ToolStripMenuItem.Text = "BETA (100)";
             // 
             // bETAToolStripMenuItem
@@ -201,6 +202,7 @@
             this.bETAToolStripMenuItem.Name = "bETAToolStripMenuItem";
             this.bETAToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.bETAToolStripMenuItem.Text = "WWW";
+            this.bETAToolStripMenuItem.Visible = false;
             // 
             // toolStripMenuItem5
             // 
