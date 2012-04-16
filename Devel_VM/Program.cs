@@ -33,7 +33,8 @@ namespace Devel_VM
                 (new Thread(new ThreadStart(updater.go))).Start();
 #endif
                 DBG = new Forms.Debug();
-                Application.Run(new fMain());
+                new fMain();
+                Application.Run();
                 mutex.ReleaseMutex();
             }
             else
@@ -52,7 +53,6 @@ namespace Devel_VM
         static string getIdentity()
         {
             username = Properties.Settings.Default.User;
-            username = "";
 
             if (String.IsNullOrEmpty(username))
             {

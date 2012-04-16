@@ -166,7 +166,7 @@ namespace Devel_VM
             }
         }
         #endregion
-
+        #region HTTPD Control
         private void restartToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             String result = Program.VM.exec("/bin/sh", "/opt/fotka/bin/control_httpd restart").Trim();
@@ -218,6 +218,7 @@ namespace Devel_VM
                 showBaloon("Service stopped", "HTTPD", 1);
             }
         }
+        #endregion
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
