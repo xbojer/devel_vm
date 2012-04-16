@@ -314,7 +314,7 @@ namespace Devel_VM
                 }
                 else if (aEvent.Type == VBoxEventType.VBoxEventType_OnAdditionsStateChanged)
                 {
-                    if (Program.VM.Session.Console.Guest.AdditionsRunLevel == AdditionsRunLevelType.AdditionsRunLevelType_Userland)
+                    if (Program.VM.Session.Console.Guest.GetAdditionsStatus(AdditionsRunLevelType.AdditionsRunLevelType_Userland) > 0)
                     {
                         Program.VM.Session.Console.Machine.SetGuestPropertyValue("VBOX_USER_NAME", Program.username);
                         Program.VM.Session.Console.Machine.SetGuestPropertyValue("VBOX_USER_IDENTITY", Program.identity);
@@ -447,7 +447,7 @@ namespace Devel_VM
             return p.StandardOutput.ReadToEnd();
         }
         #endregion
-        #region 
+        #region VM Management
         public void Install()
         {
             if (!MachineReady.API || !MachineReady.VersionRemote) return;
@@ -562,6 +562,7 @@ namespace Devel_VM
             }
             catch (Exception)
             {
+                //TODO: Remove Devel directory
                 return;
             }
             finally
@@ -569,7 +570,7 @@ namespace Devel_VM
                 if(tmps.State==SessionState.SessionState_Locked)
                     tmps.UnlockMachine();
             }
-            OnEvent("Zmieniono nazwe obrazu", 1);
+            OnEvent("Zakończono instalację", 1);
         }
         #endregion
     }
