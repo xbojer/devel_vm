@@ -5,13 +5,13 @@
     <Setting Name="User" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="path_imgver" Type="System.String" Scope="User">
+    <Setting Name="path_imgver" Type="System.String" Scope="Application">
       <Value Profile="(Default)">\\10.11.11.200\instale\Devel\current_version.txt</Value>
     </Setting>
-    <Setting Name="path_image" Type="System.String" Scope="User">
+    <Setting Name="path_image" Type="System.String" Scope="Application">
       <Value Profile="(Default)">\\10.11.11.200\instale\Devel\{vm_name}.ova</Value>
     </Setting>
-    <Setting Name="update_uri" Type="System.String" Scope="User">
+    <Setting Name="update_uri" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://00.info.pl/devel/ov.xml</Value>
     </Setting>
     <Setting Name="vm_name" Type="System.String" Scope="User">
