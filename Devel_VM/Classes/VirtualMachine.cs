@@ -450,9 +450,10 @@ namespace Devel_VM
         public void Install()
         {
             if (!MachineReady.API || !MachineReady.VersionRemote) return;
-            OnEvent("Pobieranie i instalacja obrazu", 1);
+            OnEvent("Pobieranie obrazu", 1);
             IAppliance ia = vb.CreateAppliance();
             ia.Read(ImgPath).WaitForCompletion(-1);
+            OnEvent("Odczytywanie obrazu", 1);
             ia.Interpret();
             IVirtualSystemDescription[] descs = (IVirtualSystemDescription[])ia.VirtualSystemDescriptions;
             if (descs.Length != 1)
@@ -502,7 +503,7 @@ namespace Devel_VM
 
             descs[0].SetFinalValues((Array)(enabled.ToArray()), aVBoxValues, aExtraConfigValues);
             ImportOptions[] opts = {ImportOptions.ImportOptions_KeepAllMACs};
-            OnEvent("Import obrazu", 1);
+            OnEvent("Instalacja obrazu", 1);
             ia.ImportMachines(opts).WaitForCompletion(-1);
 
         }
@@ -536,6 +537,7 @@ namespace Devel_VM
             OnEvent("Usuwanie plików", 1);
             DirectoryInfo di = Directory.GetParent(t);
             di.Delete(true);
+            OnEvent("Obraz usunięty", 1);
             return true;
         }
         private void Rename(string _old, string _new)
