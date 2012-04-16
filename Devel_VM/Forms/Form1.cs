@@ -155,13 +155,19 @@ namespace Devel_VM
                 case VirtualMachine.State.On:
                     tAutoStart.Enabled = false;
                     hTTPDToolStripMenuItem.Enabled = false;
+                    toolStripMenuItem2.Enabled = true;
+                    toolStripMenuItem2.Text = "Restart";
                     break;
                 case VirtualMachine.State.Operational:
                     tAutoStart.Enabled = false;
                     hTTPDToolStripMenuItem.Enabled = true;
+                    toolStripMenuItem2.Enabled = true;
+                    toolStripMenuItem2.Text = "Restart";
                     break;
                 default://off?
                     hTTPDToolStripMenuItem.Enabled = false;
+                    toolStripMenuItem2.Enabled = true;
+                    toolStripMenuItem2.Text = "Uruchom";
                     break;
             }
         }
@@ -222,15 +228,22 @@ namespace Devel_VM
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
+            switch (Program.VM.Status)
+            {
+                case VirtualMachine.State.On:
+                    Program.VM.Restart();
+                    break;
+                case VirtualMachine.State.Operational:
+                    Program.VM.Restart();
+                    break;
+                default://off?
+                    tAutoStart.Enabled = false;
+                    Program.VM.Start();
+                    break;
+            }
             
-            tAutoStart.Enabled = false;
-            Program.VM.Start();
         }
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
-        {
-
-        }
-        private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
 
         }
@@ -242,8 +255,8 @@ namespace Devel_VM
 
         private void tAutoStart_Tick(object sender, EventArgs e)
         {
-            Program.VM.Start();
             tAutoStart.Enabled = false;
+            Program.VM.Start();
         }
     }
     internal class NativeMethods
