@@ -57,7 +57,7 @@ namespace Devel_VM
         {
             if (VM.MachineReady.getReadyOffline())
             {
-                VM.unlock();
+                VM.PowerOff(true);
             }
         }
 
