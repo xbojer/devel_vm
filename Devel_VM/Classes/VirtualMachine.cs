@@ -543,7 +543,7 @@ namespace Devel_VM
         private void Rename(string _old, string _new)
         {
             OnEvent("Finalizowanie instalacji", 1);
-            if(Session != null)
+            if(Session != null && Session.State == SessionState.SessionState_Locked)
                 Session.UnlockMachine();
             Session tmps = new VirtualBox.Session();
             try
