@@ -240,6 +240,7 @@
             // 
             this.tAutoStart.Enabled = true;
             this.tAutoStart.Interval = 60000;
+            this.tAutoStart.Tick += new System.EventHandler(this.tAutoStart_Tick);
             // 
             // button2
             // 

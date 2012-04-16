@@ -238,6 +238,12 @@ namespace Devel_VM
         {
             Program.DBG.Show();
         }
+
+        private void tAutoStart_Tick(object sender, EventArgs e)
+        {
+            Program.VM.Start();
+            tAutoStart.Enabled = false;
+        }
     }
     internal class NativeMethods
     {
