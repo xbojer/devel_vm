@@ -13,13 +13,15 @@ namespace Devel_VM
         private String ImgPath;
         public String MachineName;
         private String VbApiVersion = "4_1";
+
+        public bool UpdateNeeded = false;
         
         public class MachineReadiness
         {
-            public bool VersionRemote = true;
-            public bool VersionLocal = true;
-            public bool Installed = false;
-            public bool API = false;
+            public bool VersionRemote = false; // remote version got
+            public bool VersionLocal = false; // machine version ok
+            public bool Installed = false; // machine found
+            public bool API = false; // vb api ok
 
             public bool getReadyOnline()
             {
@@ -47,6 +49,8 @@ namespace Devel_VM
         private IMachine Machine;
         public Session Session;
 
+        public int RemoteVersion = 0;
+
         #region Events
         private VBoXEventL1 EvListener;
         private VBoxEventType[] EvTypes = { VBoxEventType.VBoxEventType_Any };
@@ -67,11 +71,12 @@ namespace Devel_VM
         {
             MachineName = Properties.Settings.Default.vm_name;
             ImgPath = Properties.Settings.Default.path_image.Replace("{vm_name}", MachineName);
-            
+            RemoteVersion = getRemoteVersion();
         }
 
         public void initMachine()
         {
+            if (MachineReady.getReadyOffline()) return;
             vb = new VirtualBox.VirtualBox();
             if (VbApiVersion != vb.APIVersion)
             {
@@ -102,6 +107,9 @@ namespace Devel_VM
                     }
                 }
             }
+
+            checkVersion();
+
             Program.NL.OnReset += delegate(string auth)
             {
                 Packet p = new Packet();
@@ -111,8 +119,53 @@ namespace Devel_VM
                 this.Restart();
             };
         }
-        #endregion
+        private void deInit()
+        {
+            MachineReady.Installed = false;
+            MachineReady.VersionLocal = false;
+            Machine = null;
+        }
 
+        public void reInit()
+        {
+            while (!MachineReady.Installed)
+            {
+                Application.DoEvents();
+                try
+                {
+                    Machine = vb.FindMachine(MachineName);
+                    MachineReady.Installed = true;
+                }
+                catch (Exception)
+                {
+                    try
+                    {
+                        IMachine tmpmach = vb.FindMachine(MachineName + "_installing");
+                        Rename(MachineName + "_installing", MachineName);
+                    }
+                    catch (Exception)
+                    {
+                        Install();
+                    }
+                }
+            }
+
+            checkVersion();
+        }
+
+        public bool checkVersion()
+        {
+            int lv = getVersion(true);
+            RemoteVersion = getRemoteVersion();
+
+            UpdateNeeded = lv < RemoteVersion;
+            MachineReady.VersionLocal = !UpdateNeeded;
+
+            if (UpdateNeeded) OnEvent("Lokalny obraz jest nieaktualny, zaktualizuj!", 2);
+
+            return MachineReady.VersionLocal;
+        }
+        #endregion
         #region Machine locking
         private void relock()
         {
@@ -127,7 +180,7 @@ namespace Devel_VM
                 {
                     OnEvent("Nie udało się założyć locka", 0);
                     #if DEBUG
-                    throw;
+                    //throw;
                     #endif
                 }
             }
@@ -138,58 +191,18 @@ namespace Devel_VM
             if (Session.State == SessionState.SessionState_Locked)
             {
 #if DEBUG
-                OnEvent("Zdejmowanie locka ok", 0);
+                //OnEvent("Zdejmowanie locka ok", 0);
 #endif
                 Session.UnlockMachine();
             }
             else
             {
 #if DEBUG
-                OnEvent("Zdejmowanie locka nieudane", 0);
+                //OnEvent("Zdejmowanie locka nieudane", 0);
 #endif
             }
         }
         #endregion
-        void MachineConfig()
-        {
-            if (!MachineReady.getReadyOffline() || Status != State.Off) return;
-            try
-            {
-                relock();
-                Session.Machine.MemorySize = 768;
-                Session.Machine.VRAMSize = 24;
-                Session.Machine.SetBootOrder(1, DeviceType.DeviceType_HardDisk);
-                Session.Machine.SetBootOrder(2, DeviceType.DeviceType_Null);
-                Session.Machine.SetBootOrder(3, DeviceType.DeviceType_Null);
-                Session.Machine.SetBootOrder(4, DeviceType.DeviceType_Null);
-                if (vb.Host.ProcessorOnlineCount > 1 && Properties.Settings.Default.vm_multicore) //performance degradation with more than one core
-                {
-                    Session.Machine.CPUCount = 2;
-                    if (vb.Host.ProcessorOnlineCount > 2)
-                    {
-                        Session.Machine.CPUExecutionCap = 100;
-                    }
-                    else
-                    {
-                        Session.Machine.CPUExecutionCap = 80;
-                    }
-                }
-                else
-                {
-                    Session.Machine.CPUCount = 1;
-                    Session.Machine.CPUExecutionCap = 100;
-                }
-                Session.Machine.SaveSettings();
-#if DEBUG
-                OnEvent("Config ok", 0);
-#endif
-            }
-            catch (Exception)
-            {
-                OnEvent("Wystąpił problem podczas ustawiania maszyny", 2);
-            }
-            unlock();
-        }
         #region Machine state control
         public int getVersion(bool offline = true)
         {
@@ -207,6 +220,27 @@ namespace Devel_VM
             }
             MachineReady.VersionLocal = int.TryParse(ver, out v);
             return v;
+        }
+        public int getRemoteVersion()
+        {
+            int rver = 0;
+            try
+            {
+                using (StreamReader sr = new StreamReader(Properties.Settings.Default.path_imgver))
+                {
+                    String line;
+                    if((line = sr.ReadLine()) != null)
+                    {
+                        int.TryParse(line, out rver);
+                        if (rver > 0) MachineReady.VersionRemote = true;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                OnEvent("Nie udało się odczytać wersji zewnętrznego obrazu", 1);
+            }
+            return rver;
         }
         public void Start()
         {
@@ -325,7 +359,6 @@ namespace Devel_VM
                 }
             }
         }
-        #endregion
         public void Tick()
         {
             if (!MachineReady.getReadyOffline())
@@ -402,7 +435,7 @@ namespace Devel_VM
                     break;
             }
             #endregion
-            if (Status == State.On && Session.Console.Guest.AdditionsRunLevel==AdditionsRunLevelType.AdditionsRunLevelType_Userland)
+            if (Status == State.On && Session.Console.Guest.AdditionsRunLevel == AdditionsRunLevelType.AdditionsRunLevelType_Userland)
             {
                 Status = State.Operational;
                 if (oldState != State.Operational)
@@ -411,6 +444,7 @@ namespace Devel_VM
                 }
             }
         }
+        #endregion
         #region Remote process execution
         public void exec_api(String cmd, String[] args)
         {
@@ -513,6 +547,7 @@ namespace Devel_VM
             ImportOptions[] opts = {ImportOptions.ImportOptions_KeepAllMACs};
             OnEvent("Instalacja obrazu", 1);
             ia.ImportMachines(opts).WaitForCompletion(-1);
+            vb.FindMachine(((string[])ia.Machines)[0]).SetExtraData("BM/Version", imgversion.ToString());
         }
         public bool Uninstall(string name)
         {
@@ -528,6 +563,9 @@ namespace Devel_VM
             {
                 return false;
             }
+
+            if (MachineName == name) deInit();
+
             String t = mach.SettingsFilePath;
             IMedium[] med = (IMedium[])mach.Unregister(CleanupMode.CleanupMode_Full);
             mach.Delete(med).WaitForCompletion(-1);
@@ -547,7 +585,7 @@ namespace Devel_VM
             OnEvent("Obraz usunięty", 1);
             return true;
         }
-        private void Rename(string _old, string _new)
+        public void Rename(string _old, string _new)
         {
             OnEvent("Finalizowanie instalacji", 1);
             if(Session != null && Session.State == SessionState.SessionState_Locked)
@@ -578,6 +616,46 @@ namespace Devel_VM
                     tmps.UnlockMachine();
             }
             OnEvent("Zakończono instalację", 1);
+        }
+        void MachineConfig()
+        {
+            if (!MachineReady.getReadyOffline() || Status != State.Off) return;
+            try
+            {
+                relock();
+                Session.Machine.MemorySize = 768;
+                Session.Machine.VRAMSize = 24;
+                Session.Machine.SetBootOrder(1, DeviceType.DeviceType_HardDisk);
+                Session.Machine.SetBootOrder(2, DeviceType.DeviceType_Null);
+                Session.Machine.SetBootOrder(3, DeviceType.DeviceType_Null);
+                Session.Machine.SetBootOrder(4, DeviceType.DeviceType_Null);
+                if (vb.Host.ProcessorOnlineCount > 1 && Properties.Settings.Default.vm_multicore) //performance degradation with more than one core
+                {
+                    Session.Machine.CPUCount = 2;
+                    if (vb.Host.ProcessorOnlineCount > 2)
+                    {
+                        Session.Machine.CPUExecutionCap = 100;
+                    }
+                    else
+                    {
+                        Session.Machine.CPUExecutionCap = 80;
+                    }
+                }
+                else
+                {
+                    Session.Machine.CPUCount = 1;
+                    Session.Machine.CPUExecutionCap = 100;
+                }
+                Session.Machine.SaveSettings();
+#if DEBUG
+                OnEvent("Config ok", 0);
+#endif
+            }
+            catch (Exception)
+            {
+                OnEvent("Wystąpił problem podczas ustawiania maszyny", 2);
+            }
+            unlock();
         }
         #endregion
     }
