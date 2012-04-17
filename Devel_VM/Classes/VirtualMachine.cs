@@ -405,7 +405,7 @@ namespace Devel_VM
             if (Status == State.On && Session.Console.Guest.AdditionsRunLevel==AdditionsRunLevelType.AdditionsRunLevelType_Userland)
             {
                 Status = State.Operational;
-                if (oldState == State.On)
+                if (oldState != State.Operational)
                 {
                     Program.VM.OnEvent("Maszyna gotowa do pracy", 1);
                 }
