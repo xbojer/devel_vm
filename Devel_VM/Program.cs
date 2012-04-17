@@ -78,7 +78,7 @@ namespace Devel_VM
         {
             if (VM.MachineReady.getReadyOffline())
             {
-                VM.PowerOff(true);
+                VM.PowerOff(true, true);
             }
         }
 

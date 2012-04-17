@@ -233,11 +233,11 @@ namespace Devel_VM
             }
             AssureEvents();
         }
-        public void PowerOff(bool kill)
+        public void PowerOff(bool kill, bool noevents = false)
         {
             if (!MachineReady.getReadyOffline())
             {
-                OnEvent("Maszyna nie jest gotowa (PowerOff)", 3);
+                if(!noevents) OnEvent("Maszyna nie jest gotowa (PowerOff)", 3);
                 return;
             }
             relock();
@@ -245,12 +245,12 @@ namespace Devel_VM
             IConsole con = Session.Console;
             if (kill)
             {
-                OnEvent("Odłączanie maszyny", 1);
+                if (!noevents) OnEvent("Odłączanie maszyny", 1);
                 con.PowerDown();
             }
             else
             {
-                OnEvent("Wyłączanie maszyny", 1);
+                if (!noevents) OnEvent("Wyłączanie maszyny", 1);
                 con.PowerButton();
             }
         }
