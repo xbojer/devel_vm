@@ -403,6 +403,7 @@ namespace Devel_VM
             #endregion
             if (Status == State.On && Session.Console.Guest.AdditionsRunLevel==AdditionsRunLevelType.AdditionsRunLevelType_Userland)
             {
+                Program.VM.OnEvent("Maszyna gotowa do pracy", 1);
                 Status = State.Operational;
             }
         }

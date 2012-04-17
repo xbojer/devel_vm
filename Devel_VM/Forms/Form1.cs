@@ -128,7 +128,6 @@ namespace Devel_VM
             };
 
             Program.VM.OnVmEvent += new VirtualMachine.VmEvent(this.showBaloon);
-
             Program.VM.initMachine();
         }
         private void bHide_Click(object sender, EventArgs e)
@@ -141,7 +140,6 @@ namespace Devel_VM
         private void tState_Tick(object sender, EventArgs e)
         {
             Program.VM.Tick();
-            
         }
         private void tUpdateState_Tick(object sender, EventArgs e)
         {
@@ -155,8 +153,7 @@ namespace Devel_VM
                     toolStripMenuItem2.Enabled = true;
                     toolStripMenuItem2.Text = "Restart";
                     toolStripMenuItem3.Text = "Wyłącz";
-                    toolStripMenuItem3.Enabled = true;
-                    toolStripMenuItem3.Visible = true;
+                    toolStripMenuItem3.Enabled = toolStripMenuItem3.Visible = true;
                     break;
                 case VirtualMachine.State.Operational:
                     tAutoStart.Enabled = false;
@@ -164,8 +161,7 @@ namespace Devel_VM
                     toolStripMenuItem2.Enabled = true;
                     toolStripMenuItem2.Text = "Restart";
                     toolStripMenuItem3.Text = "Wyślij sygnał wyłączenia";
-                    toolStripMenuItem3.Enabled = true;
-                    toolStripMenuItem3.Visible = true;
+                    toolStripMenuItem3.Enabled = toolStripMenuItem3.Visible = true;
                     break;
                 default://off?
                     hTTPDToolStripMenuItem.Enabled = false;
