@@ -75,7 +75,7 @@ namespace Devel_VM
             vb = new VirtualBox.VirtualBox();
             if (VbApiVersion != vb.APIVersion)
             {
-                OnEvent("Niezgodna wersja API", 3);
+                OnEvent("Niezgodna wersja API VB", 3);
                 return;
             }
             MachineReady.API = true;
@@ -296,6 +296,8 @@ namespace Devel_VM
                     else
                     {
                         //Program.VM.OnEvent("Eventy on", "VBox Event1", 0);
+                        Program.VM.Session.Console.Machine.SetGuestPropertyValue("VBOX_USER_NAME", Program.username);
+                        Program.VM.Session.Console.Machine.SetGuestPropertyValue("VBOX_USER_IDENTITY", Program.identity);
                     }
                 }
                 else if (aEvent.Type == VBoxEventType.VBoxEventType_OnStateChanged)
@@ -307,19 +309,19 @@ namespace Devel_VM
                     }
                     else
                     {
-                        #if DEBUG
+#if DEBUG
                         Program.VM.OnEvent(aEvent.Type.ToString(), 0);
-                        #endif
+#endif
                     }
                 }
                 else if (aEvent.Type == VBoxEventType.VBoxEventType_OnAdditionsStateChanged)
                 {
-                    if (Program.VM.Session.Console.Guest.GetAdditionsStatus(AdditionsRunLevelType.AdditionsRunLevelType_Userland) > 0)
-                    {
-                        Program.VM.Session.Console.Machine.SetGuestPropertyValue("VBOX_USER_NAME", Program.username);
-                        Program.VM.Session.Console.Machine.SetGuestPropertyValue("VBOX_USER_IDENTITY", Program.identity);
-                        Program.VM.OnEvent("Maszyna gotowa do pracy", 1);
-                    }
+                    //if (Program.VM.Session.Console.Guest.GetAdditionsStatus(AdditionsRunLevelType.AdditionsRunLevelType_Userland) > 0)
+                    //{
+                    //    Program.VM.Session.Console.Machine.SetGuestPropertyValue("VBOX_USER_NAME", Program.username);
+                    //    Program.VM.Session.Console.Machine.SetGuestPropertyValue("VBOX_USER_IDENTITY", Program.identity);
+                    //    Program.VM.OnEvent("Maszyna gotowa do pracy", 1);
+                    //}
                 }
             }
         }
