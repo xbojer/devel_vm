@@ -12,7 +12,7 @@ namespace Devel_VM.Forms
         public AboutBox1()
         {
             InitializeComponent();
-            this.Text = String.Format("About {0}", AssemblyTitle);
+            this.Text = String.Format("{0} - Informacje", AssemblyTitle);
             this.labelProductName.Text = AssemblyProduct;
             this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
             this.labelCopyright.Text = AssemblyCopyright;
@@ -99,5 +99,10 @@ namespace Devel_VM.Forms
             }
         }
         #endregion
+
+        private void okButton_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }
