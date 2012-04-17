@@ -146,7 +146,7 @@ namespace Devel_VM
         private void tUpdateState_Tick(object sender, EventArgs e)
         {
             button2.Text = Program.VM.Status.ToString();
-            zasobnik.Text = "Beta Manager - " + Program.VM.Status.ToString();
+            zasobnik.Text = "Beta Manager - " + Program.VM.MachineName + " " + Program.VM.Status.ToString();
             switch (Program.VM.Status)
             {
                 case VirtualMachine.State.On:

@@ -11,7 +11,7 @@ namespace Devel_VM
     class VirtualMachine
     {
         private String ImgPath;
-        private String MachineName;
+        public String MachineName;
         private String VbApiVersion = "4_1";
         
         public class MachineReadiness
