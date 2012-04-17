@@ -10,6 +10,11 @@ namespace Devel_VM
         {
             InitializeComponent();
             zasobnik.Visible = true;
+            Visible = false;
+#if DEBUG
+            showToolStripMenuItem.Visible = true;
+            toolStripSeparator1.Visible = true;
+#endif
         }
         protected override void WndProc(ref Message m)
         {
@@ -38,7 +43,7 @@ namespace Devel_VM
             showBaloon("Trwa aktualizacja programu", "Beta Manager: Aktualizator", 1);
         }
         
-        private void showBaloon(String msg, String title, int priority)
+        public void showBaloon(String msg, String title, int priority)
         {
             MethodInvoker method = delegate
             {
@@ -104,20 +109,11 @@ namespace Devel_VM
         #region Form control
         private void fMain_Load(object sender, EventArgs e)
         {
-            #if !DEBUG
-            Hide();
-            Visible = false;
-            WindowState = FormWindowState.Minimized;
-            showToolStripMenuItem.Visible = false;
-            toolStripSeparator1.Visible = false;
-            #endif
+            
 
-            Program.NL = new Network_listener();
+            
 
-            Program.NL.OnInfo += delegate(string auth, string msg)
-            {
-                showBaloon(auth + ": " + msg, "Beta Manager: Informator", 1);
-            };
+            
             Program.NL.OnError += delegate(string auth, string msg)
             {
                 showBaloon(String.Format("!!! $1 ($2) !!!", auth, msg), "Beta Manager: Informator", 2);
@@ -275,6 +271,12 @@ namespace Devel_VM
         {
             tAutoStart.Enabled = false;
             Program.VM.Start();
+        }
+
+        private void informacjeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Forms.AboutBox1 ab = new Forms.AboutBox1();
+            ab.Show();
         }
     }
     internal class NativeMethods

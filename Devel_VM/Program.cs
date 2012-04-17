@@ -21,7 +21,7 @@ namespace Devel_VM
 
         static Mutex mutex = new Mutex(true, "mutex_beta_manager_devel_vm_runonce");
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             if (mutex.WaitOne(TimeSpan.Zero, true))
             {
@@ -29,15 +29,36 @@ namespace Devel_VM
                 Application.SetCompatibleTextRenderingDefault(false);
                 identity = getIdentity();
                 VM = new VirtualMachine();
+
 #if !DEBUG
                 (new Thread(new ThreadStart(updater.go))).Start();
 #endif
+
                 DBG = new Forms.Debug();
                 fMain fM = new fMain();
-                ApplicationContext ac = new ApplicationContext();
-                ac.MainForm = fM;
+
+                NL = new Network_listener();
+                NL.OnInfo += delegate(string auth, string msg)
+                {
+                    fM.showBaloon(auth + ": " + msg, "Beta Manager: Informator", 1);
+                };
+                NL.OnError += delegate(string auth, string msg)
+                {
+                    fM.showBaloon(String.Format("!!! $1 ($2) !!!", auth, msg), "Beta Manager: Informator", 2);
+                };
+                NL.OnPing += delegate(string auth, string msg)
+                {
+                    Packet p = new Packet();
+                    p.dataIdentifier = Packet.DataIdentifier.Pong;
+                    p.message = auth + "+" + msg;
+                    Network_Broadcast.send(p);
+                };
+                VM.OnVmEvent += new VirtualMachine.VmEvent(fM.showBaloon);
+                VM.initMachine();
+
                 Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
-                Application.Run(ac);
+
+                Application.Run();
                 mutex.ReleaseMutex();
             }
             else
