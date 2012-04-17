@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace Devel_VM
 {
     public partial class fMain : Form
     {
+        private bool allowshowdisplay = false;
+        private bool mainbaseinit = true;
         public fMain()
         {
             InitializeComponent();
@@ -15,6 +18,24 @@ namespace Devel_VM
             showToolStripMenuItem.Visible = true;
             toolStripSeparator1.Visible = true;
 #endif
+        }
+        protected override void SetVisibleCore(bool value)
+        {
+            if (!allowshowdisplay && mainbaseinit)
+            {
+                mainbaseinit = false;
+                Program.NL.OnInfo += delegate(string auth, string msg)
+                {
+                    showBaloon(auth + ": " + msg, "Beta Manager: Informator", 1);
+                };
+                Program.NL.OnError += delegate(string auth, string msg)
+                {
+                    showBaloon(String.Format("!!! $1 ($2) !!!", auth, msg), "Beta Manager: Informator", 2);
+                };
+                Program.VM.OnVmEvent += new VirtualMachine.VmEvent(showBaloon);
+                Program.VM.initMachine();
+            }
+            base.SetVisibleCore(allowshowdisplay ? value : allowshowdisplay);
         }
         protected override void WndProc(ref Message m)
         {
@@ -77,8 +98,8 @@ namespace Devel_VM
         #region Tray options
         private void showToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Show();
-            WindowState = FormWindowState.Normal;
+            this.allowshowdisplay = true;
+            this.Visible = !this.Visible;
         }
         private void restartToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -109,26 +130,7 @@ namespace Devel_VM
         #region Form control
         private void fMain_Load(object sender, EventArgs e)
         {
-            
 
-            
-
-            
-            Program.NL.OnError += delegate(string auth, string msg)
-            {
-                showBaloon(String.Format("!!! $1 ($2) !!!", auth, msg), "Beta Manager: Informator", 2);
-            };
-            Program.NL.OnPing += delegate(string auth, string msg)
-            {
-                //showBaloon(msg, "WAŻNE (" + auth + ")", 2);
-                Packet p = new Packet();
-                p.dataIdentifier = Packet.DataIdentifier.Pong;
-                p.message = auth + "+" + msg;
-                Network_Broadcast.send(p);
-            };
-
-            Program.VM.OnVmEvent += new VirtualMachine.VmEvent(this.showBaloon);
-            Program.VM.initMachine();
         }
         private void bHide_Click(object sender, EventArgs e)
         {
@@ -170,6 +172,8 @@ namespace Devel_VM
                     toolStripMenuItem3.Enabled = toolStripMenuItem3.Visible = false;
                     break;
             }
+
+            toolStripMenuItem7.Visible = Program.VM.UpdateNeeded;
         }
         #endregion
         #region HTTPD Control
@@ -225,7 +229,6 @@ namespace Devel_VM
             }
         }
         #endregion
-
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
             switch (Program.VM.Status)
@@ -274,6 +277,30 @@ namespace Devel_VM
             Forms.AboutBox1 ab = new Forms.AboutBox1();
             ab.Show();
         }
+
+        private void toolStripMenuItem7_Click(object sender, EventArgs e)
+        {
+            tAutoStart.Enabled = false;
+            Program.VM.PowerOff(true);
+            Program.VM.Uninstall(Program.VM.MachineName);
+            Program.VM.Install();
+            Program.VM.Rename(Program.VM.MachineName + "_installing", Program.VM.MachineName);
+            Program.VM.reInit();
+        }
+
+        private void sprawdźAktulizacjeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Program.VM.checkVersion();
+            (new Thread(new ThreadStart(updater.go))).Start();
+        }
+
+        private void usuńObrazToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            tAutoStart.Enabled = false;
+            Program.VM.PowerOff(true);
+            Program.VM.Uninstall(Program.VM.MachineName);
+        }
+
     }
     internal class NativeMethods
     {

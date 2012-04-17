@@ -35,17 +35,9 @@ namespace Devel_VM
 #endif
 
                 DBG = new Forms.Debug();
-                fMain fM = new fMain();
+                VM.OnVmEvent += new VirtualMachine.VmEvent(DBG.debugLog);
 
                 NL = new Network_listener();
-                NL.OnInfo += delegate(string auth, string msg)
-                {
-                    fM.showBaloon(auth + ": " + msg, "Beta Manager: Informator", 1);
-                };
-                NL.OnError += delegate(string auth, string msg)
-                {
-                    fM.showBaloon(String.Format("!!! $1 ($2) !!!", auth, msg), "Beta Manager: Informator", 2);
-                };
                 NL.OnPing += delegate(string auth, string msg)
                 {
                     Packet p = new Packet();
@@ -53,18 +45,14 @@ namespace Devel_VM
                     p.message = auth + "+" + msg;
                     Network_Broadcast.send(p);
                 };
-                VM.OnVmEvent += new VirtualMachine.VmEvent(fM.showBaloon);
-                VM.initMachine();
-
+                
                 Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
-
-                Application.Run();
+                Application.Run(new fMain());
                 mutex.ReleaseMutex();
             }
             else
             {
-                // send our Win32 message to make the currently running instance
-                // jump on top of all the other windows
+                // send our Win32 message to make the currently running instance jump on top of all the other windows
                 NativeMethods.PostMessage(
                     (IntPtr)NativeMethods.HWND_BROADCAST,
                     NativeMethods.WM_SHOWME,

@@ -16,7 +16,7 @@ namespace Devel_VM.Forms
             InitializeComponent();
         }
 
-        private void debugLog(String msg, String title, int priority)
+        public void debugLog(String msg, String title, int priority)
         {
             MethodInvoker method = delegate
             {
@@ -27,7 +27,7 @@ namespace Devel_VM.Forms
         }
         private void Debug_Load(object sender, EventArgs e)
         {
-            Program.VM.OnVmEvent += new VirtualMachine.VmEvent(this.debugLog);
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
