@@ -339,6 +339,7 @@ namespace Devel_VM
                 return;
             }
             relock();
+            State oldState = Status;
             #region Translate MachineState
             switch (Machine.State)
             {
@@ -403,8 +404,11 @@ namespace Devel_VM
             #endregion
             if (Status == State.On && Session.Console.Guest.AdditionsRunLevel==AdditionsRunLevelType.AdditionsRunLevelType_Userland)
             {
-                Program.VM.OnEvent("Maszyna gotowa do pracy", 1);
                 Status = State.Operational;
+                if (oldState == State.On)
+                {
+                    Program.VM.OnEvent("Maszyna gotowa do pracy", 1);
+                }
             }
         }
         #region Remote process execution
