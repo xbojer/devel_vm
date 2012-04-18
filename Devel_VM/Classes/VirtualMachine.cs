@@ -561,6 +561,7 @@ namespace Devel_VM
             }
             catch (Exception)
             {
+                OnEvent("Obraz nie jest zainstalowany", 1);
                 return false;
             }
 

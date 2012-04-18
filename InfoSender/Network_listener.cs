@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Devel_VM
 {
-    
+
     public class Packet
     {
         public enum DataIdentifier
@@ -19,6 +19,7 @@ namespace Devel_VM
             Update,
             Execute,
             Chat,
+            Reset,
             Reserved,
             Null
         }
@@ -106,6 +107,7 @@ namespace Devel_VM
         public delegate void UpdateEvent(String auth, String ver);
         public delegate void ExecuteEvent(String auth, String cmd);
         public delegate void ChatEvent(String auth, String msg);
+        public delegate void ResetEvent(String auth);
         public delegate void AnyEvent(String type, String auth, String msg);
 
         public InfoEvent OnInfo = null;
@@ -116,6 +118,7 @@ namespace Devel_VM
         public UpdateEvent OnUpdate = null;
         public ExecuteEvent OnExecute = null;
         public ChatEvent OnChat = null;
+        public ResetEvent OnReset = null;
         public AnyEvent OnAny = null;
         #endregion
         #region Events
@@ -175,6 +178,13 @@ namespace Devel_VM
                 OnChat(auth, msg);
             }
         }
+        private void onResetEvent(String auth)
+        {
+            if (OnReset != null)
+            {
+                OnReset(auth);
+            }
+        }
         private void onAnyEvent(String type, String auth, String msg)
         {
             if (OnAny != null)
@@ -194,7 +204,7 @@ namespace Devel_VM
 
             sock.BeginReceive(new AsyncCallback(this.ReceiveCallback), s);
         }
-        
+
         private class UdpState
         {
             public IPEndPoint e;
@@ -234,6 +244,9 @@ namespace Devel_VM
                     break;
                 case Packet.DataIdentifier.Chat:
                     onChatEvent(packet.auth, packet.message);
+                    break;
+                case Packet.DataIdentifier.Reset:
+                        onResetEvent(packet.auth + ":" + packet.message);
                     break;
                 case Packet.DataIdentifier.Reserved:
                     break;
