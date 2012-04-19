@@ -221,7 +221,7 @@ namespace Devel_VM
 
         private void stopToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            String result = Program.VM.exec("/bin/sh", "/opt/fotka/bin/control_httpd reload").Trim();
+            String result = Program.VM.exec("/bin/sh", "/opt/fotka/bin/control_httpd stop").Trim();
             if (result != "OK")
             {
                 showBaloon("Error while stopping HTTPD: " + result, "HTTPD", 3);
