@@ -86,29 +86,7 @@ namespace Devel_VM
             MachineReady.API = true;
             Session = new Session();
 
-            while (!MachineReady.Installed)
-            {
-                Application.DoEvents();
-                try
-                {
-                    Machine = vb.FindMachine(MachineName);
-                    MachineReady.Installed = true;
-                }
-                catch (Exception)
-                {
-                    try
-                    {
-                        IMachine tmpmach = vb.FindMachine(MachineName + "_installing");
-                        Rename(MachineName + "_installing", MachineName);
-                    }
-                    catch (Exception)
-                    {
-                        Install();
-                    }
-                }
-            }
-
-            checkVersion();
+            reInit();
 
             Program.NL.OnReset += delegate(string auth)
             {
@@ -121,9 +99,15 @@ namespace Devel_VM
         }
         private void deInit()
         {
+            if (Machine.State == MachineState.MachineState_Running)
+            {
+                relock();
+                Session.Console.PowerDown().WaitForCompletion(-1);
+            }
             MachineReady.Installed = false;
             MachineReady.VersionLocal = false;
             Machine = null;
+            unlock();
         }
 
         public void reInit()
@@ -446,28 +430,46 @@ namespace Devel_VM
         }
         #endregion
         #region Remote process execution
-        public void exec_api(String cmd, String[] args)
+        public string exec_api(String cmd, String[] args)
         {
             if (!MachineReady.getReadyOffline())
             {
                 OnEvent("Maszyna nie jest gotowa (Start)", 3);
-                return;
+                return "";
             }
             relock();
-            if(Session.Console.Guest.AdditionsRunLevel!=AdditionsRunLevelType.AdditionsRunLevelType_Userland) return;
+            if(Session.Console.Guest.AdditionsRunLevel!=AdditionsRunLevelType.AdditionsRunLevelType_Userland) return "";
+
+            long outbuff = 1024;
+
             uint pid = 0;
-            String[] env = {"BETAMGR=1"};
-            IProgress progress = Session.Console.Guest.ExecuteProcess(cmd, 0, args, env, "fotka", "@fotka", 0, out pid);
+            uint oflags = (uint)ProcessOutputFlag.ProcessOutputFlag_None;
+            uint eflags = (uint)(ExecuteProcessFlag.ExecuteProcessFlag_None|ExecuteProcessFlag.ExecuteProcessFlag_WaitForStdOut);
+            uint timeout = 0;
 
+            int[] asd = new int[outbuff];
+            String[] env = { "BETAMGR=1" };
             IGuest gu = Session.Console.Guest;
-            int[] asd = (int[])gu.GetProcessOutput(pid, 0, 5000, (long)100);
+            IProgress progress = gu.ExecuteProcess(cmd, eflags, args, env, "fotka", "@fotka", 0, out pid);
+            asd = (int[])gu.GetProcessOutput(pid, oflags, timeout, outbuff);
+            while (progress.Completed <= 0)
+            {
+                if(asd==null)
+                    asd = (int[])gu.GetProcessOutput(pid, oflags, timeout, outbuff);
+            }
+            //progress.WaitForCompletion(-1);
             
-            progress.WaitForCompletion(-1);
+            if (asd == null) return "null";
+            OnEvent("test out "+asd.Length.ToString(), 0);
+            //throw new Exception("VirtualBox COM API error?");
 
-            throw new Exception("VirtualBox COM API error?");
+            return asd[0].ToString();
         }
         public string exec(String cmd, String args)
         {
+            //string[] deli = {@" "};
+            //string t = exec_api(cmd, args.Split(deli, StringSplitOptions.None));
+
             string filename = @"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe";
             args = " guestcontrol \"" + MachineName + "\" execute --image \"" + cmd + "\" --username=\"fotka\" --password=\"@fotka\" --wait-exit --wait-stdout " + args;
 
@@ -546,13 +548,24 @@ namespace Devel_VM
             descs[0].SetFinalValues((Array)(enabled.ToArray()), aVBoxValues, aExtraConfigValues);
             ImportOptions[] opts = {ImportOptions.ImportOptions_KeepAllMACs};
             OnEvent("Instalacja obrazu", 1);
-            ia.ImportMachines(opts).WaitForCompletion(-1);
+            IProgress proprc = ia.ImportMachines(opts);
+            uint olprc = proprc.Percent;
+
+            while (proprc.Percent<100)
+            {
+                if (olprc != proprc.Percent)
+                {
+                    OnEvent("Instalacja obrazu (" + proprc.Percent + "%)", 1);
+                    olprc = proprc.Percent;
+                }
+                Application.DoEvents();
+            }
+            proprc.WaitForCompletion(-1);
             vb.FindMachine(((string[])ia.Machines)[0]).SetExtraData("BM/Version", imgversion.ToString());
         }
         public bool Uninstall(string name)
         {
-            if (Session != null)
-                Session.UnlockMachine();
+            unlock();
             OnEvent("Usuwanie obrazu", 1);
             IMachine mach;
             try
@@ -564,10 +577,9 @@ namespace Devel_VM
                 OnEvent("Obraz nie jest zainstalowany", 1);
                 return false;
             }
-
-            if (MachineName == name) deInit();
-
             String t = mach.SettingsFilePath;
+            if (MachineName == name) deInit();
+            Thread.Sleep(600);
             IMedium[] med = (IMedium[])mach.Unregister(CleanupMode.CleanupMode_Full);
             mach.Delete(med).WaitForCompletion(-1);
             /* Due to some strange behaviour with VB API App needs to separately delete medium and direcotry */

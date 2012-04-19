@@ -192,6 +192,9 @@ namespace Devel_VM
 
         private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            /*String test = Program.VM.exec("/bin/echo", "/tmp/asdfg");
+            showBaloon(test, "debug", 1);
+            return;*/
             String result = Program.VM.exec("/bin/sh", "/opt/fotka/bin/control_httpd reload").Trim();
             if (result != "OK")
             {
