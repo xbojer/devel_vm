@@ -293,8 +293,21 @@ namespace Devel_VM
 
         private void sprawdźAktulizacjeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Program.VM.checkVersion();
-            (new Thread(new ThreadStart(updater.go))).Start();
+            if (!Program.checkVersion())
+            {
+                if (Program.VM.checkVersion(false))//aktualna
+                {
+                    showBaloon("Aplikacja i obraz są aktualne.", "BetaManager: Aktualizacja", 1);
+                }
+                else
+                {
+                    showBaloon("Obraz jest nieaktualny.", "BetaManager: Aktualizacja", 2);
+                }
+            }
+            else
+            {
+                showBaloon("Aplikacja wymaga aktualizacji.", "BetaManager: Aktualizacja", 2);
+            }
         }
 
         private void usuńObrazToolStripMenuItem_Click(object sender, EventArgs e)

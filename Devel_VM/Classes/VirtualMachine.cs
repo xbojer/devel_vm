@@ -137,7 +137,7 @@ namespace Devel_VM
             checkVersion();
         }
 
-        public bool checkVersion()
+        public bool checkVersion(bool verbose = true)
         {
             int lv = getVersion(true);
             RemoteVersion = getRemoteVersion();
@@ -145,7 +145,7 @@ namespace Devel_VM
             UpdateNeeded = lv < RemoteVersion;
             MachineReady.VersionLocal = !UpdateNeeded;
 
-            if (UpdateNeeded) OnEvent("Lokalny obraz jest nieaktualny, zaktualizuj!", 2);
+            if (verbose && UpdateNeeded) OnEvent("Lokalny obraz jest nieaktualny, zaktualizuj!", 2);
 
             return MachineReady.VersionLocal;
         }

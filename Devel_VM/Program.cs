@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Threading;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace Devel_VM
 {
@@ -60,6 +61,32 @@ namespace Devel_VM
                     IntPtr.Zero
                 );
             }
+        }
+
+        internal static bool checkVersion()
+        {
+            Version newVersion = new Version(getRemoteVersion());
+            Version curVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            if (curVersion.CompareTo(newVersion) < 0)
+            {
+                return false;
+            }
+            return true;
+        }
+        public static string getRemoteVersion()
+        {
+            try
+            {
+                using (StreamReader sr = new StreamReader(Properties.Settings.Default.path_imgver))
+                {
+                    String line;
+                    if ((line = sr.ReadLine()) == null) return "0";//img ver
+                    if ((line = sr.ReadLine()) == null) return "0";//app ver
+                    return line;
+                }
+            }
+            catch (Exception) { }
+            return "0";
         }
 
         static void Application_ApplicationExit(object sender, EventArgs e)
@@ -120,5 +147,6 @@ namespace Devel_VM
             }
             return String.Format("{0} ({1} / {2})", username, host, string.Join(",", ips.ToArray()));
         }
+
     }
 }
