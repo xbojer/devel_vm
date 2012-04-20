@@ -352,8 +352,8 @@ namespace Devel_VM
             }
             if (!MachineReady.getReadyOnline())
             {
-                Status = State.Busy;
-                return;
+                //Status = State.Busy;
+                //return;
             }
             relock();
             State oldState = Status;

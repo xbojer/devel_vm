@@ -181,7 +181,7 @@ namespace Devel_VM
             {
                 toolStripMenuItem7.Text = "Aktualizuj obraz";
             }
-            toolStripMenuItem7.Visible = Program.VM.UpdateNeeded || Program.UpdateNeeded;
+            toolStripMenuItem7.Visible = (Program.VM.UpdateNeeded || Program.UpdateNeeded);
 
         }
         #endregion
@@ -272,24 +272,20 @@ namespace Devel_VM
                     break;
             }
         }
-
         private void button2_Click(object sender, EventArgs e)
         {
             Program.DBG.Show();
         }
-
         private void tAutoStart_Tick(object sender, EventArgs e)
         {
             tAutoStart.Enabled = false;
             Program.VM.Start();
         }
-
         private void informacjeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Forms.AboutBox1 ab = new Forms.AboutBox1();
             ab.Show();
         }
-
         private void toolStripMenuItem7_Click(object sender, EventArgs e)
         {
             tAutoStart.Enabled = false;
@@ -307,10 +303,9 @@ namespace Devel_VM
                 Program.VM.reInit();
             }
         }
-
         private void sprawdźAktulizacjeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!Program.checkVersion())
+            if (Program.checkVersion())
             {
                 if (Program.VM.checkVersion(false))//aktualna
                 {
@@ -326,14 +321,12 @@ namespace Devel_VM
                 showBaloon("Aplikacja wymaga aktualizacji.", "BetaManager: Aktualizacja", 2);
             }
         }
-
         private void usuńObrazToolStripMenuItem_Click(object sender, EventArgs e)
         {
             tAutoStart.Enabled = false;
             Program.VM.PowerOff(true);
             Program.VM.Uninstall(Program.VM.MachineName);
         }
-
     }
     internal class NativeMethods
     {
