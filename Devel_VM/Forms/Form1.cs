@@ -173,7 +173,16 @@ namespace Devel_VM
                     break;
             }
 
-            toolStripMenuItem7.Visible = Program.VM.UpdateNeeded;
+            if (Program.UpdateNeeded)
+            {
+                toolStripMenuItem7.Text = "Aktualizuj program";
+            }
+            else
+            {
+                toolStripMenuItem7.Text = "Aktualizuj obraz";
+            }
+            toolStripMenuItem7.Visible = Program.VM.UpdateNeeded || Program.UpdateNeeded;
+
         }
         #endregion
         #region HTTPD Control
@@ -284,11 +293,19 @@ namespace Devel_VM
         private void toolStripMenuItem7_Click(object sender, EventArgs e)
         {
             tAutoStart.Enabled = false;
-            Program.VM.PowerOff(true);
-            Program.VM.Uninstall(Program.VM.MachineName);
-            Program.VM.Install();
-            Program.VM.Rename(Program.VM.MachineName + "_installing", Program.VM.MachineName);
-            Program.VM.reInit();
+            if (Program.UpdateNeeded)
+            {
+                showBaloon("Uruchamianie instalatora programu", "BetaManager: Aktualizacja", 1);
+                Program.Update();
+            }
+            else
+            {
+                Program.VM.PowerOff(true);
+                Program.VM.Uninstall(Program.VM.MachineName);
+                Program.VM.Install();
+                Program.VM.Rename(Program.VM.MachineName + "_installing", Program.VM.MachineName);
+                Program.VM.reInit();
+            }
         }
 
         private void sprawdźAktulizacjeToolStripMenuItem_Click(object sender, EventArgs e)

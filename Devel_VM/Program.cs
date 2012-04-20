@@ -31,10 +31,6 @@ namespace Devel_VM
                 identity = getIdentity();
                 VM = new VirtualMachine();
 
-#if !DEBUG
-                (new Thread(new ThreadStart(updater.go))).Start();
-#endif
-
                 DBG = new Forms.Debug();
                 VM.OnVmEvent += new VirtualMachine.VmEvent(DBG.debugLog);
 
@@ -63,6 +59,7 @@ namespace Devel_VM
             }
         }
 
+        internal static bool UpdateNeeded = false;
         internal static bool checkVersion()
         {
             Version newVersion = new Version(getRemoteVersion());
@@ -148,5 +145,13 @@ namespace Devel_VM
             return String.Format("{0} ({1} / {2})", username, host, string.Join(",", ips.ToArray()));
         }
 
+
+        internal static void Update()
+        {
+            string ur = Properties.Settings.Default.path_updater;
+            System.Diagnostics.Process.Start(ur);
+            VM.PowerOff(true, true);
+            Application.Exit();
+        }
     }
 }

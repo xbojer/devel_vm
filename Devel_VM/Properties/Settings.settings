@@ -20,5 +20,8 @@
     <Setting Name="vm_multicore" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="path_updater" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">\\10.11.11.200\instale\Installer_Beta_Manager.exe</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
