@@ -5,6 +5,7 @@ using System.Threading;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.IO;
+using System.Diagnostics;
 
 namespace Devel_VM
 {
@@ -50,6 +51,23 @@ namespace Devel_VM
             else
             {
                 // send our Win32 message to make the currently running instance jump on top of all the other windows
+                string[] cla = Environment.GetCommandLineArgs();
+                foreach (string item in cla)
+                {
+                    if (item.Trim() == "/r")
+                    {
+                        Process[] prcs = Process.GetProcessesByName("Beta_Manager");
+                        foreach (Process prc in prcs)
+                        {
+                            if (Process.GetCurrentProcess().Id != prc.Id)
+                            {
+                                prc.Kill();
+                            }
+                        }
+                        Application.Restart();
+                    }
+                }
+
                 NativeMethods.PostMessage(
                     (IntPtr)NativeMethods.HWND_BROADCAST,
                     NativeMethods.WM_SHOWME,
@@ -85,7 +103,6 @@ namespace Devel_VM
             catch (Exception) { }
             return "0";
         }
-
         static void Application_ApplicationExit(object sender, EventArgs e)
         {
             if (VM.MachineReady.getReadyOffline())
@@ -93,7 +110,6 @@ namespace Devel_VM
                 VM.PowerOff(true, true);
             }
         }
-
         static string getIdentity()
         {
             username = Properties.Settings.Default.User;
@@ -144,12 +160,10 @@ namespace Devel_VM
             }
             return String.Format("{0} ({1} / {2})", username, host, string.Join(",", ips.ToArray()));
         }
-
-
         internal static void Update()
         {
             string ur = Properties.Settings.Default.path_updater;
-            System.Diagnostics.Process.Start(ur);
+            Process.Start(ur);
             VM.PowerOff(true, true);
             Application.Exit();
         }
