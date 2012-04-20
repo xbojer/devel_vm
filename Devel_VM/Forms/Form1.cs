@@ -327,6 +327,27 @@ namespace Devel_VM
             Program.VM.PowerOff(true);
             Program.VM.Uninstall(Program.VM.MachineName);
         }
+
+        private void tUpdateAutocheck_Tick(object sender, EventArgs e)
+        {
+            tUpdateAutocheck.Interval = 3600000;
+            SilentUpdateCheck();
+        }
+
+        void SilentUpdateCheck()
+        {
+            if (Program.checkVersion())
+            {
+                if (!Program.VM.checkVersion(false))
+                {
+                    showBaloon("Obraz jest nieaktualny.", "BetaManager: Aktualizacja", 2);
+                }
+            }
+            else
+            {
+                showBaloon("Aplikacja wymaga aktualizacji.", "BetaManager: Aktualizacja", 2);
+            }
+        }
     }
     internal class NativeMethods
     {

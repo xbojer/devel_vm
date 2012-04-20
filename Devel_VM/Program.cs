@@ -165,7 +165,8 @@ namespace Devel_VM
         internal static void Update()
         {
             string ur = Properties.Settings.Default.path_updater;
-            Process.Start(ur);
+            string ura = Properties.Settings.Default.path_updater_args;
+            Process.Start(ur, ura);
             VM.PowerOff(true, true);
             Application.Exit();
         }

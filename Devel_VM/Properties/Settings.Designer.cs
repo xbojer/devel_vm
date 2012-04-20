@@ -94,5 +94,14 @@ namespace Devel_VM.Properties {
                 return ((string)(this["path_updater"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("/S")]
+        public string path_updater_args {
+            get {
+                return ((string)(this["path_updater_args"]));
+            }
+        }
     }
 }

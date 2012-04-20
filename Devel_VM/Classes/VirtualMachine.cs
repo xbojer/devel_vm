@@ -134,7 +134,7 @@ namespace Devel_VM
                 }
             }
 
-            checkVersion();
+            checkVersion(false);
         }
 
         public bool checkVersion(bool verbose = true)

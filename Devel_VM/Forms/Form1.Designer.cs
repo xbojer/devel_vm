@@ -61,6 +61,7 @@
             this.tUpdateState = new System.Windows.Forms.Timer(this.components);
             this.tAutoStart = new System.Windows.Forms.Timer(this.components);
             this.button2 = new System.Windows.Forms.Button();
+            this.tUpdateAutocheck = new System.Windows.Forms.Timer(this.components);
             this.menuZasobnik.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -99,7 +100,7 @@
             this.toolStripMenuItem4,
             this.closeToolStripMenuItem});
             this.menuZasobnik.Name = "menuZasobnik";
-            this.menuZasobnik.Size = new System.Drawing.Size(159, 242);
+            this.menuZasobnik.Size = new System.Drawing.Size(159, 220);
             // 
             // showToolStripMenuItem
             // 
@@ -190,33 +191,33 @@
             // restartToolStripMenuItem1
             // 
             this.restartToolStripMenuItem1.Name = "restartToolStripMenuItem1";
-            this.restartToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.restartToolStripMenuItem1.Size = new System.Drawing.Size(110, 22);
             this.restartToolStripMenuItem1.Text = "Restart";
             this.restartToolStripMenuItem1.Click += new System.EventHandler(this.restartToolStripMenuItem1_Click);
             // 
             // reloadToolStripMenuItem
             // 
             this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
-            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.reloadToolStripMenuItem.Text = "Reload";
             this.reloadToolStripMenuItem.Click += new System.EventHandler(this.reloadToolStripMenuItem_Click);
             // 
             // toolStripMenuItem6
             // 
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(149, 6);
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(107, 6);
             // 
             // startToolStripMenuItem1
             // 
             this.startToolStripMenuItem1.Name = "startToolStripMenuItem1";
-            this.startToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.startToolStripMenuItem1.Size = new System.Drawing.Size(110, 22);
             this.startToolStripMenuItem1.Text = "Start";
             this.startToolStripMenuItem1.Click += new System.EventHandler(this.startToolStripMenuItem1_Click);
             // 
             // stopToolStripMenuItem
             // 
             this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
-            this.stopToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.stopToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.stopToolStripMenuItem.Text = "Stop";
             this.stopToolStripMenuItem.Click += new System.EventHandler(this.stopToolStripMenuItem_Click);
             // 
@@ -311,6 +312,12 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // tUpdateAutocheck
+            // 
+            this.tUpdateAutocheck.Enabled = true;
+            this.tUpdateAutocheck.Interval = 3000;
+            this.tUpdateAutocheck.Tick += new System.EventHandler(this.tUpdateAutocheck_Tick);
+            // 
             // fMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -363,6 +370,7 @@
         private System.Windows.Forms.ToolStripMenuItem sprawdźAktulizacjeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pobierzNaNowoObrazToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem usuńObrazToolStripMenuItem;
+        private System.Windows.Forms.Timer tUpdateAutocheck;
     }
 }
 
