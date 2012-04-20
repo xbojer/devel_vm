@@ -84,8 +84,10 @@ namespace Devel_VM
             Version curVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             if (curVersion.CompareTo(newVersion) < 0)
             {
+                UpdateNeeded = true;
                 return false;
             }
+            UpdateNeeded = false;
             return true;
         }
         public static string getRemoteVersion()
