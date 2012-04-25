@@ -99,10 +99,13 @@ namespace Devel_VM
         }
         private void deInit()
         {
-            if (Machine.State == MachineState.MachineState_Running)
+            if (Machine != null)
             {
-                relock();
-                Session.Console.PowerDown().WaitForCompletion(-1);
+                if (Machine.State == MachineState.MachineState_Running)
+                {
+                    relock();
+                    Session.Console.PowerDown().WaitForCompletion(-1);
+                }
             }
             MachineReady.Installed = false;
             MachineReady.VersionLocal = false;
@@ -154,6 +157,7 @@ namespace Devel_VM
         private void relock()
         {
             unlock();
+            if (Session == null) return;
             if (Session.State == SessionState.SessionState_Unlocked)
             {
                 try
@@ -579,7 +583,7 @@ namespace Devel_VM
             }
             String t = mach.SettingsFilePath;
             if (MachineName == name) deInit();
-            Thread.Sleep(600);
+            Thread.Sleep(1300);
             IMedium[] med = (IMedium[])mach.Unregister(CleanupMode.CleanupMode_Full);
             mach.Delete(med).WaitForCompletion(-1);
             /* Due to some strange behaviour with VB API App needs to separately delete medium and direcotry */

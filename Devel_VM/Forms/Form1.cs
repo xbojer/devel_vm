@@ -156,6 +156,7 @@ namespace Devel_VM
                     toolStripMenuItem2.Text = "Restart";
                     toolStripMenuItem3.Text = "Wyłącz";
                     toolStripMenuItem3.Enabled = toolStripMenuItem3.Visible = true;
+                    usuńObrazToolStripMenuItem.Enabled = pobierzNaNowoObrazToolStripMenuItem.Enabled = false;
                     break;
                 case VirtualMachine.State.Operational:
                     tAutoStart.Enabled = false;
@@ -164,12 +165,14 @@ namespace Devel_VM
                     toolStripMenuItem2.Text = "Restart";
                     toolStripMenuItem3.Text = "Wyślij sygnał wyłączenia";
                     toolStripMenuItem3.Enabled = toolStripMenuItem3.Visible = true;
+                    usuńObrazToolStripMenuItem.Enabled = pobierzNaNowoObrazToolStripMenuItem.Enabled = false;
                     break;
                 default://off?
                     hTTPDToolStripMenuItem.Enabled = false;
                     toolStripMenuItem2.Enabled = true;
                     toolStripMenuItem2.Text = "Uruchom";
                     toolStripMenuItem3.Enabled = toolStripMenuItem3.Visible = false;
+                    usuńObrazToolStripMenuItem.Enabled = pobierzNaNowoObrazToolStripMenuItem.Enabled = true;
                     break;
             }
 
