@@ -583,19 +583,40 @@ namespace Devel_VM
             }
             String t = mach.SettingsFilePath;
             if (MachineName == name) deInit();
-            Thread.Sleep(1300);
-            IMedium[] med = (IMedium[])mach.Unregister(CleanupMode.CleanupMode_Full);
-            mach.Delete(med).WaitForCompletion(-1);
-            /* Due to some strange behaviour with VB API App needs to separately delete medium and direcotry */
-            foreach(IMedium m in med) {
-                MediumState s = m.LockWrite();
-                if (s == MediumState.MediumState_LockedWrite)
+            bool unregistered = false;
+            IMedium[] med;
+            for (int tmp = 0; tmp <= 16; tmp++)
+            {
+                try
                 {
-                    m.Reset().WaitForCompletion(-1);
+                    med = (IMedium[])mach.Unregister(CleanupMode.CleanupMode_Full);
+                    mach.Delete(med).WaitForCompletion(-1);
+                    foreach (IMedium m in med)
+                    {
+                        MediumState s = m.LockWrite();
+                        if (s == MediumState.MediumState_LockedWrite)
+                        {
+                            m.Reset().WaitForCompletion(-1);
+                        }
+                        m.UnlockWrite();
+                        m.DeleteStorage().WaitForCompletion(-1);
+                    }
+                    unregistered = true;
+                    break;
                 }
-                m.UnlockWrite();
-                m.DeleteStorage().WaitForCompletion(-1);
+                catch (Exception)
+                {
+                    Thread.Sleep(500);
+                }
             }
+            if (!unregistered)
+            {
+                OnEvent("Nie udało się usunąć obrazu :(", 3);
+                return false;
+            }
+            
+            /* Due to some strange behaviour with VB API App needs to separately delete medium and direcotry */
+            
             OnEvent("Usuwanie plików", 1);
             DirectoryInfo di = Directory.GetParent(t);
             di.Delete(true);
