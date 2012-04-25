@@ -1,4 +1,4 @@
-﻿Beta_Manager.application
+Beta_Manager.application
 Beta_Manager.exe.manifest
 Beta_Manager.exe
 Interop.VirtualBox.dll
