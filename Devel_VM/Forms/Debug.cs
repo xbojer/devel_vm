@@ -25,6 +25,15 @@ namespace Devel_VM.Forms
             if (InvokeRequired) BeginInvoke(method);
             else method.Invoke();
         }
+        public void debugSet(String msg)
+        {
+            MethodInvoker method = delegate
+            {
+                textBox1.Text = msg;
+            };
+            if (InvokeRequired) BeginInvoke(method);
+            else method.Invoke();
+        }
         private void Debug_Load(object sender, EventArgs e)
         {
             

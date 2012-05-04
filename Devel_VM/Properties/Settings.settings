@@ -26,5 +26,8 @@
     <Setting Name="path_updater_args" Type="System.String" Scope="Application">
       <Value Profile="(Default)">/S</Value>
     </Setting>
+    <Setting Name="serial_pipe" Type="System.String" Scope="User">
+      <Value Profile="(Default)">BMTTY{0}</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

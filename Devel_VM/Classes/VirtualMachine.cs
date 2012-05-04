@@ -5,11 +5,18 @@ using System.IO;
 using System.Windows.Forms;
 using VirtualBox;
 using System.Threading;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO.Pipes;
+using Devel_VM.Classes;
 
 namespace Devel_VM
 {
     class VirtualMachine
     {
+
+        //Byte[] screenShotBuffer;
+
         private String ImgPath;
         public String MachineName;
         private String VbApiVersion = "4_1";
@@ -51,6 +58,10 @@ namespace Devel_VM
 
         public int RemoteVersion = 0;
 
+        public SerialPipe TTY;
+        string serial_prompt = "Enter passphrase: ";
+        string serial_response = "qweqweqwe\n";
+
         #region Events
         private VBoXEventL1 EvListener;
         private VBoxEventType[] EvTypes = { VBoxEventType.VBoxEventType_Any };
@@ -73,7 +84,6 @@ namespace Devel_VM
             ImgPath = Properties.Settings.Default.path_image.Replace("{vm_name}", MachineName);
             RemoteVersion = getRemoteVersion();
         }
-
         public void initMachine()
         {
             if (MachineReady.getReadyOffline()) return;
@@ -112,7 +122,6 @@ namespace Devel_VM
             Machine = null;
             unlock();
         }
-
         public void reInit()
         {
             while (!MachineReady.Installed)
@@ -139,7 +148,6 @@ namespace Devel_VM
 
             checkVersion(false);
         }
-
         public bool checkVersion(bool verbose = true)
         {
             int lv = getVersion(true);
@@ -224,7 +232,7 @@ namespace Devel_VM
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 OnEvent("Nie udało się odczytać wersji zewnętrznego obrazu", 1);
             }
@@ -423,9 +431,13 @@ namespace Devel_VM
                     break;
             }
             #endregion
+
             if (Status == State.On && Session.Console.Guest.AdditionsRunLevel == AdditionsRunLevelType.AdditionsRunLevelType_Userland)
             {
                 Status = State.Operational;
+
+                //Program.PREV.data = takeScreenShot(0);
+
                 if (oldState != State.Operational)
                 {
                     Program.VM.OnEvent("Maszyna gotowa do pracy", 1);
@@ -684,7 +696,17 @@ namespace Devel_VM
                     Session.Machine.CPUCount = 1;
                     Session.Machine.CPUExecutionCap = 100;
                 }
+
+                TTY = new SerialPipe();
+                TTY.addChallange(serial_prompt, serial_response); 
+
+                ISerialPort serialp = Session.Machine.GetSerialPort(0);
+                serialp.Path = @"\\.\pipe\" + TTY.Start();
+                serialp.HostMode = PortMode.PortMode_HostPipe;
+                serialp.Enabled = 1;
+
                 Session.Machine.SaveSettings();
+
 #if DEBUG
                 OnEvent("Config ok", 0);
 #endif
@@ -696,6 +718,43 @@ namespace Devel_VM
             unlock();
         }
         #endregion
+        public Image takeScreenShot(uint monitor)
+        {
+            return null;
+            /*
+            uint width = 0;
+            uint height = 0;
+            uint bpp = 0;
+            IDisplay d = Session.Console.Display;
+
+            d.GetScreenResolution(0, out width, out height, out bpp);
+
+            screenShotBuffer = new Byte[width * height * 4];
+
+            //try
+            //{
+                int[] buff = (int[])d.TakeScreenShotPNGToArray(0, width, height);
+                return null;
+            //} catch (Exception) {}
+            
+
+            //IFramebuffer fb;
+            //int ox, oy;
+
+            //Session.Console.Display.GetFramebuffer(0, out fb, out ox, out oy);
+
+            //IFramebufferOverlay fbo = fb.Overlay;
+            //fbo.
+
+            //Bitmap tb = new Bitmap((int)width, (int)height, 4, PixelFormat.Format24bppRgb, t);
+
+            //return (Image)tb;
+
+
+            //return Image.FromStream(new MemoryStream((byte[])buff));
+            return null;
+             */
+        }
     }
 
 }

@@ -62,6 +62,7 @@
             this.tAutoStart = new System.Windows.Forms.Timer(this.components);
             this.button2 = new System.Windows.Forms.Button();
             this.tUpdateAutocheck = new System.Windows.Forms.Timer(this.components);
+            this.podglądToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuZasobnik.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -100,7 +101,7 @@
             this.toolStripMenuItem4,
             this.closeToolStripMenuItem});
             this.menuZasobnik.Name = "menuZasobnik";
-            this.menuZasobnik.Size = new System.Drawing.Size(159, 220);
+            this.menuZasobnik.Size = new System.Drawing.Size(159, 242);
             // 
             // showToolStripMenuItem
             // 
@@ -170,7 +171,8 @@
             this.hTTPDToolStripMenuItem,
             this.sprawdźAktulizacjeToolStripMenuItem,
             this.pobierzNaNowoObrazToolStripMenuItem,
-            this.usuńObrazToolStripMenuItem});
+            this.usuńObrazToolStripMenuItem,
+            this.podglądToolStripMenuItem});
             this.toolStripMenuItem8.Name = "toolStripMenuItem8";
             this.toolStripMenuItem8.Size = new System.Drawing.Size(158, 22);
             this.toolStripMenuItem8.Text = "Zaawansowane";
@@ -318,6 +320,13 @@
             this.tUpdateAutocheck.Interval = 3000;
             this.tUpdateAutocheck.Tick += new System.EventHandler(this.tUpdateAutocheck_Tick);
             // 
+            // podglądToolStripMenuItem
+            // 
+            this.podglądToolStripMenuItem.Name = "podglądToolStripMenuItem";
+            this.podglądToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.podglądToolStripMenuItem.Text = "Podgląd";
+            this.podglądToolStripMenuItem.Click += new System.EventHandler(this.podglądToolStripMenuItem_Click);
+            // 
             // fMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -371,6 +380,7 @@
         private System.Windows.Forms.ToolStripMenuItem pobierzNaNowoObrazToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem usuńObrazToolStripMenuItem;
         private System.Windows.Forms.Timer tUpdateAutocheck;
+        private System.Windows.Forms.ToolStripMenuItem podglądToolStripMenuItem;
     }
 }
 

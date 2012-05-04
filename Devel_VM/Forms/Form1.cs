@@ -351,6 +351,11 @@ namespace Devel_VM
                 showBaloon("Aplikacja wymaga aktualizacji.", "BetaManager: Aktualizacja", 2);
             }
         }
+
+        private void podglądToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Program.PREV.Show();
+        }
     }
     internal class NativeMethods
     {

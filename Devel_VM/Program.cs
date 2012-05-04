@@ -6,6 +6,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Diagnostics;
+using Devel_VM.Forms;
 
 namespace Devel_VM
 {
@@ -20,6 +21,7 @@ namespace Devel_VM
         static public Forms.Debug DBG;
         static public string identity = "NOT YET KNOWN";
         static public string username = "NOT YET KNOWN";
+        static public Preview PREV;
 
         static Mutex mutex = new Mutex(true, "mutex_beta_manager_devel_vm_runonce");
         [STAThread]
@@ -30,6 +32,9 @@ namespace Devel_VM
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 identity = getIdentity();
+
+                PREV = new Preview();
+
                 VM = new VirtualMachine();
 
                 DBG = new Forms.Debug();
@@ -110,6 +115,7 @@ namespace Devel_VM
             if (VM.MachineReady.getReadyOffline())
             {
                 VM.PowerOff(true, true);
+                if(VM.TTY != null) VM.TTY.Stop();
             }
         }
         static string getIdentity()

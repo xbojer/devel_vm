@@ -103,5 +103,17 @@ namespace Devel_VM.Properties {
                 return ((string)(this["path_updater_args"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("BMTTY{0}")]
+        public string serial_pipe {
+            get {
+                return ((string)(this["serial_pipe"]));
+            }
+            set {
+                this["serial_pipe"] = value;
+            }
+        }
     }
 }
