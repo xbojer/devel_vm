@@ -411,9 +411,14 @@ namespace Devel_VM
             Program.PREV.Show();
         }
 
-        private void bETAToolStripMenuItem_Click(object sender, EventArgs e)
+        private void aLFAToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+            Process.Start(@"\\ALPHA");
+        }
+
+        private void bETA100ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start(@"\\BETA");
         }
     }
     internal class NativeMethods
