@@ -51,6 +51,7 @@
             this.sprawdźAktulizacjeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pobierzNaNowoObrazToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usuńObrazToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.podglądToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bETAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.informacjeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -62,7 +63,6 @@
             this.tAutoStart = new System.Windows.Forms.Timer(this.components);
             this.button2 = new System.Windows.Forms.Button();
             this.tUpdateAutocheck = new System.Windows.Forms.Timer(this.components);
-            this.podglądToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuZasobnik.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -244,6 +244,14 @@
             this.usuńObrazToolStripMenuItem.Text = "Usuń obraz";
             this.usuńObrazToolStripMenuItem.Click += new System.EventHandler(this.usuńObrazToolStripMenuItem_Click);
             // 
+            // podglądToolStripMenuItem
+            // 
+            this.podglądToolStripMenuItem.Name = "podglądToolStripMenuItem";
+            this.podglądToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.podglądToolStripMenuItem.Text = "Podgląd";
+            this.podglądToolStripMenuItem.Visible = false;
+            this.podglądToolStripMenuItem.Click += new System.EventHandler(this.podglądToolStripMenuItem_Click);
+            // 
             // bETAToolStripMenuItem
             // 
             this.bETAToolStripMenuItem.Enabled = false;
@@ -319,13 +327,6 @@
             this.tUpdateAutocheck.Enabled = true;
             this.tUpdateAutocheck.Interval = 3000;
             this.tUpdateAutocheck.Tick += new System.EventHandler(this.tUpdateAutocheck_Tick);
-            // 
-            // podglądToolStripMenuItem
-            // 
-            this.podglądToolStripMenuItem.Name = "podglądToolStripMenuItem";
-            this.podglądToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.podglądToolStripMenuItem.Text = "Podgląd";
-            this.podglądToolStripMenuItem.Click += new System.EventHandler(this.podglądToolStripMenuItem_Click);
             // 
             // fMain
             // 

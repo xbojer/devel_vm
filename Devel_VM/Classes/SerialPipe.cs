@@ -37,13 +37,24 @@ namespace Devel_VM.Classes
         public void Stop()
         {
             thread.Abort();
+            clearChallange();
         }
 
         public void addChallange(string req, string resp)
         {
             challenges[req] = resp;
         }
-
+        public void clearChallange(string req = null)
+        {
+            if (req == null)
+            {
+                challenges.Clear();
+            }
+            else
+            {
+                challenges.Remove(req);
+            }
+        }
         void work()
         {
             pipe = new NamedPipeServerStream(curr_pipe, PipeDirection.InOut);
@@ -68,7 +79,7 @@ namespace Devel_VM.Classes
                                     if (c == '\n')
                                     {
                                         log += l;
-                                        Program.DBG.debugSet(log);
+                                        //Program.DBG.debugSet(log);
                                         l = "";
                                     }
                                     if (challenges.ContainsKey(l))
@@ -77,8 +88,6 @@ namespace Devel_VM.Classes
                                         w.Flush();
                                     }
                                 }
-                                
-                                
                             }
                         }
                     }

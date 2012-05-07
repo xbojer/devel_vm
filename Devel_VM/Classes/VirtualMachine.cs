@@ -59,8 +59,10 @@ namespace Devel_VM
         public int RemoteVersion = 0;
 
         public SerialPipe TTY;
-        string serial_prompt = "Enter passphrase: ";
-        string serial_response = "qweqweqwe\n";
+
+
+        string serial_prompt1 = "Enter passphrase: ";
+        string serial_response1 = "qweqweqwe\n";
 
         #region Events
         private VBoXEventL1 EvListener;
@@ -667,7 +669,7 @@ namespace Devel_VM
             }
             OnEvent("Zakończono instalację", 1);
         }
-        void MachineConfig()
+        public void MachineConfig()
         {
             if (!MachineReady.getReadyOffline() || Status != State.Off) return;
             try
@@ -698,7 +700,7 @@ namespace Devel_VM
                 }
 
                 TTY = new SerialPipe();
-                TTY.addChallange(serial_prompt, serial_response); 
+                TTY.addChallange(serial_prompt1, serial_response1); 
 
                 ISerialPort serialp = Session.Machine.GetSerialPort(0);
                 serialp.Path = @"\\.\pipe\" + TTY.Start();
@@ -718,6 +720,7 @@ namespace Devel_VM
             unlock();
         }
         #endregion
+        #region Experimental
         public Image takeScreenShot(uint monitor)
         {
             return null;
@@ -755,6 +758,6 @@ namespace Devel_VM
             return null;
              */
         }
+        #endregion
     }
-
 }
