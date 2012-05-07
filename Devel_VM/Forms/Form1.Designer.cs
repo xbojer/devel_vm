@@ -254,11 +254,11 @@
             // 
             // bETAToolStripMenuItem
             // 
-            this.bETAToolStripMenuItem.Enabled = false;
             this.bETAToolStripMenuItem.Name = "bETAToolStripMenuItem";
             this.bETAToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.bETAToolStripMenuItem.Text = "WWW";
             this.bETAToolStripMenuItem.Visible = false;
+            this.bETAToolStripMenuItem.Click += new System.EventHandler(this.bETAToolStripMenuItem_Click);
             // 
             // toolStripMenuItem5
             // 

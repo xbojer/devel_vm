@@ -2,6 +2,10 @@
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Devel_VM.Classes;
+using Devel_VM.Forms;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Devel_VM
 {
@@ -334,7 +338,57 @@ namespace Devel_VM
         private void tUpdateAutocheck_Tick(object sender, EventArgs e)
         {
             tUpdateAutocheck.Interval = 3600000;
+            updateWWWtree();
             SilentUpdateCheck();
+        }
+        private void updateWWWtree()
+        {
+            bETAToolStripMenuItem.Visible = false;
+            bETAToolStripMenuItem.DropDownItems.Clear();
+
+            Dictionary<string, Dictionary<string, string>> data = Scanner.getSiteUrls();
+            foreach (string k in data.Keys)
+            {
+                ToolStripMenuItem domain = (ToolStripMenuItem)bETAToolStripMenuItem.DropDownItems.Add(k);
+                Dictionary<string, string> branches;
+
+                if (data.TryGetValue(k, out branches))
+                {
+                    foreach (string bk in branches.Keys)
+                    {
+                        string uri;
+                        if (branches.TryGetValue(bk, out uri))
+                        {
+                            if (bk == Properties.Settings.Default.web_dir_trunk)
+                            {
+                                domain.Click += new EventHandler(delegate(object sender, EventArgs e)
+                                {
+                                    openURL(uri);
+                                });
+                                domain.ToolTipText = uri;
+                            }
+                            else
+                            {
+                                ToolStripItem branche = domain.DropDownItems.Add(bk);
+                                branche.Click += new EventHandler(delegate(object sender, EventArgs e)
+                                {
+                                    openURL(uri);
+                                });
+                                branche.ToolTipText = uri;
+                            }
+                        }
+                    }
+                }
+            }
+            if (bETAToolStripMenuItem.DropDownItems.Count > 0)
+            {
+                bETAToolStripMenuItem.Visible = true;
+            }
+        }
+
+        private void openURL(string uri)
+        {
+            Process.Start(uri);
         }
 
         void SilentUpdateCheck()
@@ -355,6 +409,11 @@ namespace Devel_VM
         private void podglądToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Program.PREV.Show();
+        }
+
+        private void bETAToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
         }
     }
     internal class NativeMethods

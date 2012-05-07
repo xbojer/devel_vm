@@ -104,6 +104,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\Scanner.cs" />
     <Compile Include="Classes\SerialPipe.cs" />
     <Compile Include="Forms\AboutBox1.cs">
       <SubType>Form</SubType>

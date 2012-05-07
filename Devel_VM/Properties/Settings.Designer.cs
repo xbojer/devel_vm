@@ -115,5 +115,35 @@ namespace Devel_VM.Properties {
                 this["serial_pipe"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\DEVEL")]
+        public string web_dir {
+            get {
+                return ((string)(this["web_dir"]));
+            }
+            set {
+                this["web_dir"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("trunk")]
+        public string web_dir_trunk {
+            get {
+                return ((string)(this["web_dir_trunk"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("branches")]
+        public string web_dir_branches {
+            get {
+                return ((string)(this["web_dir_branches"]));
+            }
+        }
     }
 }

@@ -29,5 +29,14 @@
     <Setting Name="serial_pipe" Type="System.String" Scope="User">
       <Value Profile="(Default)">BMTTY{0}</Value>
     </Setting>
+    <Setting Name="web_dir" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\DEVEL</Value>
+    </Setting>
+    <Setting Name="web_dir_trunk" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">trunk</Value>
+    </Setting>
+    <Setting Name="web_dir_branches" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">branches</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
