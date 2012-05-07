@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Devel_VM.Forms
 {
@@ -103,6 +104,11 @@ namespace Devel_VM.Forms
         private void okButton_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(@"https://github.com/xbojer/devel_vm/issues");
         }
     }
 }
