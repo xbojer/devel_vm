@@ -64,6 +64,7 @@
             this.tAutoStart = new System.Windows.Forms.Timer(this.components);
             this.button2 = new System.Windows.Forms.Button();
             this.tUpdateAutocheck = new System.Windows.Forms.Timer(this.components);
+            this.sVNUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuZasobnik.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -151,7 +152,8 @@
             this.sprawdźAktulizacjeToolStripMenuItem,
             this.pobierzNaNowoObrazToolStripMenuItem,
             this.usuńObrazToolStripMenuItem,
-            this.podglądToolStripMenuItem});
+            this.podglądToolStripMenuItem,
+            this.sVNUpdateToolStripMenuItem});
             this.toolStripMenuItem8.Name = "toolStripMenuItem8";
             this.toolStripMenuItem8.Size = new System.Drawing.Size(165, 22);
             this.toolStripMenuItem8.Text = "Zaawansowane";
@@ -255,14 +257,14 @@
             // aLFAToolStripMenuItem
             // 
             this.aLFAToolStripMenuItem.Name = "aLFAToolStripMenuItem";
-            this.aLFAToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aLFAToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.aLFAToolStripMenuItem.Text = "alpha";
             this.aLFAToolStripMenuItem.Click += new System.EventHandler(this.aLFAToolStripMenuItem_Click);
             // 
             // bETA100ToolStripMenuItem
             // 
             this.bETA100ToolStripMenuItem.Name = "bETA100ToolStripMenuItem";
-            this.bETA100ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.bETA100ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.bETA100ToolStripMenuItem.Text = "beta";
             this.bETA100ToolStripMenuItem.Click += new System.EventHandler(this.bETA100ToolStripMenuItem_Click);
             // 
@@ -334,6 +336,13 @@
             this.tUpdateAutocheck.Interval = 3000;
             this.tUpdateAutocheck.Tick += new System.EventHandler(this.tUpdateAutocheck_Tick);
             // 
+            // sVNUpdateToolStripMenuItem
+            // 
+            this.sVNUpdateToolStripMenuItem.Name = "sVNUpdateToolStripMenuItem";
+            this.sVNUpdateToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.sVNUpdateToolStripMenuItem.Text = "SVN Update";
+            this.sVNUpdateToolStripMenuItem.Click += new System.EventHandler(this.sVNUpdateToolStripMenuItem_Click);
+            // 
             // fMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -389,6 +398,7 @@
         private System.Windows.Forms.Timer tUpdateAutocheck;
         private System.Windows.Forms.ToolStripMenuItem podglądToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem sVNUpdateToolStripMenuItem;
     }
 }
 

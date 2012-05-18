@@ -420,6 +420,30 @@ namespace Devel_VM
         {
             Process.Start(@"\\BETA");
         }
+
+        private void sVNUpdateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string filename = @"svvn";
+
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            Process p = new Process();
+
+            startInfo.CreateNoWindow = true;
+            startInfo.UseShellExecute = false;
+            startInfo.RedirectStandardOutput = true;
+
+            startInfo.FileName = filename;
+            startInfo.Arguments = "--version";
+
+            p.StartInfo = startInfo;
+            try
+            {
+                p.Start();
+                p.WaitForExit();
+                MessageBox.Show(p.StandardOutput.ReadToEnd());
+            }
+            catch (Exception) { }
+        }
     }
     internal class NativeMethods
     {

@@ -85,15 +85,24 @@ namespace Devel_VM
         internal static bool UpdateNeeded = false;
         internal static bool checkVersion()
         {
-            Version newVersion = new Version(getRemoteVersion());
-            Version curVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            if (curVersion.CompareTo(newVersion) < 0)
+            try
             {
-                UpdateNeeded = true;
-                return false;
+                Version newVersion = new Version(getRemoteVersion());
+                Version curVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+                if (curVersion.CompareTo(newVersion) < 0)
+                {
+                    UpdateNeeded = true;
+                }
+                else
+                {
+                    UpdateNeeded = false;
+                }
             }
-            UpdateNeeded = false;
-            return true;
+            catch (ArgumentException)
+            {
+                UpdateNeeded = false;
+            }
+            return !UpdateNeeded;
         }
         public static string getRemoteVersion()
         {
