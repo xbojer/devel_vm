@@ -134,17 +134,29 @@ namespace Devel_VM
                     Machine = vb.FindMachine(MachineName);
                     MachineReady.Installed = true;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    try
-                    {
-                        IMachine tmpmach = vb.FindMachine(MachineName + "_installing");
-                        Rename(MachineName + "_installing", MachineName);
-                    }
-                    catch (Exception)
-                    {
-                        Install();
-                    }
+                    //throw;
+                    
+                        try
+                        {
+                            IMachine tmpmach = vb.FindMachine(MachineName + "_installing");
+                            Rename(MachineName + "_installing", MachineName);
+                        }
+                        catch (Exception e2)
+                        {
+                            DialogResult odp = MessageBox.Show("Nie znaleziono maszyny "+MachineName+". Zaciągnąć na nowo? (Nie == spróbuj ponownie)\n("+e.Message+")", "Błąd wczytywania VM", MessageBoxButtons.YesNoCancel);
+                            if (odp == DialogResult.No) continue;
+                            if (odp == DialogResult.Yes)
+                            {
+                                Install();
+                            }
+                            if (odp == DialogResult.Cancel)
+                            {
+                                return;
+                            }
+                        }
+
                 }
             }
 
