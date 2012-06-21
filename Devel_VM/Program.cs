@@ -123,7 +123,7 @@ namespace Devel_VM
         {
             if (VM.MachineReady.getReadyOffline())
             {
-                VM.PowerOff(true, true);
+                //VM.PowerOff(true, true);
                 if(VM.TTY != null) VM.TTY.Stop();
             }
         }
@@ -138,7 +138,8 @@ namespace Devel_VM
                 {
                     if (!String.IsNullOrEmpty(r.Text))
                     {
-                        username = Robot.getUsernameByLink(r.Text.Trim());
+                        if(r.Text.Trim()=="offline") username = "OfflineMode";
+                        else username = Robot.getUsernameByLink(r.Text.Trim());
                     }
                 }
             }
@@ -157,7 +158,7 @@ namespace Devel_VM
                 throw new Exception("Błąd autoryzacji!");
             }
 
-            if (username != Properties.Settings.Default.User && username != Robot.user_unknown)
+            if (username != Properties.Settings.Default.User && username != Robot.user_unknown && username != "OfflineMode")
             {
                 Properties.Settings.Default.User = username;
                 Properties.Settings.Default.Save();

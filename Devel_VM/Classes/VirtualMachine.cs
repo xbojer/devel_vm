@@ -36,7 +36,7 @@ namespace Devel_VM
             }
             public bool getReadyOffline()
             {
-                return API && Installed && VersionRemote;
+                return API && Installed;
             }
         }
         public enum State
@@ -143,7 +143,7 @@ namespace Devel_VM
                             IMachine tmpmach = vb.FindMachine(MachineName + "_installing");
                             Rename(MachineName + "_installing", MachineName);
                         }
-                        catch (Exception e2)
+                        catch (Exception)
                         {
                             DialogResult odp = MessageBox.Show("Nie znaleziono maszyny "+MachineName+". Zaciągnąć na nowo? (Nie == spróbuj ponownie)\n("+e.Message+")", "Błąd wczytywania VM", MessageBoxButtons.YesNoCancel);
                             if (odp == DialogResult.No) continue;
