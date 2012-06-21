@@ -64,7 +64,6 @@
             this.tAutoStart = new System.Windows.Forms.Timer(this.components);
             this.button2 = new System.Windows.Forms.Button();
             this.tUpdateAutocheck = new System.Windows.Forms.Timer(this.components);
-            this.sVNUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuZasobnik.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -152,8 +151,7 @@
             this.sprawdźAktulizacjeToolStripMenuItem,
             this.pobierzNaNowoObrazToolStripMenuItem,
             this.usuńObrazToolStripMenuItem,
-            this.podglądToolStripMenuItem,
-            this.sVNUpdateToolStripMenuItem});
+            this.podglądToolStripMenuItem});
             this.toolStripMenuItem8.Name = "toolStripMenuItem8";
             this.toolStripMenuItem8.Size = new System.Drawing.Size(165, 22);
             this.toolStripMenuItem8.Text = "Zaawansowane";
@@ -174,33 +172,33 @@
             // restartToolStripMenuItem1
             // 
             this.restartToolStripMenuItem1.Name = "restartToolStripMenuItem1";
-            this.restartToolStripMenuItem1.Size = new System.Drawing.Size(110, 22);
+            this.restartToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.restartToolStripMenuItem1.Text = "Restart";
             this.restartToolStripMenuItem1.Click += new System.EventHandler(this.restartToolStripMenuItem1_Click);
             // 
             // reloadToolStripMenuItem
             // 
             this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
-            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
+            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.reloadToolStripMenuItem.Text = "Reload";
             this.reloadToolStripMenuItem.Click += new System.EventHandler(this.reloadToolStripMenuItem_Click);
             // 
             // toolStripMenuItem6
             // 
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(107, 6);
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(149, 6);
             // 
             // startToolStripMenuItem1
             // 
             this.startToolStripMenuItem1.Name = "startToolStripMenuItem1";
-            this.startToolStripMenuItem1.Size = new System.Drawing.Size(110, 22);
+            this.startToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.startToolStripMenuItem1.Text = "Start";
             this.startToolStripMenuItem1.Click += new System.EventHandler(this.startToolStripMenuItem1_Click);
             // 
             // stopToolStripMenuItem
             // 
             this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
-            this.stopToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
+            this.stopToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.stopToolStripMenuItem.Text = "Stop";
             this.stopToolStripMenuItem.Click += new System.EventHandler(this.stopToolStripMenuItem_Click);
             // 
@@ -336,13 +334,6 @@
             this.tUpdateAutocheck.Interval = 3000;
             this.tUpdateAutocheck.Tick += new System.EventHandler(this.tUpdateAutocheck_Tick);
             // 
-            // sVNUpdateToolStripMenuItem
-            // 
-            this.sVNUpdateToolStripMenuItem.Name = "sVNUpdateToolStripMenuItem";
-            this.sVNUpdateToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.sVNUpdateToolStripMenuItem.Text = "SVN Update";
-            this.sVNUpdateToolStripMenuItem.Click += new System.EventHandler(this.sVNUpdateToolStripMenuItem_Click);
-            // 
             // fMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -398,7 +389,6 @@
         private System.Windows.Forms.Timer tUpdateAutocheck;
         private System.Windows.Forms.ToolStripMenuItem podglądToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem sVNUpdateToolStripMenuItem;
     }
 }
 

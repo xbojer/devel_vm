@@ -382,7 +382,7 @@ namespace Devel_VM
             }
             if (bETAToolStripMenuItem.DropDownItems.Count > 0)
             {
-                bETAToolStripMenuItem.Visible = true;
+                //bETAToolStripMenuItem.Visible = true;
             }
         }
 
@@ -421,7 +421,7 @@ namespace Devel_VM
             Process.Start(@"\\BETA");
         }
 
-        private void sVNUpdateToolStripMenuItem_Click(object sender, EventArgs e)
+        /*private void sVNUpdateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string filename = @"svvn";
 
@@ -443,7 +443,7 @@ namespace Devel_VM
                 MessageBox.Show(p.StandardOutput.ReadToEnd());
             }
             catch (Exception) { }
-        }
+        }*/
     }
     internal class NativeMethods
     {
