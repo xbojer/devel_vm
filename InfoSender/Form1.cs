@@ -58,7 +58,7 @@ namespace InfoSender
                     p.dataIdentifier = Packet.DataIdentifier.Reset;
                     break;
                 case "Version":
-                    p.dataIdentifier = Packet.DataIdentifier.Reset;
+                    p.dataIdentifier = Packet.DataIdentifier.Version;
                     break;
                 default:
                     p.dataIdentifier = Packet.DataIdentifier.Null;
