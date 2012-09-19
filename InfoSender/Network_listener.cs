@@ -20,6 +20,8 @@ namespace Devel_VM
             Execute,
             Chat,
             Reset,
+            Debug,
+            Version,
             Reserved,
             Null
         }
@@ -108,6 +110,7 @@ namespace Devel_VM
         public delegate void ExecuteEvent(String auth, String cmd);
         public delegate void ChatEvent(String auth, String msg);
         public delegate void ResetEvent(String auth);
+        public delegate void DebugEvent(String auth, String msg);
         public delegate void AnyEvent(String type, String auth, String msg);
 
         public InfoEvent OnInfo = null;
@@ -119,6 +122,7 @@ namespace Devel_VM
         public ExecuteEvent OnExecute = null;
         public ChatEvent OnChat = null;
         public ResetEvent OnReset = null;
+        public ChatEvent OnDebug = null;
         public AnyEvent OnAny = null;
         #endregion
         #region Events
@@ -185,6 +189,13 @@ namespace Devel_VM
                 OnReset(auth);
             }
         }
+        private void onDebugEvent(String auth, String msg)
+        {
+            if (OnDebug != null)
+            {
+                OnDebug(auth, msg);
+            }
+        }
         private void onAnyEvent(String type, String auth, String msg)
         {
             if (OnAny != null)
@@ -248,6 +259,9 @@ namespace Devel_VM
                 case Packet.DataIdentifier.Reset:
                         onResetEvent(packet.auth + ":" + packet.message);
                     break;
+                case Packet.DataIdentifier.Debug:
+                        onDebugEvent(packet.auth, packet.message);
+                    break;
                 case Packet.DataIdentifier.Reserved:
                     break;
                 case Packet.DataIdentifier.Null:
@@ -263,6 +277,20 @@ namespace Devel_VM
     public class Network_Broadcast
     {
         public static int port = 21544;
+        private static string target = "255.255.255.255";
+
+        public static bool setTarget(string tg)
+        {
+            IPAddress t;
+            bool r = IPAddress.TryParse(tg, out t);
+            if(r) target = tg;
+            return r;
+        }
+
+        public static string getTarget()
+        {
+            return target;
+        }
 
         public static void send(Packet pack)
         {
@@ -272,7 +300,7 @@ namespace Devel_VM
         {
             UdpClient s = new UdpClient();
             s.EnableBroadcast = true;
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("255.255.255.255"), port);
+            IPEndPoint ep = new IPEndPoint(IPAddress.Parse(target), port);
             s.Send(packet, packet.Length, ep);
         }
     }

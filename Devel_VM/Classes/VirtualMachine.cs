@@ -14,12 +14,9 @@ namespace Devel_VM
 {
     class VirtualMachine
     {
-
-        //Byte[] screenShotBuffer;
-
         private String ImgPath;
         public String MachineName;
-        private String VbApiVersion = "4_1";
+        private String VbApiVersion = "4_2";
 
         public bool UpdateNeeded = false;
         
@@ -59,8 +56,7 @@ namespace Devel_VM
         public int RemoteVersion = 0;
 
         public SerialPipe TTY;
-
-
+        
         string serial_prompt1 = "Enter passphrase: ";
         string serial_response1 = "qweqweqwe\n";
 
@@ -136,8 +132,6 @@ namespace Devel_VM
                 }
                 catch (Exception e)
                 {
-                    //throw;
-                    
                         try
                         {
                             IMachine tmpmach = vb.FindMachine(MachineName + "_installing");
@@ -188,10 +182,7 @@ namespace Devel_VM
                 }
                 catch (Exception)
                 {
-                    OnEvent("Nie udało się założyć locka", 0);
-                    #if DEBUG
-                    //throw;
-                    #endif
+                    OnEvent("Nie udało się uzyskać dostępu do maszyny", 0);
                 }
             }
         }
@@ -200,16 +191,7 @@ namespace Devel_VM
             if (Session == null) return;
             if (Session.State == SessionState.SessionState_Locked)
             {
-#if DEBUG
-                //OnEvent("Zdejmowanie locka ok", 0);
-#endif
                 Session.UnlockMachine();
-            }
-            else
-            {
-#if DEBUG
-                //OnEvent("Zdejmowanie locka nieudane", 0);
-#endif
             }
         }
         #endregion
@@ -358,15 +340,6 @@ namespace Devel_VM
 #endif
                     }
                 }
-                else if (aEvent.Type == VBoxEventType.VBoxEventType_OnAdditionsStateChanged)
-                {
-                    //if (Program.VM.Session.Console.Guest.GetAdditionsStatus(AdditionsRunLevelType.AdditionsRunLevelType_Userland) > 0)
-                    //{
-                    //    Program.VM.Session.Console.Machine.SetGuestPropertyValue("VBOX_USER_NAME", Program.username);
-                    //    Program.VM.Session.Console.Machine.SetGuestPropertyValue("VBOX_USER_IDENTITY", Program.identity);
-                    //    Program.VM.OnEvent("Maszyna gotowa do pracy", 1);
-                    //}
-                }
             }
         }
         public void Tick()
@@ -375,11 +348,6 @@ namespace Devel_VM
             {
                 Status = State.Busy;
                 return;
-            }
-            if (!MachineReady.getReadyOnline())
-            {
-                //Status = State.Busy;
-                //return;
             }
             relock();
             State oldState = Status;
@@ -449,9 +417,6 @@ namespace Devel_VM
             if (Status == State.On && Session.Console.Guest.AdditionsRunLevel == AdditionsRunLevelType.AdditionsRunLevelType_Userland)
             {
                 Status = State.Operational;
-
-                //Program.PREV.data = takeScreenShot(0);
-
                 if (oldState != State.Operational)
                 {
                     Program.VM.OnEvent("Maszyna gotowa do pracy", 1);
@@ -460,46 +425,8 @@ namespace Devel_VM
         }
         #endregion
         #region Remote process execution
-        public string exec_api(String cmd, String[] args)
-        {
-            if (!MachineReady.getReadyOffline())
-            {
-                OnEvent("Maszyna nie jest gotowa (Start)", 3);
-                return "";
-            }
-            relock();
-            if(Session.Console.Guest.AdditionsRunLevel!=AdditionsRunLevelType.AdditionsRunLevelType_Userland) return "";
-
-            long outbuff = 1024;
-
-            uint pid = 0;
-            uint oflags = (uint)ProcessOutputFlag.ProcessOutputFlag_None;
-            uint eflags = (uint)(ExecuteProcessFlag.ExecuteProcessFlag_None|ExecuteProcessFlag.ExecuteProcessFlag_WaitForStdOut);
-            uint timeout = 0;
-
-            int[] asd = new int[outbuff];
-            String[] env = { "BETAMGR=1" };
-            IGuest gu = Session.Console.Guest;
-            IProgress progress = gu.ExecuteProcess(cmd, eflags, args, env, "fotka", "@fotka", 0, out pid);
-            asd = (int[])gu.GetProcessOutput(pid, oflags, timeout, outbuff);
-            while (progress.Completed <= 0)
-            {
-                if(asd==null)
-                    asd = (int[])gu.GetProcessOutput(pid, oflags, timeout, outbuff);
-            }
-            //progress.WaitForCompletion(-1);
-            
-            if (asd == null) return "null";
-            OnEvent("test out "+asd.Length.ToString(), 0);
-            //throw new Exception("VirtualBox COM API error?");
-
-            return asd[0].ToString();
-        }
         public string exec(String cmd, String args)
         {
-            //string[] deli = {@" "};
-            //string t = exec_api(cmd, args.Split(deli, StringSplitOptions.None));
-
             string filename = @"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe";
             args = " guestcontrol \"" + MachineName + "\" execute --image \"" + cmd + "\" --username=\"fotka\" --password=\"@fotka\" --wait-exit --wait-stdout " + args;
 
@@ -535,16 +462,16 @@ namespace Devel_VM
                 throw new Exception("Bledny obraz maszyny");
             }
 
-            System.Array aRefs, aOvfValues, aVBoxValues, aExtraConfigValues, aTypes;
+            //System.Array aRefs, aOvfValues, aVBoxValues, aExtraConfigValues, aTypes;
             VirtualSystemDescriptionType[] Types;
-            String[] VBoxValues, ExtraConfigValues;
+            String[] VBoxValues, ExtraConfigValues, Refs, OvfValues;
             IVirtualSystemDescription desc = descs[0];
 
-            desc.GetDescription(out aTypes, out aRefs, out aOvfValues, out aVBoxValues, out aExtraConfigValues);
+            desc.GetDescription(out Types, out Refs, out OvfValues, out VBoxValues, out ExtraConfigValues);
 
-            Types = (VirtualSystemDescriptionType[])aTypes;
-            VBoxValues = (String[])aVBoxValues;
-            ExtraConfigValues = (String[])aExtraConfigValues;
+            //Types = (VirtualSystemDescriptionType[])aTypes;
+            //VBoxValues = (String[])aVBoxValues;
+            //ExtraConfigValues = (String[])aExtraConfigValues;
             List<int> enabled = new List<int>();
 
             int imgversion = 0;
@@ -572,10 +499,10 @@ namespace Devel_VM
                 }
 	        }
 
-            aVBoxValues = VBoxValues;
-            aExtraConfigValues = ExtraConfigValues;
+            //aVBoxValues = VBoxValues;
+            //aExtraConfigValues = ExtraConfigValues;
 
-            descs[0].SetFinalValues((Array)(enabled.ToArray()), aVBoxValues, aExtraConfigValues);
+            descs[0].SetFinalValues(enabled.ToArray(), VBoxValues, ExtraConfigValues);
             ImportOptions[] opts = {ImportOptions.ImportOptions_KeepAllMACs};
             OnEvent("Instalacja obrazu", 1);
             IProgress proprc = ia.ImportMachines(opts);
@@ -640,9 +567,6 @@ namespace Devel_VM
                 OnEvent("Nie udało się usunąć obrazu :(", 3);
                 return false;
             }
-            
-            /* Due to some strange behaviour with VB API App needs to separately delete medium and direcotry */
-            
             OnEvent("Usuwanie plików", 1);
             DirectoryInfo di = Directory.GetParent(t);
             di.Delete(true);
@@ -730,45 +654,6 @@ namespace Devel_VM
                 OnEvent("Wystąpił problem podczas ustawiania maszyny", 2);
             }
             unlock();
-        }
-        #endregion
-        #region Experimental
-        public Image takeScreenShot(uint monitor)
-        {
-            return null;
-            /*
-            uint width = 0;
-            uint height = 0;
-            uint bpp = 0;
-            IDisplay d = Session.Console.Display;
-
-            d.GetScreenResolution(0, out width, out height, out bpp);
-
-            screenShotBuffer = new Byte[width * height * 4];
-
-            //try
-            //{
-                int[] buff = (int[])d.TakeScreenShotPNGToArray(0, width, height);
-                return null;
-            //} catch (Exception) {}
-            
-
-            //IFramebuffer fb;
-            //int ox, oy;
-
-            //Session.Console.Display.GetFramebuffer(0, out fb, out ox, out oy);
-
-            //IFramebufferOverlay fbo = fb.Overlay;
-            //fbo.
-
-            //Bitmap tb = new Bitmap((int)width, (int)height, 4, PixelFormat.Format24bppRgb, t);
-
-            //return (Image)tb;
-
-
-            //return Image.FromStream(new MemoryStream((byte[])buff));
-            return null;
-             */
         }
         #endregion
     }

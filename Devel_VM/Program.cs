@@ -7,21 +7,17 @@ using System.Text.RegularExpressions;
 using System.IO;
 using System.Diagnostics;
 using Devel_VM.Forms;
+using System.Linq;
 
 namespace Devel_VM
 {
     static class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-
         static public VirtualMachine VM;
         static public Network_listener NL;
         static public Forms.Debug DBG;
         static public string identity = "NOT YET KNOWN";
         static public string username = "NOT YET KNOWN";
-        static public Preview PREV;
 
         static Mutex mutex = new Mutex(true, "mutex_beta_manager_devel_vm_runonce");
         [STAThread]
@@ -31,21 +27,22 @@ namespace Devel_VM
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                identity = getIdentity();
+                identity = getIdentity(Environment.GetCommandLineArgs().Contains<string>("/auth"));
 
-                PREV = new Preview();
+                LogEvents += new LogEvent(NetworkLog);
 
                 VM = new VirtualMachine();
 
                 DBG = new Forms.Debug();
                 VM.OnVmEvent += new VirtualMachine.VmEvent(DBG.debugLog);
+                VM.OnVmEvent += new VirtualMachine.VmEvent(Log);
 
                 NL = new Network_listener();
                 NL.OnPing += delegate(string auth, string msg)
                 {
                     Packet p = new Packet();
                     p.dataIdentifier = Packet.DataIdentifier.Pong;
-                    p.message = auth + "+" + msg;
+                    p.message = auth + "[" + msg +"]:T["+ DateTime.Now.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalMilliseconds+"]";
                     Network_Broadcast.send(p);
                 };
                 
@@ -55,22 +52,16 @@ namespace Devel_VM
             }
             else
             {
-                // send our Win32 message to make the currently running instance jump on top of all the other windows
-                string[] cla = Environment.GetCommandLineArgs();
-                foreach (string item in cla)
-                {
-                    if (item.Trim() == "/r")
+                if(Environment.GetCommandLineArgs().Contains<string>("/r")) {
+                    Process[] prcs = Process.GetProcessesByName("Beta_Manager");
+                    foreach (Process prc in prcs)
                     {
-                        Process[] prcs = Process.GetProcessesByName("Beta_Manager");
-                        foreach (Process prc in prcs)
+                        if (Process.GetCurrentProcess().Id != prc.Id)
                         {
-                            if (Process.GetCurrentProcess().Id != prc.Id)
-                            {
-                                prc.Kill();
-                            }
+                            prc.Kill();
                         }
-                        Application.Restart();
                     }
+                    Application.Restart();
                 }
 
                 NativeMethods.PostMessage(
@@ -82,7 +73,58 @@ namespace Devel_VM
             }
         }
 
+        #region Logging
+        public delegate void LogEvent(String msg, String title, int priority);
+        public static LogEvent LogEvents;
+        public static void Log(String msg, string title, int priority)
+        {
+            if (LogEvents != null)
+            {
+                LogEvents(msg, title, priority);
+            }
+        }
+        public static void NetworkLog(String msg, String title, int priority)
+        {
+            string prio;
+            switch (priority)
+            {
+                case 1:
+                    prio = "Info";
+                    break;
+                case 2:
+                    prio = "Warning";
+                    break;
+                case 3:
+                    prio = "Error";
+                    break;
+                default:
+                    prio = "-";
+                    break;
+            }
+
+            Packet p = new Packet();
+            p.dataIdentifier = Packet.DataIdentifier.Debug;
+            p.message = title + ":" + prio + ":" + msg;
+            Network_Broadcast.send(p);
+        }
+        #endregion
+
+        #region Version checking
         internal static bool UpdateNeeded = false;
+        public static void silentCheckVersion()
+        {
+            if (Program.checkVersion())
+            {
+                if (!Program.VM.checkVersion(false))
+                {
+                    Log("Obraz jest nieaktualny.", "BetaManager: Aktualizacja", 2);
+                }
+            }
+            else
+            {
+                Log("Aplikacja wymaga aktualizacji.", "BetaManager: Aktualizacja", 2);
+            }
+        }
         internal static bool checkVersion()
         {
             try
@@ -119,16 +161,31 @@ namespace Devel_VM
             catch (Exception) { }
             return "0";
         }
+        #endregion
+        internal static void Update()
+        {
+            string ur = Properties.Settings.Default.path_updater;
+            string ura = Properties.Settings.Default.path_updater_args;
+            VM.PowerOff(true, true);
+            Process.Start(ur, ura);
+            Application.Exit();
+        }
         static void Application_ApplicationExit(object sender, EventArgs e)
         {
             if (VM.MachineReady.getReadyOffline())
             {
-                //VM.PowerOff(true, true);
                 if(VM.TTY != null) VM.TTY.Stop();
             }
+            Log("Application Exiting", "MAIN", 0);
         }
-        static string getIdentity()
+        static string getIdentity(bool forget = false)
         {
+            if (forget)
+            {
+                Properties.Settings.Default.User = "";
+                Properties.Settings.Default.Save();
+            }
+
             username = Properties.Settings.Default.User;
 
             if (String.IsNullOrEmpty(username))
@@ -178,13 +235,6 @@ namespace Devel_VM
             }
             return String.Format("{0} ({1} / {2})", username, host, string.Join(",", ips.ToArray()));
         }
-        internal static void Update()
-        {
-            string ur = Properties.Settings.Default.path_updater;
-            string ura = Properties.Settings.Default.path_updater_args;
-            Process.Start(ur, ura);
-            VM.PowerOff(true, true);
-            Application.Exit();
-        }
+
     }
 }

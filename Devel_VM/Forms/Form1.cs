@@ -28,15 +28,23 @@ namespace Devel_VM
             if (!allowshowdisplay && mainbaseinit)
             {
                 mainbaseinit = false;
+                Program.LogEvents += new Program.LogEvent(showBaloon);
                 Program.NL.OnInfo += delegate(string auth, string msg)
                 {
-                    showBaloon(auth + ": " + msg, "Beta Manager: Informator", 1);
+                    Program.Log(auth + ": " + msg, "Beta Manager: Informator", 1);
                 };
                 Program.NL.OnError += delegate(string auth, string msg)
                 {
-                    showBaloon(String.Format("!!! $1 ($2) !!!", auth, msg), "Beta Manager: Informator", 2);
+                    Program.Log(String.Format("!!! {1} ({0}) !!!", auth, msg), "Beta Manager: Informator", 2);
                 };
-                Program.VM.OnVmEvent += new VirtualMachine.VmEvent(showBaloon);
+                Program.NL.OnVersion += delegate(string auth, string msg)
+                {
+                    Packet p = new Packet();
+                    p.dataIdentifier = Packet.DataIdentifier.Debug;
+                    p.message = "AppVer: "+System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                    p.message += " / ImgVer: " + Program.VM.getVersion();
+                    Network_Broadcast.send(p);
+                };
                 Program.VM.initMachine();
             }
             base.SetVisibleCore(allowshowdisplay ? value : allowshowdisplay);
@@ -65,7 +73,7 @@ namespace Devel_VM
         }
         private void WmUpdating()
         {
-            showBaloon("Trwa aktualizacja programu", "Beta Manager: Aktualizator", 1);
+            Program.Log("Trwa aktualizacja programu", "Beta Manager: Aktualizator", 1);
         }
         
         public void showBaloon(String msg, String title, int priority)
@@ -130,18 +138,12 @@ namespace Devel_VM
             Application.Exit();
         }
         #endregion
-
         #region Form control
-        private void fMain_Load(object sender, EventArgs e)
-        {
-
-        }
         private void bHide_Click(object sender, EventArgs e)
         {
             Hide();
         }
         #endregion
-
         #region Timers' Events
         private void tState_Tick(object sender, EventArgs e)
         {
@@ -193,59 +195,36 @@ namespace Devel_VM
         }
         #endregion
         #region HTTPD Control
+        internal bool vmHTTPDoperation(string op, bool verbose = true) {
+            String result = Program.VM.exec("/bin/sh", "/opt/fotka/bin/control_httpd "+op).Trim();
+            if (verbose)
+            {
+                if (result != "OK")
+                {
+                    Program.Log("Error while " + op + "ing HTTPD: " + result, "HTTPD", 3);
+                }
+                else
+                {
+                    Program.Log("Service " + op + "ed", "HTTPD", 1);
+                }
+            }
+            return (result == "OK");
+        }
         private void restartToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            String result = Program.VM.exec("/bin/sh", "/opt/fotka/bin/control_httpd restart").Trim();
-            if (result != "OK")
-            {
-                showBaloon("Error while restarting HTTPD: "+ result, "HTTPD", 3);
-            }
-            else
-            {
-                showBaloon("Service restarted", "HTTPD", 1);
-            }
+            vmHTTPDoperation("restart");
         }
-
         private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            /*String test = Program.VM.exec("/bin/echo", "/tmp/asdfg");
-            showBaloon(test, "debug", 1);
-            return;*/
-            String result = Program.VM.exec("/bin/sh", "/opt/fotka/bin/control_httpd reload").Trim();
-            if (result != "OK")
-            {
-                showBaloon("Error while reloading HTTPD: " + result, "HTTPD", 3);
-            }
-            else
-            {
-                showBaloon("Service reloaded", "HTTPD", 1);
-            }
+            vmHTTPDoperation("reload");
         }
-
         private void startToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            String result = Program.VM.exec("/bin/sh", "/opt/fotka/bin/control_httpd start").Trim();
-            if (result != "OK")
-            {
-                showBaloon("Error while starting HTTPD: " + result, "HTTPD", 3);
-            }
-            else
-            {
-                showBaloon("Service started", "HTTPD", 1);
-            }
+            vmHTTPDoperation("start");
         }
-
         private void stopToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            String result = Program.VM.exec("/bin/sh", "/opt/fotka/bin/control_httpd stop").Trim();
-            if (result != "OK")
-            {
-                showBaloon("Error while stopping HTTPD: " + result, "HTTPD", 3);
-            }
-            else
-            {
-                showBaloon("Service stopped", "HTTPD", 1);
-            }
+            vmHTTPDoperation("stop");
         }
         #endregion
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
@@ -298,7 +277,7 @@ namespace Devel_VM
             tAutoStart.Enabled = false;
             if (Program.UpdateNeeded)
             {
-                showBaloon("Uruchamianie instalatora programu", "BetaManager: Aktualizacja", 1);
+                Program.Log("Uruchamianie instalatora programu", "BetaManager: Aktualizacja", 1);
                 Program.Update();
             }
             else
@@ -310,22 +289,22 @@ namespace Devel_VM
                 Program.VM.reInit();
             }
         }
-        private void sprawdźAktulizacjeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void sprawdzAktulizacjeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (Program.checkVersion())
             {
                 if (Program.VM.checkVersion(false))//aktualna
                 {
-                    showBaloon("Aplikacja i obraz są aktualne.", "BetaManager: Aktualizacja", 1);
+                    Program.Log("Aplikacja i obraz są aktualne.", "BetaManager: Aktualizacja", 1);
                 }
                 else
                 {
-                    showBaloon("Obraz jest nieaktualny.", "BetaManager: Aktualizacja", 2);
+                    Program.Log("Obraz jest nieaktualny.", "BetaManager: Aktualizacja", 2);
                 }
             }
             else
             {
-                showBaloon("Aplikacja wymaga aktualizacji.", "BetaManager: Aktualizacja", 2);
+                Program.Log("Aplikacja wymaga aktualizacji.", "BetaManager: Aktualizacja", 2);
             }
         }
         private void usuńObrazToolStripMenuItem_Click(object sender, EventArgs e)
@@ -339,7 +318,7 @@ namespace Devel_VM
         {
             tUpdateAutocheck.Interval = 3600000;
             updateWWWtree();
-            SilentUpdateCheck();
+            Program.silentCheckVersion();
         }
         private void updateWWWtree()
         {
@@ -350,16 +329,16 @@ namespace Devel_VM
             foreach (string k in data.Keys)
             {
                 ToolStripMenuItem domain = (ToolStripMenuItem)bETAToolStripMenuItem.DropDownItems.Add(k);
-                Dictionary<string, string> branches;
+                Dictionary<string, string> entries;
 
-                if (data.TryGetValue(k, out branches))
+                if (data.TryGetValue(k, out entries))
                 {
-                    foreach (string bk in branches.Keys)
+                    foreach (string bk in entries.Keys)
                     {
                         string uri;
-                        if (branches.TryGetValue(bk, out uri))
+                        if (entries.TryGetValue(bk, out uri))
                         {
-                            if (bk == Properties.Settings.Default.web_dir_trunk)
+                            if (bk == "@")
                             {
                                 domain.Click += new EventHandler(delegate(object sender, EventArgs e)
                                 {
@@ -382,69 +361,23 @@ namespace Devel_VM
             }
             if (bETAToolStripMenuItem.DropDownItems.Count > 0)
             {
-                //bETAToolStripMenuItem.Visible = true;
+                bETAToolStripMenuItem.Visible = true;
             }
         }
-
         private void openURL(string uri)
         {
             Process.Start(uri);
         }
-
-        void SilentUpdateCheck()
-        {
-            if (Program.checkVersion())
-            {
-                if (!Program.VM.checkVersion(false))
-                {
-                    showBaloon("Obraz jest nieaktualny.", "BetaManager: Aktualizacja", 2);
-                }
-            }
-            else
-            {
-                showBaloon("Aplikacja wymaga aktualizacji.", "BetaManager: Aktualizacja", 2);
-            }
-        }
-
-        private void podglądToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Program.PREV.Show();
-        }
-
         private void aLFAToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start(@"\\ALPHA");
         }
-
         private void bETA100ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start(@"\\BETA");
         }
-
-        /*private void sVNUpdateToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string filename = @"svvn";
-
-            ProcessStartInfo startInfo = new ProcessStartInfo();
-            Process p = new Process();
-
-            startInfo.CreateNoWindow = true;
-            startInfo.UseShellExecute = false;
-            startInfo.RedirectStandardOutput = true;
-
-            startInfo.FileName = filename;
-            startInfo.Arguments = "--version";
-
-            p.StartInfo = startInfo;
-            try
-            {
-                p.Start();
-                p.WaitForExit();
-                MessageBox.Show(p.StandardOutput.ReadToEnd());
-            }
-            catch (Exception) { }
-        }*/
     }
+
     internal class NativeMethods
     {
         public const int HWND_BROADCAST = 0xffff;

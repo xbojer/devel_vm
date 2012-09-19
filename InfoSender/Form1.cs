@@ -27,6 +27,7 @@ namespace InfoSender
 
         private void button1_Click(object sender, EventArgs e)
         {
+            Network_Broadcast.setTarget("10.11.11." + ipBox.Text);
             Packet p = new Packet();
             p.message = textBox1.Text;
             p.auth = "TestApp";
@@ -53,11 +54,17 @@ namespace InfoSender
                 case "Chat":
                     p.dataIdentifier = Packet.DataIdentifier.Chat;
                     break;
+                case "Reset":
+                    p.dataIdentifier = Packet.DataIdentifier.Reset;
+                    break;
+                case "Version":
+                    p.dataIdentifier = Packet.DataIdentifier.Reset;
+                    break;
                 default:
                     p.dataIdentifier = Packet.DataIdentifier.Null;
                     break;
             }
-
+            richTextBox1.Text += "\r\n [SEND:" + Network_Broadcast.getTarget() + "][" + p.dataIdentifier.ToString() + "] " + "TestApp" + ": " + textBox1.Text;
             Network_Broadcast.send(p);
         }
 

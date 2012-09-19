@@ -10,56 +10,23 @@ namespace Devel_VM.Classes
     {
         public static Dictionary<string, Dictionary<string, string>> getSiteUrls()
         {
-            Dictionary<string, Dictionary<string, string>> branches = new Dictionary<string, Dictionary<string, string>>();
+            Dictionary<string, Dictionary<string, string>> result = new Dictionary<string,Dictionary<string,string>>();
 
             string rootDir = Properties.Settings.Default.web_dir;
-            string trunkDir = Properties.Settings.Default.web_dir_trunk;
-            string branchesDir = Properties.Settings.Default.web_dir_branches;
 
             string[] domainLevel = Directory.GetDirectories(rootDir);
             foreach (string domainEntry in domainLevel)
             {
                 string domainName = Path.GetFileName(domainEntry);
-                if (domainName == "modules") continue;
-                string[] subLevel = Directory.GetDirectories(domainEntry);
-                foreach (string subEntry in subLevel)
-                {
-                    string subDomainName = Path.GetFileName(subEntry) + "." + domainName;
-                    string[] itemLevel = Directory.GetDirectories(subEntry);
-                    foreach (string itemEntry in itemLevel)
-                    {
-                        string name = Path.GetFileName(itemEntry);
-                        if (name == trunkDir)
-                        {
-                            string uri = "http://" + subDomainName;
-                            if (!branches.ContainsKey(subDomainName))
-                            {
-                                branches[subDomainName] = new Dictionary<string, string>();
-                            }
-                            branches[subDomainName].Add(name, uri);
-                        }
-                        else if (name == branchesDir)
-                        {
-                            string[] bLevel = Directory.GetDirectories(itemEntry);
-                            foreach (string bEntry in bLevel)
-                            {
-                                string bName = Path.GetFileName(bEntry);
-                                if (bName != ".svn")
-                                {
-                                    string uri = "http://" + bName + "." + subDomainName;
-                                    if (!branches.ContainsKey(subDomainName))
-                                    {
-                                        branches[subDomainName] = new Dictionary<string, string>();
-                                    }
-                                    branches[subDomainName].Add(bName, uri);
-                                }
-                            }
-                        }
-                    }
-                }
+                if(!domainName.Contains('.')) continue;
+
+                result[domainName] = new Dictionary<string, string>();
+                result[domainName]["@"] = "http://"+Program.username.Replace('.','-')+"."+domainName+"/";
+                result[domainName]["X"] = "http://" + domainName.Replace("devel","x")+"/";
+                result[domainName]["WWW"] = "http://" + domainName.Replace("devel", "x") + "/";
             }
 
-            return branches;
+            return result;
         }
     }
 }

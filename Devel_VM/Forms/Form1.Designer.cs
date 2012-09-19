@@ -48,7 +48,6 @@
             this.sprawdźAktulizacjeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pobierzNaNowoObrazToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usuńObrazToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.podglądToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.bETAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zasobyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -150,8 +149,7 @@
             this.hTTPDToolStripMenuItem,
             this.sprawdźAktulizacjeToolStripMenuItem,
             this.pobierzNaNowoObrazToolStripMenuItem,
-            this.usuńObrazToolStripMenuItem,
-            this.podglądToolStripMenuItem});
+            this.usuńObrazToolStripMenuItem});
             this.toolStripMenuItem8.Name = "toolStripMenuItem8";
             this.toolStripMenuItem8.Size = new System.Drawing.Size(165, 22);
             this.toolStripMenuItem8.Text = "Zaawansowane";
@@ -207,7 +205,7 @@
             this.sprawdźAktulizacjeToolStripMenuItem.Name = "sprawdźAktulizacjeToolStripMenuItem";
             this.sprawdźAktulizacjeToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.sprawdźAktulizacjeToolStripMenuItem.Text = "Sprawdź aktulizacje";
-            this.sprawdźAktulizacjeToolStripMenuItem.Click += new System.EventHandler(this.sprawdźAktulizacjeToolStripMenuItem_Click);
+            this.sprawdźAktulizacjeToolStripMenuItem.Click += new System.EventHandler(this.sprawdzAktulizacjeToolStripMenuItem_Click);
             // 
             // pobierzNaNowoObrazToolStripMenuItem
             // 
@@ -222,14 +220,6 @@
             this.usuńObrazToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.usuńObrazToolStripMenuItem.Text = "Usuń obraz";
             this.usuńObrazToolStripMenuItem.Click += new System.EventHandler(this.usuńObrazToolStripMenuItem_Click);
-            // 
-            // podglądToolStripMenuItem
-            // 
-            this.podglądToolStripMenuItem.Name = "podglądToolStripMenuItem";
-            this.podglądToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.podglądToolStripMenuItem.Text = "Podgląd";
-            this.podglądToolStripMenuItem.Visible = false;
-            this.podglądToolStripMenuItem.Click += new System.EventHandler(this.podglądToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -347,7 +337,6 @@
             this.MaximizeBox = false;
             this.Name = "fMain";
             this.Text = "Beta Manager";
-            this.Load += new System.EventHandler(this.fMain_Load);
             this.menuZasobnik.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -387,7 +376,6 @@
         private System.Windows.Forms.ToolStripMenuItem pobierzNaNowoObrazToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem usuńObrazToolStripMenuItem;
         private System.Windows.Forms.Timer tUpdateAutocheck;
-        private System.Windows.Forms.ToolStripMenuItem podglądToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     }
 }

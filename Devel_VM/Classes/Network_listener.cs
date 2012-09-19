@@ -20,6 +20,8 @@ namespace Devel_VM
             Execute,
             Chat,
             Reset,
+            Debug,
+            Version,
             Reserved,
             Null
         }
@@ -108,6 +110,8 @@ namespace Devel_VM
         public delegate void ExecuteEvent(String auth, String cmd);
         public delegate void ChatEvent(String auth, String msg);
         public delegate void ResetEvent(String auth);
+        public delegate void DebugEvent(String auth, String msg);
+        public delegate void VersionEvent(String auth, String msg);
         public delegate void AnyEvent(String type, String auth, String msg);
 
         public InfoEvent OnInfo = null;
@@ -119,6 +123,8 @@ namespace Devel_VM
         public ExecuteEvent OnExecute = null;
         public ChatEvent OnChat = null;
         public ResetEvent OnReset = null;
+        public ChatEvent OnDebug = null;
+        public ChatEvent OnVersion = null;
         public AnyEvent OnAny = null;
         #endregion
         #region Events
@@ -183,6 +189,20 @@ namespace Devel_VM
             if (OnReset != null)
             {
                 OnReset(auth);
+            }
+        }
+        private void onDebugEvent(String auth, String msg)
+        {
+            if (OnDebug != null)
+            {
+                OnDebug(auth, msg);
+            }
+        }
+        private void onVersionEvent(String auth, String msg)
+        {
+            if (OnVersion != null)
+            {
+                OnVersion(auth, msg);
             }
         }
         private void onAnyEvent(String type, String auth, String msg)
@@ -251,9 +271,11 @@ namespace Devel_VM
                         onResetEvent(packet.auth);
                     }
                     break;
-                case Packet.DataIdentifier.Reserved:
+                case Packet.DataIdentifier.Debug:
+                    onDebugEvent(packet.auth, packet.message);
                     break;
-                case Packet.DataIdentifier.Null:
+                case Packet.DataIdentifier.Version:
+                    onVersionEvent(packet.auth, packet.message);
                     break;
                 default:
                     break;
