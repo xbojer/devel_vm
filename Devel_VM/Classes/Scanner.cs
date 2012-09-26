@@ -28,5 +28,26 @@ namespace Devel_VM.Classes
 
             return result;
         }
+
+        public static Dictionary<string, Dictionary<string, string>> getNodeApps()
+        {
+            Dictionary<string, Dictionary<string, string>> result = new Dictionary<string, Dictionary<string, string>>();
+
+            string rootDir = Properties.Settings.Default.node_dir;
+            string develDir = Properties.Settings.Default.node_devel_dir;
+
+            string[] domainLevel = Directory.GetDirectories(rootDir);
+            foreach (string domainEntry in domainLevel)
+            {
+                string appdir = Path.GetFileName(domainEntry);
+
+                result[appdir] = new Dictionary<string, string>();
+                //result[domainName]["@"] = "http://" + Program.username.Replace('.', '-') + "." + domainName + "/";
+                result[appdir]["Start"] = "/usr/bin/screen -dmS nodeBM_" + appdir + " /usr/bin/node " + develDir + appdir + "/index.js";
+                result[appdir]["Stop"] = "/usr/bin/screen -S nodeBM_" + appdir + " -X quit";
+            }
+
+            return result;
+        }
     }
 }

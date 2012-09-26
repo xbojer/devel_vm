@@ -127,5 +127,29 @@ namespace Devel_VM.Properties {
                 this["web_dir"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\DEVEL\\node\\apps\\")]
+        public string node_dir {
+            get {
+                return ((string)(this["node_dir"]));
+            }
+            set {
+                this["node_dir"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("/export/www/DEVEL/node/apps/")]
+        public string node_devel_dir {
+            get {
+                return ((string)(this["node_devel_dir"]));
+            }
+            set {
+                this["node_devel_dir"] = value;
+            }
+        }
     }
 }

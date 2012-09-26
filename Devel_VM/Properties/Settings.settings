@@ -32,5 +32,11 @@
     <Setting Name="web_dir" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\DEVEL</Value>
     </Setting>
+    <Setting Name="node_dir" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\DEVEL\node\apps\</Value>
+    </Setting>
+    <Setting Name="node_devel_dir" Type="System.String" Scope="User">
+      <Value Profile="(Default)">/export/www/DEVEL/node/apps/</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

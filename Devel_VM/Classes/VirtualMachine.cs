@@ -428,7 +428,7 @@ namespace Devel_VM
         public string exec(String cmd, String args)
         {
             string filename = @"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe";
-            args = " guestcontrol \"" + MachineName + "\" execute --image \"" + cmd + "\" --username=\"fotka\" --password=\"@fotka\" --wait-exit --wait-stdout " + args;
+            args = " guestcontrol \"" + MachineName + "\" execute --image \"" + cmd + "\" --username=\"fotka\" --password=\"@fotka\" --wait-exit --wait-stdout --wait-stderr -- " + args;
 
             ProcessStartInfo startInfo = new ProcessStartInfo();
             Process p = new Process();
