@@ -404,14 +404,14 @@ namespace Devel_VM
         }
         private void openNodeCMD(string cmd)
         {
-            String result = Program.VM.exec("/bin/bash", "-c '" + cmd + "'").Trim();
+            String result = Program.VM.exec("/bin/bash", "-c '" + cmd + "'", true).Trim();
             if (result == "")
             {
-                Program.Log("OK", "NodeJS", 0);
+                Program.Log("Empty response :(", "NodeJS", 2);
             }
             else
             {
-                Program.Log(result, "NodeJS", 2);
+                Program.Log(result, "NodeJS", 0);
             }
             return;
         }

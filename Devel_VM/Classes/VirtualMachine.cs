@@ -425,10 +425,12 @@ namespace Devel_VM
         }
         #endregion
         #region Remote process execution
-        public string exec(String cmd, String args)
+        public string exec(String cmd, String args, bool verbose = false)
         {
             string filename = @"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe";
-            args = " guestcontrol \"" + MachineName + "\" execute --image \"" + cmd + "\" --username=\"fotka\" --password=\"@fotka\" --wait-exit --wait-stdout --wait-stderr -- " + args;
+            args = " -- " + args;
+            if (verbose) args = " --verbose " + args;
+            args = " guestcontrol \"" + MachineName + "\" execute --image \"" + cmd + "\" --username=\"fotka\" --password=\"@fotka\" --wait-exit --wait-stdout --wait-stderr " + args;
 
             ProcessStartInfo startInfo = new ProcessStartInfo();
             Process p = new Process();
