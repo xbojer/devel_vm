@@ -43,8 +43,8 @@ namespace Devel_VM.Classes
 
                 result[appdir] = new Dictionary<string, string>();
                 //result[domainName]["@"] = "http://" + Program.username.Replace('.', '-') + "." + domainName + "/";
-                result[appdir]["Start"] = "/usr/bin/screen -dmS nodeBM_" + appdir + " /usr/bin/node " + develDir + appdir + "/index.js";
-                result[appdir]["Stop"] = "/usr/bin/screen -S nodeBM_" + appdir + " -X quit";
+                result[appdir]["Start"] = "export NODE_ENV=beta; /usr/bin/screen -dmS nodeBM_" + appdir + " /usr/bin/node " + develDir + appdir + "/index.js";
+                result[appdir]["Stop"] = "export NODE_ENV=beta; /usr/bin/screen -S nodeBM_" + appdir + " -X quit";
             }
 
             return result;
