@@ -13,7 +13,10 @@ namespace Devel_VM.Classes
             Dictionary<string, Dictionary<string, string>> result = new Dictionary<string,Dictionary<string,string>>();
 
             string rootDir = Properties.Settings.Default.web_dir;
-
+            if (!Directory.Exists(rootDir))
+            {
+                return result;
+            }
             string[] domainLevel = Directory.GetDirectories(rootDir);
             foreach (string domainEntry in domainLevel)
             {
@@ -35,6 +38,11 @@ namespace Devel_VM.Classes
 
             string rootDir = Properties.Settings.Default.node_dir;
             string develDir = Properties.Settings.Default.node_devel_dir;
+
+            if (!Directory.Exists(rootDir))
+            {
+                return result;
+            }
 
             string[] domainLevel = Directory.GetDirectories(rootDir);
             foreach (string domainEntry in domainLevel)
