@@ -37,7 +37,7 @@ namespace Devel_VM.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\\\\10.11.11.200\\instale\\Devel\\current_version.txt")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\10.11.11.200\\instale\\Devel_beta\\current_version.txt")]
         public string path_imgver {
             get {
                 return ((string)(this["path_imgver"]));
