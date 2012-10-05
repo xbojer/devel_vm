@@ -29,22 +29,6 @@ namespace Devel_VM
             {
                 mainbaseinit = false;
                 Program.LogEvents += new Program.LogEvent(showBaloon);
-                Program.NL.OnInfo += delegate(string auth, string msg)
-                {
-                    Program.Log(auth + ": " + msg, "Beta Manager: Informator", 1);
-                };
-                Program.NL.OnError += delegate(string auth, string msg)
-                {
-                    Program.Log(String.Format("!!! {1} ({0}) !!!", auth, msg), "Beta Manager: Informator", 2);
-                };
-                Program.NL.OnVersion += delegate(string auth, string msg)
-                {
-                    Packet p = new Packet();
-                    p.dataIdentifier = Packet.DataIdentifier.Debug;
-                    p.message = "AppVer: "+System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                    p.message += " / ImgVer: " + Program.VM.getVersion();
-                    Network_Broadcast.send(p);
-                };
                 Program.VM.initMachine();
             }
             base.SetVisibleCore(allowshowdisplay ? value : allowshowdisplay);
@@ -106,7 +90,6 @@ namespace Devel_VM
             else
                 method.Invoke();
         }
-
         #region Tray options
         private void showToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -307,7 +290,7 @@ namespace Devel_VM
                 Program.Log("Aplikacja wymaga aktualizacji.", "BetaManager: Aktualizacja", 2);
             }
         }
-        private void usuńObrazToolStripMenuItem_Click(object sender, EventArgs e)
+        private void usunObrazToolStripMenuItem_Click(object sender, EventArgs e)
         {
             tAutoStart.Enabled = false;
             Program.VM.PowerOff(true);
@@ -319,6 +302,7 @@ namespace Devel_VM
             tUpdateAutocheck.Interval = 3600000;
             updateWWWtree();
             updateNodeJStree();
+            updateDeamonsTree();
             Program.silentCheckVersion();
         }
         private void updateWWWtree()
@@ -396,6 +380,39 @@ namespace Devel_VM
             if (NodeJSstripMenu.DropDownItems.Count > 0)
             {
                 NodeJSstripMenu.Visible = true;
+            }
+        }
+        private void updateDeamonsTree()
+        {
+            DeamonsStripMenu.Visible = false;
+            DeamonsStripMenu.DropDownItems.Clear();
+
+            Dictionary<string, Dictionary<string, string>> data = Scanner.getDaemonsInstances();
+            foreach (string k in data.Keys)
+            {
+                ToolStripMenuItem domain = (ToolStripMenuItem)DeamonsStripMenu.DropDownItems.Add(k);
+                Dictionary<string, string> entries;
+
+                if (data.TryGetValue(k, out entries))
+                {
+                    foreach (string bk in entries.Keys)
+                    {
+                        string uri;
+                        if (entries.TryGetValue(bk, out uri))
+                        {
+                            ToolStripItem branche = domain.DropDownItems.Add(bk);
+                            branche.Click += new EventHandler(delegate(object sender, EventArgs e)
+                            {
+                                openNodeCMD(uri);
+                            });
+                            branche.ToolTipText = uri;
+                        }
+                    }
+                }
+            }
+            if (DeamonsStripMenu.DropDownItems.Count > 0)
+            {
+                DeamonsStripMenu.Visible = true;
             }
         }
         private void openURL(string uri)

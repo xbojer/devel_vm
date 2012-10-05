@@ -45,6 +45,22 @@ namespace Devel_VM
                     p.message = auth + "[" + msg +"]:T["+ DateTime.Now.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalMilliseconds+"]";
                     Network_Broadcast.send(p);
                 };
+                NL.OnInfo += delegate(string auth, string msg)
+                {
+                    Log(auth + ": " + msg, "Beta Manager: Informator", 1);
+                };
+                NL.OnError += delegate(string auth, string msg)
+                {
+                    Log(String.Format("!!! {1} ({0}) !!!", auth, msg), "Beta Manager: Informator", 2);
+                };
+                NL.OnVersion += delegate(string auth, string msg)
+                {
+                    Packet p = new Packet();
+                    p.dataIdentifier = Packet.DataIdentifier.Debug;
+                    p.message = "AppVer: " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                    p.message += " / ImgVer: " + VM.getVersion();
+                    Network_Broadcast.send(p);
+                };
                 
                 Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
                 Application.Run(new fMain());
@@ -108,7 +124,6 @@ namespace Devel_VM
             Network_Broadcast.send(p);
         }
         #endregion
-
         #region Version checking
         internal static bool UpdateNeeded = false;
         public static void silentCheckVersion()

@@ -49,6 +49,8 @@
             this.pobierzNaNowoObrazToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usuńObrazToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.DeamonsStripMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.NodeJSstripMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.bETAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zasobyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aLFAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,7 +65,6 @@
             this.tAutoStart = new System.Windows.Forms.Timer(this.components);
             this.button2 = new System.Windows.Forms.Button();
             this.tUpdateAutocheck = new System.Windows.Forms.Timer(this.components);
-            this.NodeJSstripMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.menuZasobnik.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -96,6 +97,7 @@
             this.toolStripMenuItem7,
             this.toolStripMenuItem8,
             this.toolStripSeparator2,
+            this.DeamonsStripMenu,
             this.NodeJSstripMenu,
             this.bETAToolStripMenuItem,
             this.zasobyToolStripMenuItem,
@@ -104,7 +106,7 @@
             this.toolStripMenuItem4,
             this.closeToolStripMenuItem});
             this.menuZasobnik.Name = "menuZasobnik";
-            this.menuZasobnik.Size = new System.Drawing.Size(166, 270);
+            this.menuZasobnik.Size = new System.Drawing.Size(166, 292);
             // 
             // showToolStripMenuItem
             // 
@@ -221,12 +223,26 @@
             this.usuńObrazToolStripMenuItem.Name = "usuńObrazToolStripMenuItem";
             this.usuńObrazToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.usuńObrazToolStripMenuItem.Text = "Usuń obraz";
-            this.usuńObrazToolStripMenuItem.Click += new System.EventHandler(this.usuńObrazToolStripMenuItem_Click);
+            this.usuńObrazToolStripMenuItem.Click += new System.EventHandler(this.usunObrazToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(162, 6);
+            // 
+            // DeamonsStripMenu
+            // 
+            this.DeamonsStripMenu.Name = "DeamonsStripMenu";
+            this.DeamonsStripMenu.Size = new System.Drawing.Size(165, 22);
+            this.DeamonsStripMenu.Text = "Demony";
+            this.DeamonsStripMenu.Visible = false;
+            // 
+            // NodeJSstripMenu
+            // 
+            this.NodeJSstripMenu.Name = "NodeJSstripMenu";
+            this.NodeJSstripMenu.Size = new System.Drawing.Size(165, 22);
+            this.NodeJSstripMenu.Text = "NodeJS";
+            this.NodeJSstripMenu.Visible = false;
             // 
             // bETAToolStripMenuItem
             // 
@@ -247,14 +263,14 @@
             // aLFAToolStripMenuItem
             // 
             this.aLFAToolStripMenuItem.Name = "aLFAToolStripMenuItem";
-            this.aLFAToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aLFAToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.aLFAToolStripMenuItem.Text = "alpha";
             this.aLFAToolStripMenuItem.Click += new System.EventHandler(this.aLFAToolStripMenuItem_Click);
             // 
             // bETA100ToolStripMenuItem
             // 
             this.bETA100ToolStripMenuItem.Name = "bETA100ToolStripMenuItem";
-            this.bETA100ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.bETA100ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.bETA100ToolStripMenuItem.Text = "beta";
             this.bETA100ToolStripMenuItem.Click += new System.EventHandler(this.bETA100ToolStripMenuItem_Click);
             // 
@@ -326,13 +342,6 @@
             this.tUpdateAutocheck.Interval = 3000;
             this.tUpdateAutocheck.Tick += new System.EventHandler(this.tUpdateAutocheck_Tick);
             // 
-            // NodeJSstripMenu
-            // 
-            this.NodeJSstripMenu.Name = "NodeJSstripMenu";
-            this.NodeJSstripMenu.Size = new System.Drawing.Size(165, 22);
-            this.NodeJSstripMenu.Text = "NodeJS";
-            this.NodeJSstripMenu.Visible = false;
-            // 
             // fMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -387,6 +396,7 @@
         private System.Windows.Forms.Timer tUpdateAutocheck;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem NodeJSstripMenu;
+        private System.Windows.Forms.ToolStripMenuItem DeamonsStripMenu;
     }
 }
 

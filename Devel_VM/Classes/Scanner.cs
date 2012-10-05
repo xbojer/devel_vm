@@ -50,9 +50,44 @@ namespace Devel_VM.Classes
                 string appdir = Path.GetFileName(domainEntry);
 
                 result[appdir] = new Dictionary<string, string>();
-                //result[domainName]["@"] = "http://" + Program.username.Replace('.', '-') + "." + domainName + "/";
                 result[appdir]["Start"] = "export NODE_ENV=beta; /usr/bin/screen -dmS nodeBM_" + appdir + " /usr/bin/node " + develDir + appdir + "/index.js";
                 result[appdir]["Stop"] = "export NODE_ENV=beta; /usr/bin/screen -S nodeBM_" + appdir + " -X quit";
+            }
+
+            return result;
+        }
+
+        public static Dictionary<string, Dictionary<string, string>> getDaemonsInstances()
+        {
+            Dictionary<string, Dictionary<string, string>> result = new Dictionary<string, Dictionary<string, string>>();
+
+            string cmd_begin = "export BETA=1; /usr/bin/screen ";
+
+            string develDir = Properties.Settings.Default.daemons_devel_dir;
+            string webDir = Properties.Settings.Default.web_dir;
+            
+            string absolutePath = Properties.Settings.Default.daemons_path_absolute;
+            string relativePath = Properties.Settings.Default.daemons_path_relative;
+            
+            if (Directory.Exists(absolutePath))
+            {
+                string[] files = Directory.GetFiles(absolutePath, "*" + Properties.Settings.Default.daemons_file_ext);
+
+                foreach (string configPath in files)
+                {
+                    string relativeToFile = configPath.Replace(webDir, "").Replace(Path.GetFileName(configPath), "").Replace(@"\", "/").Trim("/".ToCharArray());
+                    string[] parts = Path.GetFileNameWithoutExtension(configPath).Split("-".ToCharArray());
+                    if(parts.Length != 3) continue;
+                    
+                    string develPath = develDir + relativeToFile + "/";
+                    string service = parts[0];
+                    string option = parts[2];
+                    string service_name = "daemonBM_" + service + "_" + option;
+
+                    if (!result.ContainsKey(service)) result[service] = new Dictionary<string, string>();
+                    result[service][option + " - Start"] = cmd_begin + "-dmS " + service_name + " /usr/bin/python " + develPath + "daemon.py " + develPath + Path.GetFileName(configPath);
+                    result[service][option + " - Stop"] = cmd_begin + "-S " + service_name + " -X quit";
+                }
             }
 
             return result;

@@ -104,15 +104,12 @@ namespace Devel_VM.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("BMTTY{0}")]
         public string serial_pipe {
             get {
                 return ((string)(this["serial_pipe"]));
-            }
-            set {
-                this["serial_pipe"] = value;
             }
         }
         
@@ -149,6 +146,54 @@ namespace Devel_VM.Properties {
             }
             set {
                 this["node_devel_dir"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\DEVEL\\modules\\daemons")]
+        public string daemons_path_absolute {
+            get {
+                return ((string)(this["daemons_path_absolute"]));
+            }
+            set {
+                this["daemons_path_absolute"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("application\\core\\cron")]
+        public string daemons_path_relative {
+            get {
+                return ((string)(this["daemons_path_relative"]));
+            }
+            set {
+                this["daemons_path_relative"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(".conf")]
+        public string daemons_file_ext {
+            get {
+                return ((string)(this["daemons_file_ext"]));
+            }
+            set {
+                this["daemons_file_ext"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("/export/www/DEVEL/")]
+        public string daemons_devel_dir {
+            get {
+                return ((string)(this["daemons_devel_dir"]));
+            }
+            set {
+                this["daemons_devel_dir"] = value;
             }
         }
     }
