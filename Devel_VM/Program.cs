@@ -180,7 +180,7 @@ namespace Devel_VM
         internal static void Update()
         {
             string ur = Properties.Settings.Default.path_updater;
-            string ura = Properties.Settings.Default.path_updater_args;
+            string ura = Properties.Settings.Default.path_updater_args + " " + getRemoteVersion().Replace(".", "_");
             VM.PowerOff(true, true);
             Process.Start(ur, ura);
             Application.Exit();
