@@ -103,6 +103,7 @@ namespace Devel_VM
 			txtInput.Size = new Size(379, 20);
 			txtInput.TabIndex = 0;
 			txtInput.Text = "";
+            txtInput.KeyDown += new KeyEventHandler(txtInput_KeyDown);
 			// 
 			// InputBoxDialog
 			// 
@@ -118,6 +119,18 @@ namespace Devel_VM
 			frmInputDialog.Name = "InputBoxDialog";
 			frmInputDialog.ResumeLayout(false);
 		}
+
+        static void txtInput_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Alt == false && e.Shift == false && e.Control == false && e.KeyData == Keys.Enter)
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                OutputResponse.ReturnCode = DialogResult.OK;
+                OutputResponse.Text = txtInput.Text;
+                frmInputDialog.Dispose();
+            }
+        }
 
 		#endregion
 
@@ -139,7 +152,7 @@ namespace Devel_VM
 			if((_xPos >= 0 && _xPos < workingRectangle.Width-100) && (_yPos >= 0 && _yPos < workingRectangle.Height-100))
 			{
 				frmInputDialog.StartPosition = FormStartPosition.Manual;
-        frmInputDialog.Location = new System.Drawing.Point(_xPos, _yPos);
+                frmInputDialog.Location = new System.Drawing.Point(_xPos, _yPos);
 			}
 			else
 				frmInputDialog.StartPosition = FormStartPosition.CenterScreen;
