@@ -64,7 +64,7 @@ namespace Devel_VM.Classes
             string cmd_begin = "export BETA=1; /usr/bin/screen ";
 
             string develDir = Properties.Settings.Default.daemons_devel_dir;
-            string webDir = Properties.Settings.Default.web_dir;
+            string rootDir = Properties.Settings.Default.web_dir;
             
             string absolutePath = Properties.Settings.Default.daemons_path_absolute;
             string relativePath = Properties.Settings.Default.daemons_path_relative;
@@ -75,7 +75,7 @@ namespace Devel_VM.Classes
 
                 foreach (string configPath in files)
                 {
-                    string relativeToFile = configPath.Replace(webDir, "").Replace(Path.GetFileName(configPath), "").Replace(@"\", "/").Trim("/".ToCharArray());
+                    string relativeToFile = configPath.Replace(rootDir, "").Replace(Path.GetFileName(configPath), "").Replace(@"\", "/").Trim("/".ToCharArray());
                     string[] parts = Path.GetFileNameWithoutExtension(configPath).Split("-".ToCharArray());
                     if(parts.Length != 3) continue;
                     
@@ -88,6 +88,34 @@ namespace Devel_VM.Classes
                     result[service][option + " - Start"] = cmd_begin + "-dmS " + service_name + " /usr/bin/python " + develPath + "daemon.py " + develPath + Path.GetFileName(configPath);
                     result[service][option + " - Stop"] = cmd_begin + "-S " + service_name + " -X quit";
                 }
+            }
+
+            string[] domainLevel = Directory.GetDirectories(rootDir);
+            foreach (string domainPath in domainLevel)
+            {
+                string domainName = Path.GetFileName(domainPath);
+                if (!domainName.Contains('.')) continue;
+
+                if (Directory.Exists(domainPath+@"\"+relativePath))
+                {
+                    string[] files = Directory.GetFiles(domainPath + @"\" + relativePath, "*" + Properties.Settings.Default.daemons_file_ext);
+
+                    foreach (string configPath in files)
+                    {
+                        string relativeToFile = configPath.Replace(rootDir, "").Replace(Path.GetFileName(configPath), "").Replace(@"\", "/").Trim("/".ToCharArray());
+                        string[] parts = Path.GetFileNameWithoutExtension(configPath).Split("-".ToCharArray());
+                        if (parts.Length != 2) continue;
+
+                        string develPath = develDir + relativeToFile + "/";
+                        string option = parts[1];
+                        string service_name = "daemonBM_" + domainName + "_" + option;
+
+                        if (!result.ContainsKey(domainName)) result[domainName] = new Dictionary<string, string>();
+                        result[domainName][option + " - Start"] = cmd_begin + "-dmS " + service_name + " /usr/bin/python " + develPath + "daemon.py " + develPath + Path.GetFileName(configPath);
+                        result[domainName][option + " - Stop"] = cmd_begin + "-S " + service_name + " -X quit";
+                    }
+                }
+                
             }
 
             return result;
