@@ -421,7 +421,7 @@ namespace Devel_VM
         }
         private void openNodeCMD(string cmd)
         {
-            String result = Program.VM.exec("/bin/bash", "-c '" + cmd + "'", true).Trim();
+            String result = Program.VM.exec("/bin/bash", cmd, true).Trim();
             if (result == "")
             {
                 Program.Log("Empty response :(", "NodeJS", 2);
