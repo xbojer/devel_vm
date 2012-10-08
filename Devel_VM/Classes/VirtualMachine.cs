@@ -427,9 +427,8 @@ namespace Devel_VM
         #region Remote process execution
         public string exec(String cmd, String args, bool verbose = false)
         {
-            
             string filename = @"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe";
-            args = " -- -c 'export BETA=1; export NODE_ENV=beta; export BM_USER=" + Program.username + "; " + args + "'";
+            args = " -- -c 'source /etc/profile;" + args + "'";
             if (verbose) args = " --verbose " + args;
             args = " guestcontrol \"" + MachineName + "\" execute --image \"" + cmd + "\" --username=\"fotka\" --password=\"@fotka\" --wait-exit --wait-stdout --wait-stderr " + args;
 
@@ -446,8 +445,8 @@ namespace Devel_VM
             p.StartInfo = startInfo;
             p.Start();
             p.WaitForExit();
-
-            return p.StandardOutput.ReadToEnd();
+            string outputss = p.StandardOutput.ReadToEnd();
+            return outputss;
         }
         #endregion
         #region VM Management

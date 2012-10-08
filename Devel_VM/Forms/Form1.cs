@@ -424,11 +424,11 @@ namespace Devel_VM
             String result = Program.VM.exec("/bin/bash", cmd, true).Trim();
             if (result == "")
             {
-                Program.Log("Empty response :(", "NodeJS", 2);
+                Program.Log("Empty response :(", "Executor", 2);
             }
             else
             {
-                Program.Log(result, "NodeJS", 0);
+                Program.Log(result, "Executor", 0);
             }
             return;
         }
@@ -439,6 +439,20 @@ namespace Devel_VM
         private void bETA100ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start(@"\\BETA");
+        }
+
+        private void testToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            String result = Program.VM.exec("/bin/bash", "/usr/bin/screen -LdmS TESTST /usr/bin/python /export/home/fotka/python_env.py", true).Trim();
+            if (result == "")
+            {
+                Program.Log("Empty response :(", "Executor", 2);
+            }
+            else
+            {
+                Program.Log(result, "Executor", 0);
+            }
+            return;
         }
     }
 
