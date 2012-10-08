@@ -50,8 +50,8 @@ namespace Devel_VM.Classes
                 string appdir = Path.GetFileName(domainEntry);
 
                 result[appdir] = new Dictionary<string, string>();
-                result[appdir]["Start"] = "export NODE_ENV=beta; /usr/bin/screen -dmS nodeBM_" + appdir + " /usr/bin/node " + develDir + appdir + "/index.js";
-                result[appdir]["Stop"] = "export NODE_ENV=beta; /usr/bin/screen -S nodeBM_" + appdir + " -X quit";
+                result[appdir]["Start"] = "/usr/bin/screen -dmS nodeBM_" + appdir + " /usr/bin/node " + develDir + appdir + "/index.js";
+                result[appdir]["Stop"] = "/usr/bin/screen -S nodeBM_" + appdir + " -X quit";
             }
 
             return result;
@@ -61,7 +61,7 @@ namespace Devel_VM.Classes
         {
             Dictionary<string, Dictionary<string, string>> result = new Dictionary<string, Dictionary<string, string>>();
 
-            string cmd_begin = "export BETA=1; /usr/bin/screen ";
+            string cmd_begin = "/usr/bin/screen ";
 
             string develDir = Properties.Settings.Default.daemons_devel_dir;
             string rootDir = Properties.Settings.Default.web_dir;
