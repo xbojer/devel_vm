@@ -649,7 +649,7 @@ namespace Devel_VM
                             Session.Machine.CPUExecutionCap = 100;
                         }
                     }
-                    if (Properties.Settings.Default.vm_settings_cpucap > 0)
+                    if (!Properties.Settings.Default.vm_settings_cpuautocap && Properties.Settings.Default.vm_settings_cpucap > 0)
                     {
                         Session.Machine.CPUExecutionCap = Properties.Settings.Default.vm_settings_cpucap;
                     }
