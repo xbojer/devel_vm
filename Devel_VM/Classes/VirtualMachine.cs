@@ -609,50 +609,119 @@ namespace Devel_VM
         }
         public void MachineConfig()
         {
+            if (Properties.Settings.Default.vm_settings_bypass) return;
             if (!MachineReady.getReadyOffline() || Status != State.Off) return;
+            relock();
             try
             {
-                relock();
-                Session.Machine.MemorySize = 768;
-                Session.Machine.VRAMSize = 24;
-                Session.Machine.SetBootOrder(1, DeviceType.DeviceType_HardDisk);
-                Session.Machine.SetBootOrder(2, DeviceType.DeviceType_Null);
-                Session.Machine.SetBootOrder(3, DeviceType.DeviceType_Null);
-                Session.Machine.SetBootOrder(4, DeviceType.DeviceType_Null);
-                if (vb.Host.ProcessorOnlineCount > 1 && Properties.Settings.Default.vm_multicore) //performance degradation with more than one core
+                if (Properties.Settings.Default.vm_settings_mem > 0) Session.Machine.MemorySize = Properties.Settings.Default.vm_settings_mem;
+                if (Properties.Settings.Default.vm_settings_vram > 0) Session.Machine.VRAMSize = Properties.Settings.Default.vm_settings_vram;
+
+                if (Properties.Settings.Default.vm_settings_setbootorder)
                 {
-                    Session.Machine.CPUCount = 2;
-                    if (vb.Host.ProcessorOnlineCount > 2)
+                    Session.Machine.SetBootOrder(1, DeviceType.DeviceType_HardDisk);
+                    Session.Machine.SetBootOrder(2, DeviceType.DeviceType_Null);
+                    Session.Machine.SetBootOrder(3, DeviceType.DeviceType_Null);
+                    Session.Machine.SetBootOrder(4, DeviceType.DeviceType_Null);
+                }
+                if (Properties.Settings.Default.vm_settings_setcpu)
+                {
+                    if (vb.Host.ProcessorOnlineCount > 1 && Properties.Settings.Default.vm_multicore) //performance degradation with more than one core
                     {
-                        Session.Machine.CPUExecutionCap = 100;
+                        Session.Machine.CPUCount = 2;
+                        if (Properties.Settings.Default.vm_settings_cpuautocap)
+                        {
+                            if (vb.Host.ProcessorOnlineCount > 2)
+                            {
+                                Session.Machine.CPUExecutionCap = 100;
+                            }
+                            else
+                            {
+                                Session.Machine.CPUExecutionCap = Properties.Settings.Default.vm_settings_cpucap;
+                            }
+                        }
                     }
                     else
                     {
-                        Session.Machine.CPUExecutionCap = 80;
+                        Session.Machine.CPUCount = 1;
+                        if (Properties.Settings.Default.vm_settings_cpuautocap)
+                        {
+                            Session.Machine.CPUExecutionCap = 100;
+                        }
                     }
+                    if (Properties.Settings.Default.vm_settings_cpucap > 0)
+                    {
+                        Session.Machine.CPUExecutionCap = Properties.Settings.Default.vm_settings_cpucap;
+                    }
+                }
+                ISerialPort serialp = Session.Machine.GetSerialPort(0);
+                if (Properties.Settings.Default.vm_settings_serialport)
+                {
+                    TTY = new SerialPipe();
+                    TTY.addChallange(serial_prompt1, serial_response1);
+                    serialp.Path = @"\\.\pipe\" + TTY.Start();
+                    serialp.HostMode = PortMode.PortMode_HostPipe;
+                    serialp.Enabled = 1;
                 }
                 else
                 {
-                    Session.Machine.CPUCount = 1;
-                    Session.Machine.CPUExecutionCap = 100;
+                    DialogResult odp = DialogResult.No;
+                    try
+                    {
+                        if (serialp.Enabled == 1 && serialp.HostMode == PortMode.PortMode_HostPipe)
+                        {
+                            odp = MessageBox.Show("Maszyna " + MachineName + " ma skonfigurowany port szeregowy do wspolpracy z BM, ale jego obsługa w BM jest wyłączona.\nCzy chcesz aby BM wyłączył port szeregowy?", "Konfiguracja VM", MessageBoxButtons.YesNo);
+                            if (odp == DialogResult.Yes)
+                            {
+                                serialp.Enabled = 0;
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        Session.Machine.DiscardSettings();
+                        OnEvent("Wystąpił problem podczas sprawdzania ustawień maszyny", 1);
+                    }
+                    if (odp == DialogResult.Yes)
+                    {
+                        serialp.Enabled = 0;
+                    }
                 }
-
-                TTY = new SerialPipe();
-                TTY.addChallange(serial_prompt1, serial_response1); 
-
-                ISerialPort serialp = Session.Machine.GetSerialPort(0);
-                serialp.Path = @"\\.\pipe\" + TTY.Start();
-                serialp.HostMode = PortMode.PortMode_HostPipe;
-                serialp.Enabled = 1;
-
+                if (Properties.Settings.Default.vm_settings_setnetmac)
+                {
+                    string usermac = Program.getMACAddress();
+                    if (usermac.Length == 12)
+                    {
+                        INetworkAdapter n0 = Session.Machine.GetNetworkAdapter(0);
+                        if (n0.AttachmentType == NetworkAttachmentType.NetworkAttachmentType_Bridged)
+                        {
+                            bool foundInterface = false;
+                            foreach (IHostNetworkInterface hni in vb.Host.NetworkInterfaces)
+                        	{
+                                if (hni.IPAddress.StartsWith(Properties.Settings.Default.vm_settings_networkprefix))
+                                {
+                                    n0.BridgedInterface = hni.Name;
+                                    foundInterface = true;
+                                    break;
+                                }
+	                        }
+                            n0.MACAddress = usermac;
+                            if (!foundInterface) OnEvent("Wystąpił problem podczas ustawiania sieci (nie znaleziono karty lokalnej)", 2);
+                        }
+                        else
+                        {
+                            OnEvent("Wystąpił problem podczas ustawiania mac (zły typ karty)", 2);
+                        }
+                    }
+                }
                 Session.Machine.SaveSettings();
-
 #if DEBUG
                 OnEvent("Config ok", 0);
 #endif
             }
             catch (Exception)
             {
+                Session.Machine.DiscardSettings();
                 OnEvent("Wystąpił problem podczas ustawiania maszyny", 2);
             }
             unlock();

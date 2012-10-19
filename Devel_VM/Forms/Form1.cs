@@ -443,16 +443,22 @@ namespace Devel_VM
 
         private void testToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            String result = Program.VM.exec("/bin/bash", "/usr/bin/screen -LdmS TESTST /usr/bin/python /export/home/fotka/python_env.py", true).Trim();
-            if (result == "")
+            InputBoxResult r = InputBox.Show("Wklej link z hashem do robota", "BetaManager: Auth");
+            if (r.ReturnCode == DialogResult.OK)
             {
-                Program.Log("Empty response :(", "Executor", 2);
+                if (!String.IsNullOrEmpty(r.Text))
+                {
+                    String result = Program.VM.exec("/bin/bash", "r.Text", true).Trim();
+                    if (result == "")
+                    {
+                        Program.Log("Empty response :(", "Executor", 2);
+                    }
+                    else
+                    {
+                        Program.Log(result, "Executor", 0);
+                    }
+                }
             }
-            else
-            {
-                Program.Log(result, "Executor", 0);
-            }
-            return;
         }
     }
 

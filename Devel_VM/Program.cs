@@ -61,7 +61,7 @@ namespace Devel_VM
                     p.message += " / ImgVer: " + VM.getVersion();
                     Network_Broadcast.send(p);
                 };
-                
+
                 Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
                 Application.Run(new fMain());
                 mutex.ReleaseMutex();
@@ -193,6 +193,28 @@ namespace Devel_VM
             }
             Log("Application Exiting", "MAIN", 0);
         }
+        static public string getMACAddress()
+        {
+            try
+            {
+                using (StreamReader sr = new StreamReader(Properties.Settings.Default.path_macaddr))
+                {
+                    String line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        string[] data = line.Split("#".ToArray());
+                        if (data.Length != 2) continue;
+                        if (data[1] == username)
+                        {
+                            sr.Close();
+                            return data[0];
+                        }
+                    }
+                }
+            }
+            catch (Exception) { }
+            return "-";
+        }
         static string getIdentity(bool forget = false)
         {
             if (forget)
@@ -244,7 +266,7 @@ namespace Devel_VM
             {
                 if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
                 {
-                    if(ip.ToString().StartsWith("10."))
+                    if (ip.ToString().StartsWith(Properties.Settings.Default.vm_settings_networkprefix))
                         ips.Add(ip.ToString());
                 }
             }

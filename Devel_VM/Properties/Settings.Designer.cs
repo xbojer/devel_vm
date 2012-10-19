@@ -46,7 +46,7 @@ namespace Devel_VM.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\\\\10.11.11.200\\instale\\Devel\\{vm_name}_test.ova")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\10.11.11.200\\instale\\Devel\\Devel.114.ova")]
         public string path_image {
             get {
                 return ((string)(this["path_image"]));
@@ -314,6 +314,15 @@ namespace Devel_VM.Properties {
             }
             set {
                 this["path_macaddr"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10.11.11.")]
+        public string vm_settings_networkprefix {
+            get {
+                return ((string)(this["vm_settings_networkprefix"]));
             }
         }
     }
