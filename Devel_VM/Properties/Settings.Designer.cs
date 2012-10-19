@@ -46,7 +46,7 @@ namespace Devel_VM.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\\\\10.11.11.200\\instale\\Devel\\{vm_name}.ova")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\10.11.11.200\\instale\\Devel\\{vm_name}_test.ova")]
         public string path_image {
             get {
                 return ((string)(this["path_image"]));
@@ -194,6 +194,126 @@ namespace Devel_VM.Properties {
             }
             set {
                 this["daemons_devel_dir"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool vm_settings_bypass {
+            get {
+                return ((bool)(this["vm_settings_bypass"]));
+            }
+            set {
+                this["vm_settings_bypass"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("768")]
+        public uint vm_settings_mem {
+            get {
+                return ((uint)(this["vm_settings_mem"]));
+            }
+            set {
+                this["vm_settings_mem"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("24")]
+        public uint vm_settings_vram {
+            get {
+                return ((uint)(this["vm_settings_vram"]));
+            }
+            set {
+                this["vm_settings_vram"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool vm_settings_setbootorder {
+            get {
+                return ((bool)(this["vm_settings_setbootorder"]));
+            }
+            set {
+                this["vm_settings_setbootorder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool vm_settings_setcpu {
+            get {
+                return ((bool)(this["vm_settings_setcpu"]));
+            }
+            set {
+                this["vm_settings_setcpu"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool vm_settings_cpuautocap {
+            get {
+                return ((bool)(this["vm_settings_cpuautocap"]));
+            }
+            set {
+                this["vm_settings_cpuautocap"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("80")]
+        public uint vm_settings_cpucap {
+            get {
+                return ((uint)(this["vm_settings_cpucap"]));
+            }
+            set {
+                this["vm_settings_cpucap"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool vm_settings_serialport {
+            get {
+                return ((bool)(this["vm_settings_serialport"]));
+            }
+            set {
+                this["vm_settings_serialport"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool vm_settings_setnetmac {
+            get {
+                return ((bool)(this["vm_settings_setnetmac"]));
+            }
+            set {
+                this["vm_settings_setnetmac"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\10.11.11.200\\instale\\Devel\\name2mac.txt")]
+        public string path_macaddr {
+            get {
+                return ((string)(this["path_macaddr"]));
+            }
+            set {
+                this["path_macaddr"] = value;
             }
         }
     }
