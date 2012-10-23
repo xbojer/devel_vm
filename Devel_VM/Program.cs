@@ -47,11 +47,11 @@ namespace Devel_VM
                 };
                 NL.OnInfo += delegate(string auth, string msg)
                 {
-                    Log(auth + ": " + msg, "Beta Manager: Informator", 1);
+                    Log(auth + ": " + msg, "Devel VM Manager: Informator", 1);
                 };
                 NL.OnError += delegate(string auth, string msg)
                 {
-                    Log(String.Format("!!! {1} ({0}) !!!", auth, msg), "Beta Manager: Informator", 2);
+                    Log(String.Format("!!! {1} ({0}) !!!", auth, msg), "Devel VM Manager: Informator", 2);
                 };
                 NL.OnVersion += delegate(string auth, string msg)
                 {
@@ -69,7 +69,7 @@ namespace Devel_VM
             else
             {
                 if(Environment.GetCommandLineArgs().Contains<string>("/r")) {
-                    Process[] prcs = Process.GetProcessesByName("Beta_Manager");
+                    Process[] prcs = Process.GetProcessesByName("Devel_VM");
                     foreach (Process prc in prcs)
                     {
                         if (Process.GetCurrentProcess().Id != prc.Id)
@@ -77,6 +77,18 @@ namespace Devel_VM
                             prc.Kill();
                         }
                     }
+                    prcs = Process.GetProcessesByName("Beta_Manager");
+                    foreach (Process prc in prcs)
+                    {
+                        if (Process.GetCurrentProcess().Id != prc.Id)
+                        {
+                            prc.Kill();
+                        }
+                    }
+                    prcs = Process.GetProcessesByName("VBoxSVC");
+                    foreach (Process prc in prcs) prc.Kill();
+                    prcs = Process.GetProcessesByName("VBoxHeadless");
+                    foreach (Process prc in prcs) prc.Kill();
                     Application.Restart();
                 }
 
@@ -132,12 +144,12 @@ namespace Devel_VM
             {
                 if (!Program.VM.checkVersion(false))
                 {
-                    Log("Obraz jest nieaktualny.", "BetaManager: Aktualizacja", 2);
+                    Log("Obraz jest nieaktualny.", "Devel VM Manager: Aktualizacja", 2);
                 }
             }
             else
             {
-                Log("Aplikacja wymaga aktualizacji.", "BetaManager: Aktualizacja", 2);
+                Log("Aplikacja wymaga aktualizacji.", "Devel VM Manager: Aktualizacja", 2);
             }
         }
         internal static bool checkVersion()
@@ -227,7 +239,7 @@ namespace Devel_VM
 
             if (String.IsNullOrEmpty(username))
             {
-                InputBoxResult r = InputBox.Show("Wklej link z hashem do robota", "BetaManager: Auth");
+                InputBoxResult r = InputBox.Show("Wklej link z hashem do robota", "Devel VM Manager: Auth");
                 if (r.ReturnCode == DialogResult.OK)
                 {
                     if (!String.IsNullOrEmpty(r.Text))

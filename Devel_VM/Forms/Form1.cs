@@ -57,7 +57,7 @@ namespace Devel_VM
         }
         private void WmUpdating()
         {
-            Program.Log("Trwa aktualizacja programu", "Beta Manager: Aktualizator", 1);
+            Program.Log("Trwa aktualizacja programu", "Devel VM Manager: Aktualizator", 1);
         }
         
         public void showBaloon(String msg, String title, int priority)
@@ -135,7 +135,7 @@ namespace Devel_VM
         private void tUpdateState_Tick(object sender, EventArgs e)
         {
             button2.Text = Program.VM.Status.ToString();
-            zasobnik.Text = "Beta Manager - " + Program.VM.MachineName + " " + Program.VM.Status.ToString();
+            zasobnik.Text = "Devel VM Manager - " + Program.VM.MachineName + " " + Program.VM.Status.ToString();
             switch (Program.VM.Status)
             {
                 case VirtualMachine.State.On:
@@ -260,7 +260,7 @@ namespace Devel_VM
             tAutoStart.Enabled = false;
             if (Program.UpdateNeeded)
             {
-                Program.Log("Uruchamianie instalatora programu", "BetaManager: Aktualizacja", 1);
+                Program.Log("Uruchamianie instalatora programu", "Devel VM Manager: Aktualizacja", 1);
                 Program.Update();
             }
             else
@@ -278,16 +278,16 @@ namespace Devel_VM
             {
                 if (Program.VM.checkVersion(false))//aktualna
                 {
-                    Program.Log("Aplikacja i obraz są aktualne.", "BetaManager: Aktualizacja", 1);
+                    Program.Log("Aplikacja i obraz są aktualne.", "Devel VM Manager: Aktualizacja", 1);
                 }
                 else
                 {
-                    Program.Log("Obraz jest nieaktualny.", "BetaManager: Aktualizacja", 2);
+                    Program.Log("Obraz jest nieaktualny.", "Devel VM Manager: Aktualizacja", 2);
                 }
             }
             else
             {
-                Program.Log("Aplikacja wymaga aktualizacji.", "BetaManager: Aktualizacja", 2);
+                Program.Log("Aplikacja wymaga aktualizacji.", "Devel VM Manager: Aktualizacja", 2);
             }
         }
         private void usunObrazToolStripMenuItem_Click(object sender, EventArgs e)
@@ -443,7 +443,7 @@ namespace Devel_VM
 
         private void testToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            InputBoxResult r = InputBox.Show("Wklej link z hashem do robota", "BetaManager: Auth");
+            InputBoxResult r = InputBox.Show("Polecenie do uruchomienia", "Devel VM Manager: Exec");
             if (r.ReturnCode == DialogResult.OK)
             {
                 if (!String.IsNullOrEmpty(r.Text))

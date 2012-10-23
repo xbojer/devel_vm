@@ -70,7 +70,7 @@ namespace Devel_VM
         {
             if (OnVmEvent != null)
             {
-                OnVmEvent(msg, "BetaManager: VM", priority);
+                OnVmEvent(msg, "Devel VM Manager: VM", priority);
             }
         }
         #endregion

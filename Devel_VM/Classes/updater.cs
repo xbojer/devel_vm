@@ -46,7 +46,7 @@ namespace Devel_VM
                     {
                         // ask the user if he would like
                         // to download the new version
-                        //string title = "Fotka Beta Manager Update";
+                        //string title = "Fotka Devel VM Manager Update";
                         //string question = "Czy chcesz teraz pobrać nową wersję?";
                         //if (DialogResult.Yes == MessageBox.Show(question, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question))
                         //{

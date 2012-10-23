@@ -46,7 +46,7 @@ namespace Devel_VM.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\\\\10.11.11.200\\instale\\Devel\\Devel.114.ova")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\10.11.11.200\\instale\\Devel\\{vm_name}.114.ova")]
         public string path_image {
             get {
                 return ((string)(this["path_image"]));
@@ -88,7 +88,7 @@ namespace Devel_VM.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\\\\10.11.11.200\\instale\\Installer_Beta_Manager.exe")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\10.11.11.200\\instale\\Devel\\Devel_VM_Installer.exe")]
         public string path_updater {
             get {
                 return ((string)(this["path_updater"]));
