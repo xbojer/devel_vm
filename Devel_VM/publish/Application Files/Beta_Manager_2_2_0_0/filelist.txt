@@ -1,0 +1,7 @@
+Devel_VM.application
+Devel_VM.exe.manifest
+Devel_VM.exe
+vb_comapi.dll
+Devel_VM.exe.config
+application.ico
+filelist.txt
