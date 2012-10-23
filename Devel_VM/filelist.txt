@@ -1,7 +1,7 @@
-Beta_Manager.application
-Beta_Manager.exe.manifest
-Beta_Manager.exe
+Devel_VM.application
+Devel_VM.exe.manifest
+Devel_VM.exe
 vb_comapi.dll
-Beta_Manager.exe.config
-beta.ico
+Devel_VM.exe.config
+application.ico
 filelist.txt
