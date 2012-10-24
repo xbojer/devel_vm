@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devel_VM", "Devel_VM\Devel_
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfoSender", "InfoSender\InfoSender.csproj", "{8B5A4581-938D-4747-96B9-01EA48CDE32F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Installer", "Installer\Installer.csproj", "{EA0A717A-2FCB-44F6-B489-47980E1C1C88}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,12 @@ Global
 		{8B5A4581-938D-4747-96B9-01EA48CDE32F}.Release|Any CPU.Build.0 = Release|x86
 		{8B5A4581-938D-4747-96B9-01EA48CDE32F}.Release|x86.ActiveCfg = Release|x86
 		{8B5A4581-938D-4747-96B9-01EA48CDE32F}.Release|x86.Build.0 = Release|x86
+		{EA0A717A-2FCB-44F6-B489-47980E1C1C88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA0A717A-2FCB-44F6-B489-47980E1C1C88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA0A717A-2FCB-44F6-B489-47980E1C1C88}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EA0A717A-2FCB-44F6-B489-47980E1C1C88}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA0A717A-2FCB-44F6-B489-47980E1C1C88}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{EA0A717A-2FCB-44F6-B489-47980E1C1C88}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
