@@ -63,6 +63,7 @@ namespace DVMinstaller
             downloadFiles();
             copyFiles();
             finalize();
+            Close();
         }
 
         private void getTempDir()
@@ -92,12 +93,12 @@ namespace DVMinstaller
             pb.Value = 100;
             log("Finished! Starting app...");
 
-            Program.execute(mainexe, "/r");
+            Program.execute(mainexe, "/r", true, true);
         }
         private void copyFiles()
         {
             int step = 10 / filenames.Count;
-            string installDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), @"..\Devel VM");
+            string installDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"Devel VM");
 
             log("Verifying directory [" + installDir + "]...");
             if (Directory.Exists(installDir))
@@ -113,12 +114,18 @@ namespace DVMinstaller
             {
                 log("Copying [" + fn + "]...");
                 File.Copy(Path.Combine(tempDir, fn), Path.Combine(installDir, fn), true);
-                if (Path.GetExtension(Path.Combine(installDir, fn)) == "exe")
+                if (Path.GetExtension(Path.Combine(installDir, fn)) == ".exe")
                 {
                     mainexe = Path.Combine(installDir, fn);
                 }
                 pb.Value += step;
                 refresh();
+            }
+            if (mainexe == "")
+            {
+                log("No executable found :(");
+                MessageBox.Show("No executable file found in release! Exterminate!", "Devel VM Installer Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Program.Exterminate();
             }
             pb.Value = 95;
             refresh();
@@ -303,6 +310,12 @@ namespace DVMinstaller
             {
                 log("Removing [" + Path.Combine(UserDir, "Beta Manager") + "]...");
                 Directory.Delete(Path.Combine(UserDir, "Beta Manager"), true);
+            }
+
+            if (Directory.Exists(Path.Combine(UserDir, "Devel VM")))
+            {
+                log("Removing [" + Path.Combine(UserDir, "Devel VM") + "]...");
+                Directory.Delete(Path.Combine(UserDir, "Devel VM"), true);
             }
 
             log("Checking Start menu...");

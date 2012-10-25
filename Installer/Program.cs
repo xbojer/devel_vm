@@ -21,31 +21,36 @@ namespace DVMinstaller
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             
-            if (Environment.GetCommandLineArgs().Contains<string>("/r"))
-            {
-
-            }
-
             Application.Run(new f());
         }
 
-        public static string execute(string exe, string args, bool systemdir = true)
+        public static string execute(string exe, string args, bool systemdir = true, bool detached = false)
         {
+            string r = "";
             Process MyProc = new Process();
             MyProc.StartInfo.WorkingDirectory = Environment.GetFolderPath(Environment.SpecialFolder.System);
             MyProc.StartInfo.FileName = exe;
             MyProc.StartInfo.UseShellExecute = false;
-            MyProc.StartInfo.RedirectStandardError = true;
-            MyProc.StartInfo.RedirectStandardInput = true;
-            MyProc.StartInfo.RedirectStandardOutput = true;
-            MyProc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-
+            MyProc.StartInfo.RedirectStandardError = !detached;
+            MyProc.StartInfo.RedirectStandardInput = !detached;
+            MyProc.StartInfo.RedirectStandardOutput = !detached;
+            if (detached)
+            {
+                MyProc.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+            }
+            else
+            {
+                MyProc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            }
             MyProc.StartInfo.Arguments = args;
 
             MyProc.Start();
-            MyProc.WaitForExit();
-            string r = MyProc.StandardOutput.ReadToEnd();
-            MyProc.Close();
+            if (!detached)
+            {
+                MyProc.WaitForExit();
+                r = MyProc.StandardOutput.ReadToEnd();
+                MyProc.Close();
+            }
             return r;
         }
 
@@ -67,7 +72,6 @@ namespace DVMinstaller
             }
             return sharedFolders;
         }
-
         public static string getRemoteVersion()
         {
             try
@@ -83,7 +87,6 @@ namespace DVMinstaller
             catch (Exception) { }
             return "0";
         }
-
         public static void Exterminate()
         {
             if (Application.MessageLoop == true)
