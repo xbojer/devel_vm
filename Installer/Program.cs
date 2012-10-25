@@ -68,6 +68,22 @@ namespace DVMinstaller
             return sharedFolders;
         }
 
+        public static string getRemoteVersion()
+        {
+            try
+            {
+                using (StreamReader sr = new StreamReader(@"\\ALPHA\instale\Devel_beta\current_version.txt"))
+                {
+                    String line;
+                    if ((line = sr.ReadLine()) == null) return "0";//img ver
+                    if ((line = sr.ReadLine()) == null) return "0";//app ver
+                    return line;
+                }
+            }
+            catch (Exception) { }
+            return "0";
+        }
+
         public static void Exterminate()
         {
             if (Application.MessageLoop == true)

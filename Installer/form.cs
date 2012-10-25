@@ -12,12 +12,18 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using System.Management;
+using System.Net;
 
 namespace DVMinstaller
 {
     public partial class f : Form
     {
         bool CloseLock = false;
+        string remoteVer = "0";
+        string tempDir = "";
+        string remoteBaseUrl = "https://raw.github.com/xbojer/devel_vm/master/Devel_VM/publish/Application%20Files/";
+        List<string> filenames = new List<string>();
+
         public f()
         {
             InitializeComponent();
@@ -32,7 +38,6 @@ namespace DVMinstaller
             Update();
             Application.DoEvents();
         }
-
         private void f_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing)
@@ -41,7 +46,6 @@ namespace DVMinstaller
                 if (e.Cancel) MessageBox.Show("Nie można teraz przerwać!");
             }
         }
-
         private void f_Shown(object sender, EventArgs e)
         {
             log("Initializing...");
@@ -50,9 +54,10 @@ namespace DVMinstaller
             cleanup();
             checkUser();
             checkSourceDir();
-
             getCurrentVersion();
             getFileList();
+            getTempDir();
+
             downloadFiles();
             copyFiles();
             cleanupTemp();
@@ -60,6 +65,19 @@ namespace DVMinstaller
 
             String DestFolder = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
 
+        }
+
+        private void getTempDir()
+        {
+            log("Preparing temporary directory...");
+            tempDir = System.IO.Path.GetTempPath();
+            tempDir = Path.Combine(tempDir, ".develvminstaller");
+            if (Directory.Exists(tempDir))
+            {
+                log("Cleaning [" + tempDir + "]...");
+                Directory.Delete(tempDir, true);
+            }
+            Directory.CreateDirectory(tempDir);
         }
 
         private void finalize()
@@ -79,17 +97,50 @@ namespace DVMinstaller
 
         private void downloadFiles()
         {
+            log("Downloading " + filenames.Count.ToString() + " files...");
+            int old = pb.Value;
+            foreach (string fn in filenames)
+            {
+                log("Downloading [" + fn + "]...");
+                string url = remoteBaseUrl + @"Devel_VM_" + remoteVer.Replace(".", "_") + "/" + fn;
+                WebClient webClient = new WebClient();
+                webClient.DownloadFile(url, Path.Combine(tempDir, fn));
+
+            }
             //throw new NotImplementedException();
         }
 
         private void getFileList()
         {
-            //throw new NotImplementedException();
+            log("Fetching app file list...");
+            HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(remoteBaseUrl + @"Devel_VM_" + remoteVer.Replace(".", "_") + "/filelist.txt");
+            HttpWebResponse httpResponse = (HttpWebResponse)httpRequest.GetResponse();
+
+            Stream responseStream = httpResponse.GetResponseStream();
+            using (StreamReader sr = new StreamReader(responseStream))
+            {
+                string line;
+                filenames.Clear();
+                while ((line = sr.ReadLine()) != null)
+                {
+                    if (line != "filelist.txt" && line.Contains("."))
+                        filenames.Add(line);
+                }
+            }
+            responseStream.Close();
+            pb.PerformStep();
         }
 
         private void getCurrentVersion()
         {
-            //throw new NotImplementedException();
+            log("Fetching current version...");
+            remoteVer = Program.getRemoteVersion();
+            if (remoteVer == "0")
+            {
+                MessageBox.Show("Could not fetch version! Exterminate!", "Devel VM Installer Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Program.Exterminate();
+            }
+            log("Current version: " + remoteVer);
         }
 
         private void checkSourceDir()

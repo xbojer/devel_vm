@@ -45,8 +45,10 @@
             // pb
             // 
             this.pb.Location = new System.Drawing.Point(12, 25);
+            this.pb.MarqueeAnimationSpeed = 10;
             this.pb.Name = "pb";
             this.pb.Size = new System.Drawing.Size(296, 23);
+            this.pb.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.pb.TabIndex = 1;
             // 
             // f
