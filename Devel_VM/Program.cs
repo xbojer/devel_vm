@@ -23,6 +23,11 @@ namespace Devel_VM
         [STAThread]
         static void Main(string[] args)
         {
+            if (Environment.GetCommandLineArgs().Contains<string>("/installed"))
+            {
+                Application.Restart();
+                return;
+            }
             if (mutex.WaitOne(TimeSpan.Zero, true))
             {
                 Application.EnableVisualStyles();

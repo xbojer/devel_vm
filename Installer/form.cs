@@ -24,6 +24,8 @@ namespace DVMinstaller
         string remoteBaseUrl = "https://raw.github.com/xbojer/devel_vm/master/Devel_VM/publish/Application%20Files/";
         List<string> filenames = new List<string>();
 
+        string mainexe = "";
+
         public f()
         {
             InitializeComponent();
@@ -36,6 +38,7 @@ namespace DVMinstaller
         public void refresh()
         {
             Update();
+            Refresh();
             Application.DoEvents();
         }
         private void f_FormClosing(object sender, FormClosingEventArgs e)
@@ -57,14 +60,9 @@ namespace DVMinstaller
             getCurrentVersion();
             getFileList();
             getTempDir();
-
             downloadFiles();
             copyFiles();
-            cleanupTemp();
             finalize();
-
-            String DestFolder = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
-
         }
 
         private void getTempDir()
@@ -79,37 +77,68 @@ namespace DVMinstaller
             }
             Directory.CreateDirectory(tempDir);
         }
-
         private void finalize()
         {
-            //throw new NotImplementedException();
-        }
+            log("Clearing temporary directory...");
+            Directory.Delete(tempDir, true);
 
-        private void cleanupTemp()
-        {
-            //throw new NotImplementedException();
-        }
+            log("Adding autostart reg entry...");
+            RegistryKey regkey = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
+            if (regkey != null)
+            {
+                regkey.SetValue("Devel VM", mainexe);
+                regkey.Close();
+            }
+            pb.Value = 100;
+            log("Finished! Starting app...");
 
+            Program.execute(mainexe, "/r");
+        }
         private void copyFiles()
         {
-            //throw new NotImplementedException();
-        }
+            int step = 10 / filenames.Count;
+            string installDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), @"..\Devel VM");
 
+            log("Verifying directory [" + installDir + "]...");
+            if (Directory.Exists(installDir))
+            {
+                log("Removing [" + installDir + "]...");
+                Directory.Delete(installDir, true);
+            }
+            log("Creating directory [" + installDir + "]...");
+            DirectorySecurity sec = new DirectorySecurity(Environment.GetFolderPath(Environment.SpecialFolder.Personal), AccessControlSections.All);
+            Directory.CreateDirectory(installDir, sec);
+
+            foreach (string fn in filenames)    
+            {
+                log("Copying [" + fn + "]...");
+                File.Copy(Path.Combine(tempDir, fn), Path.Combine(installDir, fn), true);
+                if (Path.GetExtension(Path.Combine(installDir, fn)) == "exe")
+                {
+                    mainexe = Path.Combine(installDir, fn);
+                }
+                pb.Value += step;
+                refresh();
+            }
+            pb.Value = 95;
+            refresh();
+        }
         private void downloadFiles()
         {
             log("Downloading " + filenames.Count.ToString() + " files...");
-            int old = pb.Value;
+            int step = 70 / filenames.Count;
             foreach (string fn in filenames)
             {
                 log("Downloading [" + fn + "]...");
                 string url = remoteBaseUrl + @"Devel_VM_" + remoteVer.Replace(".", "_") + "/" + fn;
                 WebClient webClient = new WebClient();
                 webClient.DownloadFile(url, Path.Combine(tempDir, fn));
-
+                pb.Value += step;
+                refresh();
             }
-            //throw new NotImplementedException();
+            pb.Value = 85;
+            refresh();
         }
-
         private void getFileList()
         {
             log("Fetching app file list...");
@@ -128,9 +157,9 @@ namespace DVMinstaller
                 }
             }
             responseStream.Close();
-            pb.PerformStep();
+            pb.Value = 15;
+            refresh();
         }
-
         private void getCurrentVersion()
         {
             log("Fetching current version...");
@@ -142,7 +171,6 @@ namespace DVMinstaller
             }
             log("Current version: " + remoteVer);
         }
-
         private void checkSourceDir()
         {
             string dir = @"C:\DEVEL";
@@ -191,7 +219,6 @@ namespace DVMinstaller
             /*Win32Share.MethodStatus createResult = Win32Share.Create(dir, shareName, Win32Share.ShareType.DiskDrive, 20, "Source code", null);
             if (createResult != Win32Share.MethodStatus.Success){}*/
         }
-
         private void checkUser()
         {
             string username = "vbox";
@@ -240,7 +267,6 @@ namespace DVMinstaller
                 log("Error while accessing registry...");
             }
         }
-
         private void killer()
         {
             log("Killing all instances of used processes...");
@@ -250,7 +276,6 @@ namespace DVMinstaller
                     if (Process.GetCurrentProcess().Id != prc.Id)
                         prc.Kill();
         }
-
         private void cleanup()
         {
             log("Checking previous installations...");
@@ -288,7 +313,6 @@ namespace DVMinstaller
                 Directory.Delete(Path.Combine(smDir, "Beta Manager"), true);
             }
         }
-
         private void checkVB()
         {
             bool ok = false;
@@ -326,7 +350,6 @@ namespace DVMinstaller
             }
 
         }
-
         private void InstallVB()
         {
             throw new NotImplementedException();
