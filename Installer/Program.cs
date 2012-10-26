@@ -24,6 +24,7 @@ namespace DVMinstaller
             Application.Run(new f());
         }
 
+        public static int executeLastCode = -1;
         public static string execute(string exe, string args, bool systemdir = true, bool detached = false)
         {
             string r = "";
@@ -49,6 +50,7 @@ namespace DVMinstaller
             {
                 MyProc.WaitForExit();
                 r = MyProc.StandardOutput.ReadToEnd();
+                executeLastCode = MyProc.ExitCode;
                 MyProc.Close();
             }
             return r;

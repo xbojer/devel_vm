@@ -21,8 +21,11 @@ namespace DVMinstaller
         bool CloseLock = false;
         string remoteVer = "0";
         string tempDir = "";
-        string remoteBaseUrl = "https://raw.github.com/xbojer/devel_vm/master/Devel_VM/publish/Application%20Files/";
+        string remoteBaseUrl = @"https://raw.github.com/xbojer/devel_vm/master/Devel_VM/publish/Application%20Files/";
+        string vboxInstallBase = @"\\ALPHA\instale\Devel\VirtualBox-";
         List<string> filenames = new List<string>();
+
+        string vboxVer = "4.2.2";
 
         string mainexe = "";
 
@@ -326,6 +329,7 @@ namespace DVMinstaller
                 Directory.Delete(Path.Combine(smDir, "Beta Manager"), true);
             }
         }
+        bool vbchecklasttry = false;
         private void checkVB()
         {
             bool ok = false;
@@ -337,7 +341,7 @@ namespace DVMinstaller
                 if (vbox_version != null)
                 {
                     log("VirtualBox " + vbox_version + " found...");
-                    if (vbox_version != "4.2.2") //TODO: Add grabbing correct version
+                    if (vbox_version != vboxVer) //TODO: Add grabbing correct version
                     {
                         log("Wrong VirtualBox version!");
                     }
@@ -359,13 +363,35 @@ namespace DVMinstaller
 
             if (!ok)
             {
-                InstallVB();
+                if (vbchecklasttry)
+                {
+                    log("VirtualBox installation not verified!");
+                    MessageBox.Show("Be sure to install right version of VirtualBox! Exterminate!", "Devel VM Installer Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Program.Exterminate();
+                }
+                else
+                {
+                    InstallVB();
+                }
             }
 
         }
         private void InstallVB()
         {
-            throw new NotImplementedException();
+            log("Starting VirtualBox installer...");
+            try
+            {
+                Program.execute(vboxInstallBase + vboxVer + ".exe", @"");
+            }
+            catch (Exception)
+            {
+                log("VirtualBox installer problem!");
+                MessageBox.Show("Installer not found. Be sure to install right version of VirtualBox. Exterminate!", "Devel VM Installer Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Program.Exterminate();
+            }
+            
+            vbchecklasttry = true;
+            checkVB();
         }
     }
 }
