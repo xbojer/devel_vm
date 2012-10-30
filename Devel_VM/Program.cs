@@ -25,6 +25,9 @@ namespace Devel_VM
         {
             if (Environment.GetCommandLineArgs().Contains<string>("/installed"))
             {
+                Properties.Settings.Default.Upgrade();
+                Properties.Settings.Default.UpgradeSettings = false;
+                Properties.Settings.Default.Save();
                 Application.Restart();
                 return;
             }
@@ -32,6 +35,20 @@ namespace Devel_VM
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
+
+                if (Properties.Settings.Default.UpgradeSettings)
+                {
+                    Properties.Settings.Default.Upgrade();
+                    Properties.Settings.Default.UpgradeSettings = false;
+                    Properties.Settings.Default.Save();
+                }
+
+                if (Environment.GetCommandLineArgs().Contains<string>("/reset"))
+                {
+                    Properties.Settings.Default.Reset();
+                    Properties.Settings.Default.Save();
+                }
+
                 identity = getIdentity(Environment.GetCommandLineArgs().Contains<string>("/auth"));
 
                 LogEvents += new LogEvent(NetworkLog);
