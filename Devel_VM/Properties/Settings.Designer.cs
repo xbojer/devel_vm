@@ -37,7 +37,7 @@ namespace Devel_VM.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\\\\10.11.11.200\\instale\\Devel\\current_version.txt")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\10.11.11.200\\instale\\Devel\\current_version_2.2.0.0.txt")]
         public string path_imgver {
             get {
                 return ((string)(this["path_imgver"]));
@@ -323,6 +323,15 @@ namespace Devel_VM.Properties {
         public string vm_settings_networkprefix {
             get {
                 return ((string)(this["vm_settings_networkprefix"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("080000000000")]
+        public string vm_settings_defaultmac {
+            get {
+                return ((string)(this["vm_settings_defaultmac"]));
             }
         }
     }

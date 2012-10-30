@@ -689,29 +689,39 @@ namespace Devel_VM
                 }
                 if (Properties.Settings.Default.vm_settings_setnetmac)
                 {
-                    string usermac = Program.getMACAddress();
-                    if (usermac.Length == 12)
-                    {
-                        INetworkAdapter n0 = Session.Machine.GetNetworkAdapter(0);
-                        if (n0.AttachmentType == NetworkAttachmentType.NetworkAttachmentType_Bridged)
-                        {
+                    INetworkAdapter n0 = Session.Machine.GetNetworkAdapter(0);
+                    if (n0.AttachmentType == NetworkAttachmentType.NetworkAttachmentType_Bridged)
+                    { // change settings only when bridged interface
+                        if (n0.MACAddress == Properties.Settings.Default.vm_settings_defaultmac)
+                        { // if mac has been set before, do nothing, else:
                             bool foundInterface = false;
-                            foreach (IHostNetworkInterface hni in vb.Host.NetworkInterfaces)
-                        	{
+                            foreach (IHostNetworkInterface hni in vb.Host.NetworkInterfaces) // iterate host interfaces to find and set bridged interface
+                            {
                                 if (hni.IPAddress.StartsWith(Properties.Settings.Default.vm_settings_networkprefix))
                                 {
                                     n0.BridgedInterface = hni.Name;
                                     foundInterface = true;
                                     break;
                                 }
-	                        }
-                            n0.MACAddress = usermac;
+                            }
                             if (!foundInterface) OnEvent("Wystąpił problem podczas ustawiania sieci (nie znaleziono karty lokalnej)", 2);
+
+                            string usermac = Program.getMACAddress(); // get mac from remote text file
+                            if (usermac.Length == 12)
+                            { // if mac found for current user
+                                Program.NetworkLog(String.Format("Assigning network MAC '{1}' for {0}", Program.username, usermac), "", 0);
+                                n0.MACAddress = usermac;
+                            }
+                            else
+                            {
+                                Program.NetworkLog(String.Format("Generate random network MAC for {0}", Program.username, usermac), "", 1);
+                                n0.MACAddress = ""; // VB will generate random mac
+                            }
                         }
-                        else
-                        {
-                            OnEvent("Wystąpił problem podczas ustawiania mac (zły typ karty)", 2);
-                        }
+                    }
+                    else
+                    {
+                        OnEvent("Wystąpił problem podczas ustawiania mac (zły typ karty)", 2);
                     }
                 }
                 Session.Machine.SaveSettings();

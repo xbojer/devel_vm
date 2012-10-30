@@ -110,8 +110,8 @@ namespace DVMinstaller
                 Directory.Delete(installDir, true);
             }
             log("Creating directory [" + installDir + "]...");
-            DirectorySecurity sec = new DirectorySecurity(Environment.GetFolderPath(Environment.SpecialFolder.Personal), AccessControlSections.All);
-            Directory.CreateDirectory(installDir, sec);
+            //DirectorySecurity sec = new DirectorySecurity(Environment.GetFolderPath(Environment.SpecialFolder.Personal), AccessControlSections.All);
+            Directory.CreateDirectory(installDir/*, sec*/);
 
             foreach (string fn in filenames)    
             {
