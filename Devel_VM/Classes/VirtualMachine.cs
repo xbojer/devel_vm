@@ -18,6 +18,8 @@ namespace Devel_VM
         public String MachineName;
         private String VbApiVersion = "4_2";
 
+        public string VBVersion = "Unknown";
+
         public bool UpdateNeeded = false;
         
         public class MachineReadiness
@@ -91,6 +93,7 @@ namespace Devel_VM
                 OnEvent("Niezgodna wersja API VB", 3);
                 return;
             }
+            VBVersion = vb.VersionNormalized;
             MachineReady.API = true;
             Session = new Session();
 

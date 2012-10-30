@@ -15,10 +15,16 @@ namespace Devel_VM.Forms
             InitializeComponent();
             this.Text = String.Format("{0} - Informacje", AssemblyTitle);
             this.labelProductName.Text = AssemblyProduct;
-            this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
+            this.labelVersion.Text = String.Format("Wersja aplikacji: {0}", AssemblyVersion);
             this.labelCopyright.Text = AssemblyCopyright;
             this.labelCompanyName.Text = AssemblyCompany;
-            this.textBoxDescription.Text = AssemblyDescription;
+            //this.textBoxDescription.Text = AssemblyDescription;
+            this.textBoxDescription.Text = "";
+            this.textBoxDescription.Text += String.Format("Powiązanie z kontem: {0}\r\n", Program.username);
+            this.textBoxDescription.Text += String.Format("Wersja VirtualBoxa: {0}\r\n", Program.VM.VBVersion);
+            this.textBoxDescription.Text += String.Format("Nazwa obrazu: {0}\r\n", Program.VM.MachineName);
+            this.textBoxDescription.Text += String.Format("Wersja obrazu: {0}\r\n", Program.VM.getVersion());
+            
         }
 
         #region Assembly Attribute Accessors
