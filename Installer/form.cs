@@ -13,11 +13,13 @@ using System.Windows.Forms;
 using Microsoft.Win32;
 using System.Management;
 using System.Net;
+using IWshRuntimeLibrary;
 
 namespace DVMinstaller
 {
     public partial class f : Form
     {
+        private WshShellClass WshShell;
         bool CloseLock = false;
         string remoteVer = "0";
         string tempDir = "";
@@ -93,6 +95,26 @@ namespace DVMinstaller
                 regkey.SetValue("Devel VM", mainexe);
                 regkey.Close();
             }
+            
+            string smDir = Environment.GetFolderPath(Environment.SpecialFolder.Programs);
+            if (Directory.Exists(Path.Combine(smDir, "Devel VM")))
+            {
+                log("Clearing [" + Path.Combine(smDir, "Devel VM") + "]...");
+                Directory.Delete(Path.Combine(smDir, "Devel VM"), true);
+            }
+            smDir = Path.Combine(smDir, "Devel VM");
+            log("Creating [" + Path.Combine(smDir, "Devel VM") + "]...");
+            Directory.CreateDirectory(smDir);
+
+            log("Create StartMenu shortcut...");
+            WshShell = new WshShellClass();
+            IWshRuntimeLibrary.IWshShortcut shortcut;
+            shortcut = (IWshRuntimeLibrary.IWshShortcut)WshShell.CreateShortcut(Path.Combine(smDir, "Devel VM Manager.lnk"));
+            shortcut.TargetPath = mainexe;
+            shortcut.Description = "Uruchom Devel VM Manager";
+            shortcut.IconLocation = mainexe + ",0";
+            shortcut.Save();
+
             pb.Value = 100;
             log("Finished! Starting app...");
 
@@ -116,7 +138,7 @@ namespace DVMinstaller
             foreach (string fn in filenames)    
             {
                 log("Copying [" + fn + "]...");
-                File.Copy(Path.Combine(tempDir, fn), Path.Combine(installDir, fn), true);
+                System.IO.File.Copy(Path.Combine(tempDir, fn), Path.Combine(installDir, fn), true);
                 if (Path.GetExtension(Path.Combine(installDir, fn)) == ".exe")
                 {
                     mainexe = Path.Combine(installDir, fn);
@@ -327,6 +349,11 @@ namespace DVMinstaller
             {
                 log("Removing [" + Path.Combine(smDir, "Beta Manager") + "]...");
                 Directory.Delete(Path.Combine(smDir, "Beta Manager"), true);
+            }
+            if (Directory.Exists(Path.Combine(smDir, "Devel VM")))
+            {
+                log("Removing [" + Path.Combine(smDir, "Devel VM") + "]...");
+                Directory.Delete(Path.Combine(smDir, "Devel VM"), true);
             }
         }
         bool vbchecklasttry = false;
