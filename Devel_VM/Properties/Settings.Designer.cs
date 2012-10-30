@@ -305,15 +305,12 @@ namespace Devel_VM.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("\\\\10.11.11.200\\instale\\Devel\\name2mac.txt")]
         public string path_macaddr {
             get {
                 return ((string)(this["path_macaddr"]));
-            }
-            set {
-                this["path_macaddr"] = value;
             }
         }
         

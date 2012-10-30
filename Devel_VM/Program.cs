@@ -221,10 +221,7 @@ namespace Devel_VM
         }
         static void Application_ApplicationExit(object sender, EventArgs e)
         {
-            if (VM.MachineReady.getReadyOffline())
-            {
-                if(VM.TTY != null) VM.TTY.Stop();
-            }
+            VM.Destroy();
             Log("Application Exiting", "MAIN", 0);
         }
         static public string getMACAddress()

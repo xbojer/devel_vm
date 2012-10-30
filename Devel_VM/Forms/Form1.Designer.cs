@@ -66,6 +66,7 @@
             this.tAutoStart = new System.Windows.Forms.Timer(this.components);
             this.button2 = new System.Windows.Forms.Button();
             this.tUpdateAutocheck = new System.Windows.Forms.Timer(this.components);
+            this.resetSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuZasobnik.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -155,7 +156,8 @@
             this.hTTPDToolStripMenuItem,
             this.sprawdźAktulizacjeToolStripMenuItem,
             this.pobierzNaNowoObrazToolStripMenuItem,
-            this.usuńObrazToolStripMenuItem});
+            this.usuńObrazToolStripMenuItem,
+            this.resetSettingsToolStripMenuItem});
             this.toolStripMenuItem8.Name = "toolStripMenuItem8";
             this.toolStripMenuItem8.Size = new System.Drawing.Size(165, 22);
             this.toolStripMenuItem8.Text = "Zaawansowane";
@@ -352,6 +354,13 @@
             this.tUpdateAutocheck.Interval = 3000;
             this.tUpdateAutocheck.Tick += new System.EventHandler(this.tUpdateAutocheck_Tick);
             // 
+            // resetSettingsToolStripMenuItem
+            // 
+            this.resetSettingsToolStripMenuItem.Name = "resetSettingsToolStripMenuItem";
+            this.resetSettingsToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.resetSettingsToolStripMenuItem.Text = "Reset ustawień";
+            this.resetSettingsToolStripMenuItem.Click += new System.EventHandler(this.resetSettingsToolStripMenuItem_Click);
+            // 
             // fMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -408,6 +417,7 @@
         private System.Windows.Forms.ToolStripMenuItem NodeJSstripMenu;
         private System.Windows.Forms.ToolStripMenuItem DeamonsStripMenu;
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resetSettingsToolStripMenuItem;
     }
 }
 

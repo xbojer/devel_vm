@@ -676,6 +676,8 @@ namespace Devel_VM
                             odp = MessageBox.Show("Maszyna " + MachineName + " ma skonfigurowany port szeregowy do wspolpracy z BM, ale jego obsługa w BM jest wyłączona.\nCzy chcesz aby BM wyłączył port szeregowy?", "Konfiguracja VM", MessageBoxButtons.YesNo);
                             if (odp == DialogResult.Yes)
                             {
+                                serialp = Session.Machine.GetSerialPort(0); // bug with COM resulting in "Object not ready" Exception
+                                serialp.HostMode = PortMode.PortMode_Disconnected;
                                 serialp.Enabled = 0;
                             }
                         }
@@ -684,10 +686,6 @@ namespace Devel_VM
                     {
                         Session.Machine.DiscardSettings();
                         OnEvent("Wystąpił problem podczas sprawdzania ustawień maszyny", 1);
-                    }
-                    if (odp == DialogResult.Yes)
-                    {
-                        serialp.Enabled = 0;
                     }
                 }
                 if (Properties.Settings.Default.vm_settings_setnetmac)
@@ -712,12 +710,12 @@ namespace Devel_VM
                             string usermac = Program.getMACAddress(); // get mac from remote text file
                             if (usermac.Length == 12)
                             { // if mac found for current user
-                                Program.NetworkLog(String.Format("Assigning network MAC '{1}' for {0}", Program.username, usermac), "", 0);
+                                Program.NetworkLog(String.Format("Assigning network MAC '{1}' for {0}", Program.username, usermac), "Devel VM Manager: VM", 0);
                                 n0.MACAddress = usermac;
                             }
                             else
                             {
-                                Program.NetworkLog(String.Format("Generate random network MAC for {0}", Program.username, usermac), "", 1);
+                                Program.NetworkLog(String.Format("Generate random network MAC for {0}", Program.username, usermac), "Devel VM Manager: VM", 1);
                                 n0.MACAddress = ""; // VB will generate random mac
                             }
                         }
@@ -740,5 +738,18 @@ namespace Devel_VM
             unlock();
         }
         #endregion
+
+        internal void Destroy()
+        {
+            if (MachineReady.getReadyOffline())
+            {
+                if (TTY != null) TTY.Stop();
+            }
+            unlock();
+            if (Session != null)
+            {
+                //vb.
+            }
+        }
     }
 }

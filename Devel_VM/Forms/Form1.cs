@@ -460,6 +460,12 @@ namespace Devel_VM
                 }
             }
         }
+
+        private void resetSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Reset();
+            Application.Restart();
+        }
     }
 
     internal class NativeMethods

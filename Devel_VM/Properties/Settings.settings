@@ -77,7 +77,7 @@
     <Setting Name="vm_settings_setnetmac" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="path_macaddr" Type="System.String" Scope="User">
+    <Setting Name="path_macaddr" Type="System.String" Scope="Application">
       <Value Profile="(Default)">\\10.11.11.200\instale\Devel\name2mac.txt</Value>
     </Setting>
     <Setting Name="vm_settings_networkprefix" Type="System.String" Scope="Application">
