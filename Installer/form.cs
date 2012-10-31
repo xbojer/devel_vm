@@ -13,13 +13,12 @@ using System.Windows.Forms;
 using Microsoft.Win32;
 using System.Management;
 using System.Net;
-using IWshRuntimeLibrary;
+using vbAccelerator.Components.Shell;
 
 namespace DVMinstaller
 {
     public partial class f : Form
     {
-        private WshShellClass WshShell;
         bool CloseLock = false;
         string remoteVer = "0";
         string tempDir = "";
@@ -107,13 +106,24 @@ namespace DVMinstaller
             Directory.CreateDirectory(smDir);
 
             log("Create StartMenu shortcut...");
-            WshShell = new WshShellClass();
-            IWshRuntimeLibrary.IWshShortcut shortcut;
-            shortcut = (IWshRuntimeLibrary.IWshShortcut)WshShell.CreateShortcut(Path.Combine(smDir, "Devel VM Manager.lnk"));
-            shortcut.TargetPath = mainexe;
-            shortcut.Description = "Uruchom Devel VM Manager";
-            shortcut.IconLocation = mainexe + ",0";
-            shortcut.Save();
+            try
+            {
+                ShellLink link = new ShellLink();
+                link.Target = mainexe;
+                link.WorkingDirectory = Path.GetDirectoryName(mainexe);
+                link.IconPath = mainexe;
+                link.IconIndex = 0;
+                link.Description = "Devel VM Manager";
+                link.Save(Path.Combine(smDir, "Devel VM.lnk"));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Could not create DeskTop Shortcut...\r\n" +
+                                "App_Path = " + mainexe + "\r\n" +
+                                "Exception: " + ex.Message.ToString(),
+                                "ShortCut Creation Error:");
+                Program.Exterminate();
+            }
 
             pb.Value = 100;
             log("Finished! Starting app...");
