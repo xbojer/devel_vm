@@ -162,12 +162,15 @@ namespace Devel_VM
         public bool checkVersion(bool verbose = true)
         {
             int lv = getVersion(true);
-            RemoteVersion = getRemoteVersion();
+            RemoteVersion = getRemoteVersion(verbose);
 
-            UpdateNeeded = lv < RemoteVersion;
-            MachineReady.VersionLocal = !UpdateNeeded;
+            if (RemoteVersion != 0)
+            {
+                UpdateNeeded = lv < RemoteVersion;
+                MachineReady.VersionLocal = !UpdateNeeded;
 
-            if (verbose && UpdateNeeded) OnEvent("Lokalny obraz jest nieaktualny, zaktualizuj!", 2);
+                if (verbose && UpdateNeeded) OnEvent("Lokalny obraz jest nieaktualny, zaktualizuj!", 2);
+            }
 
             return MachineReady.VersionLocal;
         }
@@ -216,7 +219,7 @@ namespace Devel_VM
             MachineReady.VersionLocal = int.TryParse(ver, out v);
             return v;
         }
-        public int getRemoteVersion()
+        public int getRemoteVersion(bool verbose = true)
         {
             int rver = 0;
             try
@@ -224,7 +227,7 @@ namespace Devel_VM
                 using (StreamReader sr = new StreamReader(Properties.Settings.Default.path_imgver))
                 {
                     String line;
-                    if((line = sr.ReadLine()) != null)
+                    if ((line = sr.ReadLine()) != null)
                     {
                         int.TryParse(line, out rver);
                         if (rver > 0) MachineReady.VersionRemote = true;
@@ -233,7 +236,15 @@ namespace Devel_VM
             }
             catch (Exception)
             {
-                OnEvent("Nie udało się odczytać wersji zewnętrznego obrazu", 1);
+                MachineReady.VersionRemote = false;
+                if (verbose)
+                {
+                    OnEvent("Nie udało się odczytać wersji zewnętrznego obrazu", 1);
+                }
+                else
+                {
+                    Program.NetworkLog("Nie udało się odczytać wersji zewnętrznego obrazu", "Devel VM Manager: VM", 1);
+                }
             }
             return rver;
         }

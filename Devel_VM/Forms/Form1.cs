@@ -278,7 +278,14 @@ namespace Devel_VM
             {
                 if (Program.VM.checkVersion(false))//aktualna
                 {
-                    Program.Log("Aplikacja i obraz są aktualne.", "Devel VM Manager: Aktualizacja", 1);
+                    if (Program.VM.MachineReady.VersionRemote)
+                    {
+                        Program.Log("Aplikacja i obraz są aktualne.", "Devel VM Manager: Aktualizacja", 1);
+                    }
+                    else
+                    {
+                        Program.Log("Nie udało się pobrać aktualnej wersji obrazu.", "Devel VM Manager: Aktualizacja", 2);
+                    }
                 }
                 else
                 {
