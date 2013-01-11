@@ -73,13 +73,13 @@ namespace Devel_VM
 
             // Add the auth length
             if (this.auth != null)
-                dataStream.AddRange(BitConverter.GetBytes(this.auth.Length));
+                dataStream.AddRange(BitConverter.GetBytes(Encoding.UTF8.GetBytes(this.auth).Length));
             else
                 dataStream.AddRange(BitConverter.GetBytes(0));
 
             // Add the message length
             if (this.message != null)
-                dataStream.AddRange(BitConverter.GetBytes(this.message.Length));
+                dataStream.AddRange(BitConverter.GetBytes(Encoding.UTF8.GetBytes(this.message).Length));
             else
                 dataStream.AddRange(BitConverter.GetBytes(0));
 
