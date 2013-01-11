@@ -26,7 +26,7 @@ namespace DVMinstaller
         string vboxInstallBase = @"\\ALPHA\instale\Devel\VirtualBox-";
         List<string> filenames = new List<string>();
 
-        string vboxVer = "4.2.2";
+        string vboxVer = "4.2.6";
 
         string mainexe = "";
 
