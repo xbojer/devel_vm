@@ -628,6 +628,7 @@ namespace Devel_VM
             relock();
             try
             {
+                Program.NetworkLog("Machine configuration start", "Devel VM Manager: VM", 1);
                 if (Properties.Settings.Default.vm_settings_mem > 0) Session.Machine.MemorySize = Properties.Settings.Default.vm_settings_mem;
                 if (Properties.Settings.Default.vm_settings_vram > 0) Session.Machine.VRAMSize = Properties.Settings.Default.vm_settings_vram;
 
@@ -704,20 +705,20 @@ namespace Devel_VM
                     INetworkAdapter n0 = Session.Machine.GetNetworkAdapter(0);
                     if (n0.AttachmentType == NetworkAttachmentType.NetworkAttachmentType_Bridged)
                     { // change settings only when bridged interface
+                        bool foundInterface = false;
+                        foreach (IHostNetworkInterface hni in vb.Host.NetworkInterfaces) // iterate host interfaces to find and set bridged interface
+                        {
+                            if (hni.IPAddress.StartsWith(Properties.Settings.Default.vm_settings_networkprefix))
+                            {
+                                n0.BridgedInterface = hni.Name;
+                                foundInterface = true;
+                                break;
+                            }
+                        }
+                        if (!foundInterface) OnEvent("Wystąpił problem podczas ustawiania sieci (nie znaleziono karty lokalnej)", 2);
+
                         if (n0.MACAddress == Properties.Settings.Default.vm_settings_defaultmac)
                         { // if mac has been set before, do nothing, else:
-                            bool foundInterface = false;
-                            foreach (IHostNetworkInterface hni in vb.Host.NetworkInterfaces) // iterate host interfaces to find and set bridged interface
-                            {
-                                if (hni.IPAddress.StartsWith(Properties.Settings.Default.vm_settings_networkprefix))
-                                {
-                                    n0.BridgedInterface = hni.Name;
-                                    foundInterface = true;
-                                    break;
-                                }
-                            }
-                            if (!foundInterface) OnEvent("Wystąpił problem podczas ustawiania sieci (nie znaleziono karty lokalnej)", 2);
-
                             string usermac = Program.getMACAddress(); // get mac from remote text file
                             if (usermac.Length == 12)
                             { // if mac found for current user
