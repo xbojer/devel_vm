@@ -263,9 +263,16 @@ namespace Devel_VM
                     Session.Console.PowerDown();
                 }
                 unlock();
-                MachineConfig();
-                OnEvent("Uruchamianie maszyny", 1);
-                Machine.LaunchVMProcess(Session, "headless", "VBETAM=1").WaitForCompletion(-1);
+                if (MachineConfig())
+                {
+                    OnEvent("Uruchamianie maszyny", 1);
+                    Machine.LaunchVMProcess(Session, "headless", "VBETAM=1").WaitForCompletion(-1);
+                }
+                else
+                {
+                    OnEvent("Nie można uruchomić maszyny!", 2);
+                }
+
             }
             else
             {
@@ -621,10 +628,10 @@ namespace Devel_VM
             }
             OnEvent("Zakończono instalację", 1);
         }
-        public void MachineConfig()
+        public bool MachineConfig()
         {
-            if (Properties.Settings.Default.vm_settings_bypass) return;
-            if (!MachineReady.getReadyOffline() || Status != State.Off) return;
+            if (Properties.Settings.Default.vm_settings_bypass) return true;
+            if (!MachineReady.getReadyOffline() || Status != State.Off) return false;
             relock();
             try
             {
@@ -727,8 +734,11 @@ namespace Devel_VM
                             }
                             else
                             {
-                                Program.NetworkLog(String.Format("Generate random network MAC for {0}", Program.username, usermac), "Devel VM Manager: VM", 1);
-                                n0.MACAddress = ""; // VB will generate random mac
+                                Program.NetworkLog(String.Format("User {0} does not have entry in name2mac file", Program.username), "Devel VM Manager: VM", 2);
+                                MessageBox.Show("Nie ma zdefiniowanego MAC adresu dla twojego konta. Skontaktuj sie z działem administracji.");
+                                return false;
+                                //Program.NetworkLog(String.Format("Generate random network MAC for {0}", Program.username, usermac), "Devel VM Manager: VM", 1);
+                                //n0.MACAddress = ""; // VB will generate random mac
                             }
                         }
                     }
@@ -746,8 +756,11 @@ namespace Devel_VM
             {
                 Session.Machine.DiscardSettings();
                 OnEvent("Wystąpił problem podczas ustawiania maszyny", 2);
+                unlock();
+                return false;
             }
             unlock();
+            return true;
         }
         #endregion
 
