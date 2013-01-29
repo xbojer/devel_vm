@@ -95,7 +95,7 @@ namespace Devel_VM
         }
         #endregion
     }
-    public class Network_listener
+    public class Network_listener : IDisposable
     {
         IPEndPoint ep_server = new IPEndPoint(IPAddress.Any, 21544);
         UdpClient sock;
@@ -284,6 +284,11 @@ namespace Devel_VM
             }
 
             u.BeginReceive(new AsyncCallback(this.ReceiveCallback), ((UdpState)(ar.AsyncState)));
+        }
+
+        public void Dispose()
+        {
+            sock.Close();
         }
     }
 

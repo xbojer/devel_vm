@@ -8,7 +8,7 @@ using System.IO;
 
 namespace Devel_VM.Classes
 {
-    class SerialPipe //TODO: MEMLEAK?
+    class SerialPipe : IDisposable //TODO: MEMLEAK?
     {
         static int num = 0;
 
@@ -96,6 +96,15 @@ namespace Devel_VM.Classes
                 {
                     //throw;
                 }
+            }
+        }
+
+        public void Dispose()
+        {
+            Stop();
+            if (pipe != null)
+            {
+                pipe.Close();
             }
         }
     }
