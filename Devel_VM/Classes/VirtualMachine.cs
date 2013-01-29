@@ -88,7 +88,20 @@ namespace Devel_VM
         public void initMachine()
         {
             if (MachineReady.getReadyOffline()) return;
-            vb = new VirtualBox.VirtualBox();
+            bool apiok = false;
+            try
+            {
+                vb = new VirtualBox.VirtualBox();
+                apiok = true;
+            }
+            catch (Exception) { }
+
+            if (!apiok)
+            {
+                OnEvent("Brak API VB !!!", 3);
+                return;
+            }
+            
             if (VbApiVersion != vb.APIVersion)
             {
                 OnEvent("Niezgodna wersja API VB", 3);
