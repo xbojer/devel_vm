@@ -215,8 +215,10 @@ namespace Devel_VM
         #endregion
         public Network_listener()
         {
-            sock = new UdpClient(ep_server);
+            sock = new UdpClient();
+            sock.ExclusiveAddressUse = false;
             sock.EnableBroadcast = true;
+            sock.Client.Bind(ep_server);
 
             UdpState s = new UdpState();
             s.e = ep_server;
@@ -297,6 +299,7 @@ namespace Devel_VM
         public static void send(byte[] packet)
         {
             UdpClient s = new UdpClient();
+            s.ExclusiveAddressUse = false;
             s.EnableBroadcast = true;
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse("255.255.255.255"), port);
             s.Send(packet, packet.Length, ep);

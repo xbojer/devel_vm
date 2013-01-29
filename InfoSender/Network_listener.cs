@@ -61,6 +61,8 @@ namespace Devel_VM
                 this.message = Encoding.UTF8.GetString(dataStream, 12 + nameLength, msgLength);
             else
                 this.message = null;
+
+            //Encoding.UTF8.GetString(dataStream, 12 + nameLength, ;
         }
 
         // Converts the packet into a byte array for sending/receiving
@@ -206,8 +208,10 @@ namespace Devel_VM
         #endregion
         public Network_listener()
         {
-            sock = new UdpClient(ep_server);
+            sock = new UdpClient();
+            sock.ExclusiveAddressUse = false;
             sock.EnableBroadcast = true;
+            sock.Client.Bind(ep_server);
 
             UdpState s = new UdpState();
             s.e = ep_server;
@@ -300,6 +304,7 @@ namespace Devel_VM
         {
             UdpClient s = new UdpClient();
             s.EnableBroadcast = true;
+            s.ExclusiveAddressUse = false;
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse(target), port);
             s.Send(packet, packet.Length, ep);
         }
