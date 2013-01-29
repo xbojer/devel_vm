@@ -12,6 +12,7 @@ using Devel_VM.Classes;
 
 namespace Devel_VM
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")]
     class VirtualMachine
     {
         private String ImgPath;
@@ -692,7 +693,7 @@ namespace Devel_VM
                     {
                         if (serialp.Enabled == 1 && serialp.HostMode == PortMode.PortMode_HostPipe)
                         {
-                            odp = MessageBox.Show("Maszyna " + MachineName + " ma skonfigurowany port szeregowy do wspolpracy z BM, ale jego obsługa w BM jest wyłączona.\nCzy chcesz aby BM wyłączył port szeregowy?", "Konfiguracja VM", MessageBoxButtons.YesNo);
+                            odp = MessageBox.Show("Maszyna " + MachineName + " ma skonfigurowany port szeregowy do wspolpracy z Devel VM, ale jego obsługa jest wyłączona.\nCzy chcesz wyłączyć ten port w VM?", "Konfiguracja VM", MessageBoxButtons.YesNo);
                             if (odp == DialogResult.Yes)
                             {
                                 serialp = Session.Machine.GetSerialPort(0); // bug with COM resulting in "Object not ready" Exception
@@ -705,6 +706,7 @@ namespace Devel_VM
                     {
                         Session.Machine.DiscardSettings();
                         OnEvent("Wystąpił problem podczas sprawdzania ustawień maszyny", 1);
+                        return false;
                     }
                 }
                 if (Properties.Settings.Default.vm_settings_setnetmac)
@@ -719,10 +721,22 @@ namespace Devel_VM
                             {
                                 n0.BridgedInterface = hni.Name;
                                 foundInterface = true;
-                                break;
+                                if (!Properties.Settings.Default.vm_settings_netho_fixip) break;
+                            }
+                            if (Properties.Settings.Default.vm_settings_netho_fixip && hni.InterfaceType == HostNetworkInterfaceType.HostNetworkInterfaceType_HostOnly)
+                            {
+                                if (hni.IPAddress != Properties.Settings.Default.vm_settings_netho_ip)
+                                {
+                                    Program.NetworkLog("Fixing HO network ip to " + Properties.Settings.Default.vm_settings_netho_ip + "/" + Properties.Settings.Default.vm_settings_netho_mask, "Devel VM Manager: VM", 2);
+                                    hni.EnableStaticIPConfig(Properties.Settings.Default.vm_settings_netho_ip, Properties.Settings.Default.vm_settings_netho_mask);
+                                }
                             }
                         }
-                        if (!foundInterface) OnEvent("Wystąpił problem podczas ustawiania sieci (nie znaleziono karty lokalnej)", 2);
+                        if (!foundInterface)
+                        {
+                            OnEvent("Wystąpił problem podczas ustawiania sieci (nie znaleziono karty lokalnej)", 2);
+                            throw new Exception();
+                        }
 
                         if (n0.MACAddress == Properties.Settings.Default.vm_settings_defaultmac)
                         { // if mac has been set before, do nothing, else:
@@ -736,9 +750,7 @@ namespace Devel_VM
                             {
                                 Program.NetworkLog(String.Format("User {0} does not have entry in name2mac file", Program.username), "Devel VM Manager: VM", 2);
                                 MessageBox.Show("Nie ma zdefiniowanego MAC adresu dla twojego konta. Skontaktuj sie z działem administracji.");
-                                return false;
-                                //Program.NetworkLog(String.Format("Generate random network MAC for {0}", Program.username, usermac), "Devel VM Manager: VM", 1);
-                                //n0.MACAddress = ""; // VB will generate random mac
+                                throw new Exception();
                             }
                         }
                     }
@@ -748,9 +760,7 @@ namespace Devel_VM
                     }
                 }
                 Session.Machine.SaveSettings();
-#if DEBUG
-                OnEvent("Config ok", 0);
-#endif
+                Program.NetworkLog("VM Config done", "Devel VM Manager: VM", 2);
             }
             catch (Exception)
             {
