@@ -798,11 +798,11 @@ namespace Devel_VM
             {
                 if (TTY != null) TTY.Stop();
             }
-            unlock();
             if (Session != null)
             {
-                //vb.
-            }
+                PowerOff(true, true);
+            } 
+            unlock();
         }
     }
 }
