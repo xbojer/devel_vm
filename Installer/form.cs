@@ -143,7 +143,16 @@ namespace DVMinstaller
             }
             log("Creating directory [" + installDir + "]...");
             //DirectorySecurity sec = new DirectorySecurity(Environment.GetFolderPath(Environment.SpecialFolder.Personal), AccessControlSections.All);
-            Directory.CreateDirectory(installDir/*, sec*/);
+            try
+            {
+                Directory.CreateDirectory(installDir/*, sec*/);
+            }
+            catch (Exception)
+            {
+                log("Unable to create " + installDir + " :(");
+                MessageBox.Show("Unable to create " + installDir + " ! Exterminate!", "Devel VM Installer Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Program.Exterminate();
+            }
 
             foreach (string fn in filenames)    
             {
@@ -221,15 +230,33 @@ namespace DVMinstaller
             if (!Directory.Exists(dir))
             {
                 log("Creating directory [" + dir + "]...");
-                DirectorySecurity sec = new DirectorySecurity(Environment.GetFolderPath(Environment.SpecialFolder.Personal), AccessControlSections.All);
-                sec.AddAccessRule(new FileSystemAccessRule(
-                    "vbox",
-                    FileSystemRights.FullControl,
-                    InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
-                    PropagationFlags.InheritOnly,
-                    AccessControlType.Allow
-                ));
-                Directory.CreateDirectory(dir, sec);
+                try
+                {
+                    DirectorySecurity sec = new DirectorySecurity(Environment.GetFolderPath(Environment.SpecialFolder.Personal), AccessControlSections.All);
+                    sec.AddAccessRule(new FileSystemAccessRule(
+                        "vbox",
+                        FileSystemRights.FullControl,
+                        InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
+                        PropagationFlags.InheritOnly,
+                        AccessControlType.Allow
+                    ));
+                    Directory.CreateDirectory(dir, sec);
+                }
+                catch (Exception)
+                {
+                    try
+                    {
+                        log("Retry Creating directory [" + dir + "]...");
+                        Directory.CreateDirectory(dir);
+                    }
+                    catch (Exception)
+                    {
+                        log("Unable to create " + dir + " :(");
+                        MessageBox.Show("Unable to create " + dir + " ! Exterminate!", "Devel VM Installer Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Program.Exterminate();
+                    }
+                }
+                
             }
 
             log("Verifying share [" + shareName + "]...");
