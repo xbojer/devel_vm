@@ -30,6 +30,8 @@ namespace DVMinstaller
 
         string mainexe = "";
 
+        bool rebootRequired = false;
+
         public f()
         {
             InitializeComponent();
@@ -126,9 +128,18 @@ namespace DVMinstaller
             }
 
             pb.Value = 100;
-            log("Finished! Starting app...");
+            
 
-            Program.execute(mainexe, "/r", true, true);
+            if (rebootRequired)
+            {
+                log("Finished! Reboot required...");
+                MessageBox.Show("Uruchom ponownie komputer aby korzystać z Devela! W razie problemów z uruchomieniem maszyny po restarcie, skontaktuj się z administratorami.", "Devel VM Installer", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                log("Finished! Starting app...");
+                Program.execute(mainexe, "/r", true, true);
+            }
         }
         private void copyFiles()
         {
@@ -435,6 +446,8 @@ namespace DVMinstaller
                 }
                 else
                 {
+                    MessageBox.Show("Wymagana jest aktualizacja VirtualBoxa. Uruchomiona zostanie instalacja wymaganej wersji. Po instalacji VB i Devela WYMAGANE będzie ponowne uruchomienie komputera!", "Devel VM Installer", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    rebootRequired = true;
                     InstallVB();
                 }
             }
