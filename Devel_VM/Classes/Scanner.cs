@@ -65,6 +65,8 @@ namespace Devel_VM.Classes
 
             string develDir = Properties.Settings.Default.daemons_devel_dir;
             string rootDir = Properties.Settings.Default.web_dir;
+
+            if (!Directory.Exists(rootDir)) return result;
             
             string absolutePath = Properties.Settings.Default.daemons_path_absolute;
             string relativePath = Properties.Settings.Default.daemons_path_relative;
