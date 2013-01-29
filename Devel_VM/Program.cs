@@ -8,6 +8,7 @@ using System.IO;
 using System.Diagnostics;
 using Devel_VM.Forms;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace Devel_VM
 {
@@ -85,6 +86,7 @@ namespace Devel_VM
                 };
 
                 Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
+                SetProcessShutdownParameters(0x3FF, 0x00000001);
                 Application.Run(new fMain());
                 mutex.ReleaseMutex();
             }
@@ -303,6 +305,9 @@ namespace Devel_VM
             }
             return String.Format("{0} ({1} / {2})", username, host, string.Join(",", ips.ToArray()));
         }
+
+        [DllImport("kernel32.dll")]
+        static extern bool SetProcessShutdownParameters(uint dwLevel, uint dwFlags);
 
     }
 }
