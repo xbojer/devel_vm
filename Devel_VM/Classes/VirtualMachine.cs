@@ -759,8 +759,13 @@ namespace Devel_VM
                         OnEvent("Wystąpił problem podczas ustawiania mac (zły typ karty)", 2);
                     }
                 }
+                if (Properties.Settings.Default.vm_settings_shutdowncontrol)
+                {//VB code suggests it's not supported on Windows hosts :c
+                    Program.NetworkLog("Autostop type set to acpi", "Devel VM Manager: VM", 0);
+                    Session.Machine.AutostopType = AutostopType.AutostopType_AcpiShutdown;
+                }
                 Session.Machine.SaveSettings();
-                Program.NetworkLog("VM Config done", "Devel VM Manager: VM", 2);
+                Program.NetworkLog("VM Config done", "Devel VM Manager: VM", 0);
             }
             catch (Exception)
             {

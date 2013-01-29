@@ -379,5 +379,14 @@ namespace Devel_VM.Properties {
                 this["vm_settings_netho_mask"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool vm_settings_shutdowncontrol {
+            get {
+                return ((bool)(this["vm_settings_shutdowncontrol"]));
+            }
+        }
     }
 }
