@@ -78,7 +78,7 @@ namespace DVMinstaller
         {
             try
             {
-                using (StreamReader sr = new StreamReader(@"\\ALPHA\instale\Devel\current_version.txt"))
+                using (StreamReader sr = new StreamReader(@"\\ALPHA\instale\Devel_beta\current_version.txt"))
                 {
                     String line;
                     if ((line = sr.ReadLine()) == null) return "0";//img ver
