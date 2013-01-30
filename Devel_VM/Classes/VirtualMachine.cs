@@ -356,7 +356,7 @@ namespace Devel_VM
                     }
                     else
                     {
-                        //Program.VM.OnEvent("Eventy on", "VBox Event1", 0);
+                        Program.NetworkLog("Eventy on", "VBox Event1", 0);
                         Program.VM.Session.Console.Machine.SetGuestPropertyValue("VBOX_USER_NAME", Program.username);
                         Program.VM.Session.Console.Machine.SetGuestPropertyValue("VBOX_USER_IDENTITY", Program.identity);
                     }
