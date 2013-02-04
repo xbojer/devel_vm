@@ -61,7 +61,9 @@ namespace Devel_VM.Classes
         {
             Dictionary<string, Dictionary<string, string>> result = new Dictionary<string, Dictionary<string, string>>();
 
-            string cmd_begin = "/usr/bin/screen ";
+            string cmd_begin = "/usr/sbin/daemonize ";
+
+            string cmd_start_params = " -a -e /tmp/daemon.log -o /tmp/daemon.log -p /tmp/daemon_{@service_name}.pid /usr/bin/python -u {@pathpy} {@pathconf}";
 
             string develDir = Properties.Settings.Default.daemons_devel_dir;
             string rootDir = Properties.Settings.Default.web_dir;
@@ -84,11 +86,14 @@ namespace Devel_VM.Classes
                     string develPath = develDir + relativeToFile + "/";
                     string service = parts[0];
                     string option = parts[2];
-                    string service_name = "daemonBM_" + service + "_" + option;
+                    string service_name = service.Replace('.', '_') + "__" + option.Replace('.', '_');
 
                     if (!result.ContainsKey(service)) result[service] = new Dictionary<string, string>();
-                    result[service][option + " - Start"] = cmd_begin + "-dmS " + service_name + " /usr/bin/python " + develPath + "daemon.py " + develPath + Path.GetFileName(configPath);
-                    result[service][option + " - Stop"] = cmd_begin + "-S " + service_name + " -X quit";
+                    result[service][option + " - Start"] = cmd_begin + 
+                        cmd_start_params.Replace("{@service_name}", service_name)
+                        .Replace("{@pathpy}", develPath + "daemon.py")
+                        .Replace("{@pathconf}", develPath + Path.GetFileName(configPath));
+                    //result[service][option + " - Stop"] = cmd_begin + "-S " + service_name + " -X quit";
                 }
             }
 
@@ -113,8 +118,11 @@ namespace Devel_VM.Classes
                         string service_name = "daemonBM_" + domainName + "_" + option;
 
                         if (!result.ContainsKey(domainName)) result[domainName] = new Dictionary<string, string>();
-                        result[domainName][option + " - Start"] = cmd_begin + "-dmS " + service_name + " /usr/bin/python " + develPath + "daemon.py " + develPath + Path.GetFileName(configPath);
-                        result[domainName][option + " - Stop"] = cmd_begin + "-S " + service_name + " -X quit";
+                        result[domainName][option + " - Start"] = cmd_begin +
+                            cmd_start_params.Replace("{@service_name}", service_name)
+                            .Replace("{@pathpy}", develPath + "daemon.py")
+                            .Replace("{@pathconf}", develPath + Path.GetFileName(configPath));
+                        //result[domainName][option + " - Stop"] = cmd_begin + "-S " + service_name + " -X quit";
                     }
                 }
                 
