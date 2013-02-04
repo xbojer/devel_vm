@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly manifestVersion="1.0" xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1">
+  <asmv1:assemblyIdentity version="3.0.0.1" name="Devel_VM.exe" publicKeyToken="cab5cf1f721e517d" language="pl-PL" processorArchitecture="msil" type="win32" />
+  <description asmv2:iconFile="application.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="Devel_VM" version="3.0.0.0" language="neutral" processorArchitecture="msil" />
+    <commandLine file="Devel_VM.exe" parameters="" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet class="System.Security.PermissionSet" version="1" ID="Custom" SameSite="site" Unrestricted="true" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!-- UAC Manifest Options
+            If you want to change the Windows User Account Control level replace the 
+            requestedExecutionLevel node with one of the following.
+
+        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
+
+            Specifying requestedExecutionLevel node will disable file and registry virtualization.
+            If you want to utilize File and Registry Virtualization for backward 
+            compatibility then delete the requestedExecutionLevel node.
+        -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="2.0.50727.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Sentinel.v3.5Client" version="3.5.0.0" publicKeyToken="b03f5f7f11d50a3a" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="System.Core" version="3.5.0.0" publicKeyToken="b77a5c561934e089" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="WindowsBase" version="3.0.0.0" publicKeyToken="31bf3856ad364e35" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Devel_VM.exe" size="144896">
+      <assemblyIdentity name="Devel_VM" version="3.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>Cmb0SEgqCMo++84t3vayzS5RsNs=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="vb_comapi.dll" size="163840">
+      <assemblyIdentity name="vb_comapi" version="1.3.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>6EeD0C/AYn4Py34ZZ9xkltZuwUA=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="application.ico" size="8246">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>tXlx5elQDHBMvUlf5/kNfGSyzxw=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Devel_VM.exe.config" size="5834">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>qsvhbnoOYtDO8B8OEvFakNlf2ac=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="filelist.txt" size="50">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>dzkVk6lVDryv2Zg2fO23a9+V9zA=</dsig:DigestValue>
+    </hash>
+  </file>
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <application>
+      <!-- A list of all Windows versions that this application is designed to work with. Windows will automatically select the most compatible environment.-->
+      <!-- If your application is designed to work with Windows 7, uncomment the following supportedOS node-->
+      <!--<supportedOS Id="{35138b9a-5d96-4fbd-8e2d-a2440225f93a}"/>-->
+    </application>
+  </compatibility>
+<publisherIdentity name="CN=ELB-022\Michal Bojarski" issuerKeyHash="177fb327a4c066767de1ea58d15e89da20200396" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>7R/R9+BZj68is1I0wuwc84EdgBE=</DigestValue></Reference></SignedInfo><SignatureValue>GPCAFZ7kwr2A46djzPdgZ7iNm2o0uYFNr0Xfhb7WnfLfTvfScNxhFtiEj52+NGn+7k33S76N24/67hR7/hEzAuRJ+wPW0T1VdHodmjisK2JHb1WEc3os+Ff9G58S+rvtT/gZTPFrUmd+wJEsTHpmyp1+I8J4ve+4NZcbf6hMaJs=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>w2BwzdxFCHUMqH31wUxW8IDu3X/j+G5OC6mebfMBVQX+0ANrdtO8TOa9tAXH4mdwBFDPeI16J1360rtgdvEXbahXBK5+fwv5nRHUfGPM0XrzCvIqp0XbBbYOYpY0+aaB9H0uXFQZ1P5fKUn4LYSctH2EuuDnSD/LKBusL7f9v4c=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="11801d81f31cecc23452b322af8f59e0f7d11fed" Description="" Url=""><as:assemblyIdentity version="3.0.0.1" name="Devel_VM.exe" publicKeyToken="cab5cf1f721e517d" language="pl-PL" processorArchitecture="msil" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=ELB-022\Michal Bojarski</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>xzroKLvFGcXemKspxyG+qLrCMYQ=</DigestValue></Reference></SignedInfo><SignatureValue>LHpaoRCol+FLJPXsPH6RgjAUzsLPIXGH01yGg8AkCKqzSq57hK5HzNGunfP3Opr+eUq8QxX1wsI3WoqkOlaM41+dbK2LSZsssnXIGENrT7Vr18DkVcEd+T13b7s0rNLL0fvVpXFAm/oK1FsI1/9jLU4Hp61XM76N7DDbnNRKMoc=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>w2BwzdxFCHUMqH31wUxW8IDu3X/j+G5OC6mebfMBVQX+0ANrdtO8TOa9tAXH4mdwBFDPeI16J1360rtgdvEXbahXBK5+fwv5nRHUfGPM0XrzCvIqp0XbBbYOYpY0+aaB9H0uXFQZ1P5fKUn4LYSctH2EuuDnSD/LKBusL7f9v4c=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIB9TCCAV6gAwIBAgIQYbN5CXCak6FMDEMwJY5K/zANBgkqhkiG9w0BAQUFADA5MTcwNQYDVQQDHi4ARQBMAEIALQAwADIAMgBcAE0AaQBjAGgAYQBsACAAQgBvAGoAYQByAHMAawBpMB4XDTEyMDIwOTEzMTEwNloXDTEzMDIwODE5MTEwNlowOTE3MDUGA1UEAx4uAEUATABCAC0AMAAyADIAXABNAGkAYwBoAGEAbAAgAEIAbwBqAGEAcgBzAGsAaTCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAw2BwzdxFCHUMqH31wUxW8IDu3X/j+G5OC6mebfMBVQX+0ANrdtO8TOa9tAXH4mdwBFDPeI16J1360rtgdvEXbahXBK5+fwv5nRHUfGPM0XrzCvIqp0XbBbYOYpY0+aaB9H0uXFQZ1P5fKUn4LYSctH2EuuDnSD/LKBusL7f9v4cCAwEAATANBgkqhkiG9w0BAQUFAAOBgQAGg/cko1AlkP68/fI8Qsd3klsKiNftacoYCc54pXJ3K9K7p1HlswusaXX5I1enA+dxuvxOl6AgK8aa3I7eEBAjywoJZ5lWBUzS4I17ixIn5fabT+viiFAp0R3zhkXCDJElHjjvRvxX1UJ3Tzz7Xb+UrZc7Gh1Mfl7XCdk0JyrUOQ==</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>

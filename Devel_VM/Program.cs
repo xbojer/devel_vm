@@ -86,6 +86,7 @@ namespace Devel_VM
                 };
 
                 Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
+                AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
                 SetProcessShutdownParameters(0x3FF, 0x00000001);
                 Application.Run(new fMain());
                 mutex.ReleaseMutex();
@@ -123,6 +124,15 @@ namespace Devel_VM
                     IntPtr.Zero
                 );
             }
+        }
+
+        static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs args)
+        {
+            Exception e = (Exception) args.ExceptionObject;
+            Packet p = new Packet();
+            p.dataIdentifier = Packet.DataIdentifier.Debug;
+            p.message = "Unhandled Exception: "+e.Source+": "+e.Message;
+            Network_Broadcast.send(p);
         }
 
         #region Logging
