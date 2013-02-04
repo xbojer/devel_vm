@@ -350,7 +350,7 @@ namespace DVMinstaller
         private void killer()
         {
             log("Killing all instances of used processes...");
-            string[] pnames = { "Devel_VM", "Beta_Manager", "VirtualBox", "VBoxSVC", "VBoxHeadless" };
+            string[] pnames = { "Devel_VM", "Beta_Manager", "VirtualBox", "VBoxSVC", "VBoxHeadless", "VBoxNetDHCP" };
             foreach (string pname in pnames)
                 foreach (Process prc in Process.GetProcessesByName(pname))
                     if (Process.GetCurrentProcess().Id != prc.Id)
