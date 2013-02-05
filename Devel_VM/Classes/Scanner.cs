@@ -115,7 +115,7 @@ namespace Devel_VM.Classes
 
                         string develPath = develDir + relativeToFile + "/";
                         string option = parts[1];
-                        string service_name = "daemonBM_" + domainName + "_" + option;
+                        string service_name = domainName.Replace('.', '_') + "__" + option.Replace('.', '_');
 
                         if (!result.ContainsKey(domainName)) result[domainName] = new Dictionary<string, string>();
                         result[domainName][option + " - Start"] = cmd_begin +
