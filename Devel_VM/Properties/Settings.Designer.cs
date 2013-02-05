@@ -88,7 +88,7 @@ namespace Devel_VM.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\\\\10.11.11.200\\instale\\Devel\\Devel_VM_Installer.exe")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\10.11.11.200\\instale\\Devel_beta\\Devel_VM_Installer.exe")]
         public string path_updater {
             get {
                 return ((string)(this["path_updater"]));
