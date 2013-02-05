@@ -93,7 +93,7 @@ namespace Devel_VM.Classes
                         cmd_start_params.Replace("{@service_name}", service_name)
                         .Replace("{@pathpy}", develPath + "daemon.py")
                         .Replace("{@pathconf}", develPath + Path.GetFileName(configPath));
-                    //result[service][option + " - Stop"] = cmd_begin + "-S " + service_name + " -X quit";
+                    result[service][option + " - Stop"] = "/bin/kill -TERM $(/bin/cat /tmp/daemon_{@service_name}.pid)".Replace("{@service_name}", service_name);
                 }
             }
 
@@ -122,7 +122,7 @@ namespace Devel_VM.Classes
                             cmd_start_params.Replace("{@service_name}", service_name)
                             .Replace("{@pathpy}", develPath + "daemon.py")
                             .Replace("{@pathconf}", develPath + Path.GetFileName(configPath));
-                        //result[domainName][option + " - Stop"] = cmd_begin + "-S " + service_name + " -X quit";
+                        result[domainName][option + " - Stop"] = "/bin/kill -TERM $(/bin/cat /tmp/daemon_{@service_name}.pid)".Replace("{@service_name}", service_name);
                     }
                 }
                 
