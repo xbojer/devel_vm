@@ -48,9 +48,9 @@
             this.sprawdźAktulizacjeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pobierzNaNowoObrazToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usuńObrazToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.DeamonsStripMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.NodeJSstripMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.bETAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zasobyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aLFAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -66,7 +66,6 @@
             this.tAutoStart = new System.Windows.Forms.Timer(this.components);
             this.button2 = new System.Windows.Forms.Button();
             this.tUpdateAutocheck = new System.Windows.Forms.Timer(this.components);
-            this.resetSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuZasobnik.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -100,7 +99,6 @@
             this.toolStripMenuItem8,
             this.toolStripSeparator2,
             this.DeamonsStripMenu,
-            this.NodeJSstripMenu,
             this.bETAToolStripMenuItem,
             this.zasobyToolStripMenuItem,
             this.toolStripMenuItem5,
@@ -109,7 +107,7 @@
             this.closeToolStripMenuItem,
             this.testToolStripMenuItem});
             this.menuZasobnik.Name = "menuZasobnik";
-            this.menuZasobnik.Size = new System.Drawing.Size(166, 314);
+            this.menuZasobnik.Size = new System.Drawing.Size(166, 292);
             // 
             // showToolStripMenuItem
             // 
@@ -229,6 +227,13 @@
             this.usuńObrazToolStripMenuItem.Text = "Usuń obraz";
             this.usuńObrazToolStripMenuItem.Click += new System.EventHandler(this.usunObrazToolStripMenuItem_Click);
             // 
+            // resetSettingsToolStripMenuItem
+            // 
+            this.resetSettingsToolStripMenuItem.Name = "resetSettingsToolStripMenuItem";
+            this.resetSettingsToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.resetSettingsToolStripMenuItem.Text = "Reset ustawień";
+            this.resetSettingsToolStripMenuItem.Click += new System.EventHandler(this.resetSettingsToolStripMenuItem_Click);
+            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
@@ -240,13 +245,6 @@
             this.DeamonsStripMenu.Size = new System.Drawing.Size(165, 22);
             this.DeamonsStripMenu.Text = "Demony";
             this.DeamonsStripMenu.Visible = false;
-            // 
-            // NodeJSstripMenu
-            // 
-            this.NodeJSstripMenu.Name = "NodeJSstripMenu";
-            this.NodeJSstripMenu.Size = new System.Drawing.Size(165, 22);
-            this.NodeJSstripMenu.Text = "NodeJS";
-            this.NodeJSstripMenu.Visible = false;
             // 
             // bETAToolStripMenuItem
             // 
@@ -354,13 +352,6 @@
             this.tUpdateAutocheck.Interval = 3000;
             this.tUpdateAutocheck.Tick += new System.EventHandler(this.tUpdateAutocheck_Tick);
             // 
-            // resetSettingsToolStripMenuItem
-            // 
-            this.resetSettingsToolStripMenuItem.Name = "resetSettingsToolStripMenuItem";
-            this.resetSettingsToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.resetSettingsToolStripMenuItem.Text = "Reset ustawień";
-            this.resetSettingsToolStripMenuItem.Click += new System.EventHandler(this.resetSettingsToolStripMenuItem_Click);
-            // 
             // fMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -414,7 +405,6 @@
         private System.Windows.Forms.ToolStripMenuItem usuńObrazToolStripMenuItem;
         private System.Windows.Forms.Timer tUpdateAutocheck;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem NodeJSstripMenu;
         private System.Windows.Forms.ToolStripMenuItem DeamonsStripMenu;
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetSettingsToolStripMenuItem;

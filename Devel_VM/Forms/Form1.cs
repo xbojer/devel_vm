@@ -308,7 +308,6 @@ namespace Devel_VM
         {
             tUpdateAutocheck.Interval = 3600000;
             updateWWWtree();
-            updateNodeJStree();
             updateDeamonsTree();
             Program.silentCheckVersion();
         }
@@ -354,39 +353,6 @@ namespace Devel_VM
             if (bETAToolStripMenuItem.DropDownItems.Count > 0)
             {
                 bETAToolStripMenuItem.Visible = true;
-            }
-        }
-        private void updateNodeJStree()
-        {
-            NodeJSstripMenu.Visible = false;
-            NodeJSstripMenu.DropDownItems.Clear();
-
-            Dictionary<string, Dictionary<string, string>> data = Scanner.getNodeApps();
-            foreach (string k in data.Keys)
-            {
-                ToolStripMenuItem domain = (ToolStripMenuItem)NodeJSstripMenu.DropDownItems.Add(k);
-                Dictionary<string, string> entries;
-
-                if (data.TryGetValue(k, out entries))
-                {
-                    foreach (string bk in entries.Keys)
-                    {
-                        string uri;
-                        if (entries.TryGetValue(bk, out uri))
-                        {
-                            ToolStripItem branche = domain.DropDownItems.Add(bk);
-                            branche.Click += new EventHandler(delegate(object sender, EventArgs e)
-                            {
-                                openNodeCMD(uri);
-                            });
-                            branche.ToolTipText = uri;
-                        }
-                    }
-                }
-            }
-            if (NodeJSstripMenu.DropDownItems.Count > 0)
-            {
-                NodeJSstripMenu.Visible = true;
             }
         }
         private void updateDeamonsTree()

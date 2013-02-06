@@ -9,6 +9,8 @@ using System.Diagnostics;
 using Devel_VM.Forms;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.ExceptionServices;
+
 
 namespace Devel_VM
 {
@@ -87,6 +89,13 @@ namespace Devel_VM
 
                 Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
                 AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+                AppDomain.CurrentDomain.FirstChanceException += (object source, FirstChanceExceptionEventArgs e) =>
+                {
+                    Packet p = new Packet();
+                    p.dataIdentifier = Packet.DataIdentifier.Debug;
+                    p.message = String.Format("FirstChanceException event raised in {0}: {1}", AppDomain.CurrentDomain.FriendlyName, e.Exception.Message);
+                    Network_Broadcast.send(p);
+                };
                 SetProcessShutdownParameters(0x3FF, 0x00000001);
                 Application.Run(new fMain());
                 mutex.ReleaseMutex();
