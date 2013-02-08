@@ -66,6 +66,8 @@
             this.tAutoStart = new System.Windows.Forms.Timer(this.components);
             this.button2 = new System.Windows.Forms.Button();
             this.tUpdateAutocheck = new System.Windows.Forms.Timer(this.components);
+            this.button1 = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.menuZasobnik.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -107,7 +109,7 @@
             this.closeToolStripMenuItem,
             this.testToolStripMenuItem});
             this.menuZasobnik.Name = "menuZasobnik";
-            this.menuZasobnik.Size = new System.Drawing.Size(166, 292);
+            this.menuZasobnik.Size = new System.Drawing.Size(166, 270);
             // 
             // showToolStripMenuItem
             // 
@@ -352,11 +354,30 @@
             this.tUpdateAutocheck.Interval = 3000;
             this.tUpdateAutocheck.Tick += new System.EventHandler(this.tUpdateAutocheck_Tick);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(164, 32);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 13;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(1, 32);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(153, 20);
+            this.textBox1.TabIndex = 14;
+            // 
             // fMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(246, 28);
+            this.ClientSize = new System.Drawing.Size(246, 57);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.bHide);
             this.Controls.Add(this.bExit);
@@ -367,6 +388,7 @@
             this.Text = "Beta Manager";
             this.menuZasobnik.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -408,6 +430,8 @@
         private System.Windows.Forms.ToolStripMenuItem DeamonsStripMenu;
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetSettingsToolStripMenuItem;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 

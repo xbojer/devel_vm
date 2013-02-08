@@ -6,7 +6,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="path_imgver" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">\\10.11.11.200\instale\Devel_beta\current_version.txt</Value>
+      <Value Profile="(Default)">\\10.11.11.200\instale\Devel\current_version.txt</Value>
     </Setting>
     <Setting Name="path_image" Type="System.String" Scope="Application">
       <Value Profile="(Default)">\\10.11.11.200\instale\Devel\{vm_name}.ova</Value>
@@ -21,7 +21,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="path_updater" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">\\10.11.11.200\instale\Devel_beta\Devel_VM_Installer.exe</Value>
+      <Value Profile="(Default)">\\10.11.11.200\instale\Devel\Devel_VM_Installer.exe</Value>
     </Setting>
     <Setting Name="path_updater_args" Type="System.String" Scope="Application">
       <Value Profile="(Default)">/S</Value>

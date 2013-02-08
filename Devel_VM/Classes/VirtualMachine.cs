@@ -798,7 +798,7 @@ namespace Devel_VM
             {
                 if (TTY != null) TTY.Stop();
             }
-            if (Session != null)
+            if (Session != null && !System.Diagnostics.Debugger.IsAttached)
             {
                 PowerOff(true, true);
             } 

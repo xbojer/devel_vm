@@ -34,7 +34,7 @@ namespace Devel_VM
                 Application.Restart();
                 return;
             }
-            if (mutex.WaitOne(TimeSpan.Zero, true))
+            if (mutex.WaitOne(TimeSpan.Zero, true) || System.Diagnostics.Debugger.IsAttached)
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
@@ -93,7 +93,7 @@ namespace Devel_VM
                 {
                     Packet p = new Packet();
                     p.dataIdentifier = Packet.DataIdentifier.Debug;
-                    p.message = String.Format("FirstChanceException event raised in {0}: {1}", AppDomain.CurrentDomain.FriendlyName, e.Exception.Message);
+                    p.message = String.Format("FirstChanceException event raised in {0}: {2}\nStackTrace:{1}", AppDomain.CurrentDomain.FriendlyName, e.Exception.StackTrace, e.Exception.Message);
                     Network_Broadcast.send(p);
                 };
                 SetProcessShutdownParameters(0x3FF, 0x00000001);

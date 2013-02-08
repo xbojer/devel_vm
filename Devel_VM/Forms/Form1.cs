@@ -439,6 +439,20 @@ namespace Devel_VM
             Properties.Settings.Default.Reset();
             Application.Restart();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (textBox1.Text == "")
+            {
+                textBox1.Text = Properties.Settings.Default.vm_name;
+            }
+            else
+            {
+                Properties.Settings.Default.vm_name = textBox1.Text;
+                Properties.Settings.Default.Save();
+                Application.Restart();
+            }
+        }
     }
 
     internal class NativeMethods
