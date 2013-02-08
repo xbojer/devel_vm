@@ -215,16 +215,27 @@ namespace Devel_VM
         #endregion
         public Network_listener()
         {
-            sock = new UdpClient();
-            sock.ExclusiveAddressUse = false;
-            sock.EnableBroadcast = true;
-            sock.Client.Bind(ep_server);
+            try
+            {
+                sock = new UdpClient();
+                sock.ExclusiveAddressUse = false;
+                sock.EnableBroadcast = true;
+                sock.Client.Bind(ep_server);
 
-            UdpState s = new UdpState();
-            s.e = ep_server;
-            s.u = sock;
+                UdpState s = new UdpState();
+                s.e = ep_server;
+                s.u = sock;
 
-            sock.BeginReceive(new AsyncCallback(this.ReceiveCallback), s);
+                sock.BeginReceive(new AsyncCallback(this.ReceiveCallback), s);
+            }
+            catch (Exception)
+            {
+                Packet p = new Packet();
+                p.dataIdentifier = Packet.DataIdentifier.Debug;
+                p.message = "Listener ERROR. Disabling...";
+                Network_Broadcast.send(p);
+            }
+            
         }
 
         private class UdpState
