@@ -1,3 +1,2 @@
 Devel_VM.exe
-vb_comapi.dll
 Devel_VM.exe.config
