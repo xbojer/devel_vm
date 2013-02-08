@@ -65,6 +65,9 @@ namespace InfoSender
                     break;
             }
             richTextBox1.Text += "\r\n [SEND:" + Network_Broadcast.getTarget() + "][" + p.dataIdentifier.ToString() + "] " + "TestApp" + ": " + textBox1.Text;
+            richTextBox1.SelectionStart = richTextBox1.Text.Length;
+            richTextBox1.ScrollToCaret();
+            richTextBox1.Refresh();
             Network_Broadcast.send(p);
         }
 
@@ -73,6 +76,9 @@ namespace InfoSender
             MethodInvoker method = delegate
             {
                 richTextBox1.Text += "\r\n [" + t + "] " + a + ": " + m;
+                richTextBox1.SelectionStart = richTextBox1.Text.Length;
+                richTextBox1.ScrollToCaret();
+                richTextBox1.Refresh();
             };
 
             if (InvokeRequired)
