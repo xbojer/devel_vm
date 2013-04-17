@@ -22,7 +22,7 @@ namespace Devel_VM
         static public string identity = "NOT YET KNOWN";
         static public string username = "NOT YET KNOWN";
 
-        static Mutex mutex = new Mutex(true, "mutex_beta_manager_devel_vm_runonce");
+        static Mutex mutex;
         [STAThread]
         static void Main(string[] args)
         {
@@ -34,6 +34,7 @@ namespace Devel_VM
                 Application.Restart();
                 return;
             }
+            mutex = new Mutex(true, "mutex_beta_manager_"+Properties.Settings.Default.vm_name+"_vm_runonce");
             if (mutex.WaitOne(TimeSpan.Zero, true) || System.Diagnostics.Debugger.IsAttached)
             {
                 Application.EnableVisualStyles();

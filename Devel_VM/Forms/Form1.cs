@@ -376,7 +376,7 @@ namespace Devel_VM
                             ToolStripItem branche = domain.DropDownItems.Add(bk);
                             branche.Click += new EventHandler(delegate(object sender, EventArgs e)
                             {
-                                openNodeCMD(uri);
+                                openCMDvm(uri);
                             });
                             branche.ToolTipText = uri;
                         }
@@ -392,7 +392,7 @@ namespace Devel_VM
         {
             Process.Start(uri);
         }
-        private void openNodeCMD(string cmd)
+        private void openCMDvm(string cmd)
         {
             String result = Program.VM.exec("/bin/bash", cmd, true).Trim();
             if (result == "")
