@@ -11,7 +11,7 @@ using System.Resources;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Fotka.pl Sp. z o.o.")]
 [assembly: AssemblyProduct("Devel VM Manager")]
-[assembly: AssemblyCopyright("Copyright © bojer 2012")]
+[assembly: AssemblyCopyright("Copyright © bojer 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
