@@ -356,9 +356,9 @@ namespace Devel_VM
                     }
                     else
                     {
-                        Program.NetworkLog("Setting properties...", "VM VBox Events", 0);
-                        Program.VM.Session.Console.Machine.SetGuestPropertyValue("VBOX_USER_NAME", Program.username);
-                        Program.VM.Session.Console.Machine.SetGuestPropertyValue("VBOX_USER_IDENTITY", Program.identity);
+                        //Program.NetworkLog("Setting properties...", "VM VBox Events", 0);
+                        //Program.VM.Session.Console.Machine.SetGuestPropertyValue("VBOX_USER_NAME", Program.username);
+                        //Program.VM.Session.Console.Machine.SetGuestPropertyValue("VBOX_USER_IDENTITY", Program.identity);
                     }
                 }
                 else if (aEvent.Type == VBoxEventType.VBoxEventType_OnStateChanged)
