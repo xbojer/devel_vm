@@ -725,15 +725,17 @@ namespace Devel_VM
                 if (Properties.Settings.Default.vm_settings_setnetmac)
                 {
                     INetworkAdapter n0 = Session.Machine.GetNetworkAdapter(0);
+                    INetworkAdapter n1 = Session.Machine.GetNetworkAdapter(1);
                     if (n0.AttachmentType == NetworkAttachmentType.NetworkAttachmentType_Bridged)
                     { // change settings only when bridged interface
-                        bool foundInterface = false;
+                        bool foundInterfaceBridge = false;
+                        bool foundInterfaceHost = false;
                         foreach (IHostNetworkInterface hni in vb.Host.NetworkInterfaces) // iterate host interfaces to find and set bridged interface
                         {
                             if (hni.IPAddress.StartsWith(Properties.Settings.Default.vm_settings_networkprefix))
                             {
                                 n0.BridgedInterface = hni.Name;
-                                foundInterface = true;
+                                foundInterfaceBridge = true;
                                 if (!Properties.Settings.Default.vm_settings_netho_fixip) break;
                             }
                             if (Properties.Settings.Default.vm_settings_netho_fixip && hni.InterfaceType == HostNetworkInterfaceType.HostNetworkInterfaceType_HostOnly)
@@ -743,11 +745,22 @@ namespace Devel_VM
                                     Program.NetworkLog("Fixing HO network ip to " + Properties.Settings.Default.vm_settings_netho_ip + "/" + Properties.Settings.Default.vm_settings_netho_mask, "Devel VM Manager: VM", 2);
                                     hni.EnableStaticIPConfig(Properties.Settings.Default.vm_settings_netho_ip, Properties.Settings.Default.vm_settings_netho_mask);
                                 }
+                                if (!foundInterfaceHost)
+                                {
+                                    foundInterfaceHost = true;
+                                    n1.HostOnlyInterface = hni.Name;
+                                }
                             }
                         }
-                        if (!foundInterface)
+                        if (!foundInterfaceBridge)
                         {
                             OnEvent("Wystąpił problem podczas ustawiania sieci (nie znaleziono karty lokalnej)", 2);
+                            throw new Exception();
+                        }
+
+                        if (!foundInterfaceHost)
+                        {
+                            OnEvent("Wystąpił problem podczas ustawiania sieci (nie znaleziono karty Host-Only)", 2);
                             throw new Exception();
                         }
 
