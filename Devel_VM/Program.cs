@@ -255,12 +255,12 @@ namespace Devel_VM
                     String line;
                     while ((line = sr.ReadLine()) != null)
                     {
-                        string[] data = line.Split("#".ToArray());
+                        string[] data = line.Split(" ".ToArray());
                         if (data.Length != 2) continue;
                         if (data[1] == username)
                         {
                             sr.Close();
-                            return data[0];
+                            return data[0].Replace(":", "");
                         }
                     }
                 }
