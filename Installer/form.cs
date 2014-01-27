@@ -26,7 +26,7 @@ namespace DVMinstaller
         string vboxInstallBase = @"\\ALPHA\instale\Devel\VirtualBox-";
         List<string> filenames = new List<string>();
 
-        string vboxVer = "4.2.12";
+        string vboxVer = "4.3.6";
 
         string mainexe = "";
 
@@ -350,7 +350,7 @@ namespace DVMinstaller
         private void killer()
         {
             log("Killing all instances of used processes...");
-            string[] pnames = { "Devel_VM", "Beta_Manager", "VirtualBox", "VBoxSVC", "VBoxHeadless", "VBoxNetDHCP" };
+            string[] pnames = { "VirtualBox", "VBoxHeadless", "VBoxSVC", "VBoxNetDHCP", "Beta_Manager", "Devel_VM" };
             foreach (string pname in pnames)
                 foreach (Process prc in Process.GetProcessesByName(pname))
                     if (Process.GetCurrentProcess().Id != prc.Id)
