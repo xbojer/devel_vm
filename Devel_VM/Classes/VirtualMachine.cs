@@ -17,7 +17,7 @@ namespace Devel_VM
     {
         private String ImgPath;
         public String MachineName;
-        private String VbApiVersion = "4_2";
+        private String VbApiVersion = "4_3";
 
         public string VBVersion = "Unknown";
 
@@ -104,7 +104,7 @@ namespace Devel_VM
             
             if (VbApiVersion != vb.APIVersion)
             {
-                OnEvent("Niezgodna wersja API VB", 3);
+                OnEvent("Niezgodna wersja API VB (Oczekiwano: "+VbApiVersion+" dostepna:" + vb.APIVersion + ")", 3);
                 return;
             }
             VBVersion = vb.VersionNormalized;
@@ -580,15 +580,17 @@ namespace Devel_VM
                 try
                 {
                     med = (IMedium[])mach.Unregister(CleanupMode.CleanupMode_Full);
-                    mach.Delete(med).WaitForCompletion(-1);
+                    mach.DeleteConfig(med).WaitForCompletion(-1);
                     foreach (IMedium m in med)
                     {
-                        MediumState s = m.LockWrite();
-                        if (s == MediumState.MediumState_LockedWrite)
+                        IToken lockToken = m.LockWrite();
+                        m.RefreshState();
+
+                        if (m.State == MediumState.MediumState_LockedWrite)
                         {
                             m.Reset().WaitForCompletion(-1);
                         }
-                        m.UnlockWrite();
+                        lockToken.Abandon();
                         m.DeleteStorage().WaitForCompletion(-1);
                     }
                     unregistered = true;

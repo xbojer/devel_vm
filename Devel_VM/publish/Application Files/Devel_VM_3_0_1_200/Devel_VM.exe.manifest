@@ -43,14 +43,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Devel_VM.exe" size="165376">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Devel_VM.exe" size="166400">
       <assemblyIdentity name="Devel_VM" version="3.0.1.116" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>okG0zv0TuaJaq4BaG2UPsw7vY6Y=</dsig:DigestValue>
+        <dsig:DigestValue>+zmFWJc0Fdt+GXvRhjb7GkdGA8A=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
