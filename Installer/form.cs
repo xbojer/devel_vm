@@ -23,7 +23,7 @@ namespace DVMinstaller
         string remoteVer = "0";
         string tempDir = "";
         string remoteBaseUrl = @"https://raw.github.com/xbojer/devel_vm/master/Devel_VM/publish/Application%20Files/";
-        string vboxInstallBase = @"\\ALPHA\instale\Devel\VirtualBox-";
+        string vboxInstallBase = @"\\alpha\public\ADMINISTRACJA\devel\VirtualBox-";
         List<string> filenames = new List<string>();
 
         string vboxVer = "4.3.6";
