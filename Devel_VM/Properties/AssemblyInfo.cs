@@ -11,7 +11,7 @@ using System.Resources;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Fotka.pl sp. z o.o.")]
 [assembly: AssemblyProduct("Devel VM Manager")]
-[assembly: AssemblyCopyright("Copyright © xbojer 2013")]
+[assembly: AssemblyCopyright("Copyright © xbojer 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -33,6 +33,6 @@ using System.Resources;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.0.1.116")]
-[assembly: AssemblyFileVersion("3.0.1.116")]
+[assembly: AssemblyVersion("3.0.1.200")]
+[assembly: AssemblyFileVersion("3.0.1.200")]
 [assembly: NeutralResourcesLanguageAttribute("pl-PL")]

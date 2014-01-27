@@ -4,7 +4,7 @@
   <description asmv2:iconFile="application.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="Devel_VM" version="3.0.1.116" language="neutral" processorArchitecture="msil" />
+    <assemblyIdentity name="Devel_VM" version="3.0.1.200" language="neutral" processorArchitecture="msil" />
     <commandLine file="Devel_VM.exe" parameters="" />
   </entryPoint>
   <trustInfo>
@@ -44,13 +44,13 @@
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Devel_VM.exe" size="166400">
-      <assemblyIdentity name="Devel_VM" version="3.0.1.116" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="Devel_VM" version="3.0.1.200" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>+zmFWJc0Fdt+GXvRhjb7GkdGA8A=</dsig:DigestValue>
+        <dsig:DigestValue>SrXitePzIKQso5tSIDb2HPxhm7o=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
