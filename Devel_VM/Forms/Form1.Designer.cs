@@ -68,6 +68,7 @@
             this.tUpdateAutocheck = new System.Windows.Forms.Timer(this.components);
             this.button1 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.tSlacker = new System.Windows.Forms.Timer(this.components);
             this.menuZasobnik.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -371,6 +372,12 @@
             this.textBox1.Size = new System.Drawing.Size(153, 20);
             this.textBox1.TabIndex = 14;
             // 
+            // tSlacker
+            // 
+            this.tSlacker.Enabled = true;
+            this.tSlacker.Interval = 60000;
+            this.tSlacker.Tick += new System.EventHandler(this.tSlacker_Tick);
+            // 
             // fMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -432,6 +439,7 @@
         private System.Windows.Forms.ToolStripMenuItem resetSettingsToolStripMenuItem;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Timer tSlacker;
     }
 }
 

@@ -6,6 +6,9 @@ using Devel_VM.Classes;
 using Devel_VM.Forms;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Classes;
+using System.Collections;
+using System.Text;
 
 namespace Devel_VM
 {
@@ -13,6 +16,7 @@ namespace Devel_VM
     {
         private bool allowshowdisplay = false;
         private bool mainbaseinit = true;
+        IntPtr SlackHandle = IntPtr.Zero;
         public fMain()
         {
             InitializeComponent();
@@ -22,6 +26,34 @@ namespace Devel_VM
             showToolStripMenuItem.Visible = true;
             toolStripSeparator1.Visible = true;
 #endif
+            Hotkey hk = new Hotkey();
+            hk.KeyCode = Keys.Escape;
+            hk.Windows = true;
+            hk.Pressed += delegate
+            {
+                if (IntPtr.Zero != SlackHandle)
+                {
+                    NativeMethods.SetForegroundWindow(SlackHandle);
+                    NativeMethods.BringWindowToTop(SlackHandle);
+                    NativeMethods.SetForegroundWindow(SlackHandle);
+
+                    SendKeys.Send("^k");
+                    SendKeys.Flush();
+                    //Program.Log("HK!", "Slacker", 1);
+                }
+                else
+                {
+                    showBaloon("Nie znaleziono okna Google Chrome Slack", "Slacker", 1);
+                }
+            };
+            //Program.Log("Register Hotkey", "Slacker", 0);
+            hk.Register(this); 
+        }
+        bool processEnumWindows(IntPtr windowHandle, ArrayList windowHandles)
+        {
+            string x = NativeMethods.GetText(windowHandle);
+            if(x.IndexOf("ROBOTa Slack")>0) windowHandles.Add(windowHandle);
+            return true;
         }
         protected override void SetVisibleCore(bool value)
         {
@@ -303,9 +335,23 @@ namespace Devel_VM
             Program.VM.PowerOff(true);
             Program.VM.Uninstall(Program.VM.MachineName);
         }
+        private void findSlack()
+        {
+            if (SlackHandle != IntPtr.Zero && NativeMethods.GetText(SlackHandle).IndexOf("ROBOTa Slack") > 0) return;
 
+            ArrayList windowHandles = new ArrayList();
+            NativeMethods.EnumWindowsProc callBackPtr = processEnumWindows;
+
+            NativeMethods.EnumWindows(callBackPtr, windowHandles);
+            if (windowHandles.Count > 0)
+            {
+                SlackHandle = (IntPtr)windowHandles[0];
+                //Program.Log("Found " + windowHandles.Count + " instances of Slack window", "Slacker", 0);
+            }
+        }
         private void tUpdateAutocheck_Tick(object sender, EventArgs e)
         {
+            findSlack();
             tUpdateAutocheck.Interval = 3600000;
             updateWWWtree();
             updateDeamonsTree();
@@ -413,7 +459,6 @@ namespace Devel_VM
         {
             Process.Start(@"\\BETA");
         }
-
         private void testToolStripMenuItem_Click(object sender, EventArgs e)
         {
             InputBoxResult r = InputBox.Show("Polecenie do uruchomienia", "Devel VM Manager: Exec");
@@ -433,7 +478,6 @@ namespace Devel_VM
                 }
             }
         }
-
         private void resetSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.Reset();
@@ -453,6 +497,11 @@ namespace Devel_VM
                 Application.Restart();
             }
         }
+
+        private void tSlacker_Tick(object sender, EventArgs e)
+        {
+            findSlack();
+        }
     }
 
     internal class NativeMethods
@@ -460,9 +509,39 @@ namespace Devel_VM
         public const int HWND_BROADCAST = 0xffff;
         public static readonly int WM_SHOWME = RegisterWindowMessage("WM_SHOWME");
         public static readonly int WM_UPDATING = RegisterWindowMessage("WM_UPDATING");
+
+        public delegate bool EnumWindowsProc(IntPtr hWnd, ArrayList lParam);
+
         [DllImport("user32")]
         public static extern bool PostMessage(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam);
         [DllImport("user32")]
         public static extern int RegisterWindowMessage(string message);
+        [DllImport("user32")]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
+        [DllImport("user32")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, ArrayList lParam);
+        [DllImport("user32", CharSet = CharSet.Auto, SetLastError = true)]
+        static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+        [DllImport("user32", SetLastError = true, CharSet = CharSet.Auto)]
+        static extern int GetWindowTextLength(IntPtr hWnd);
+        [DllImport("user32")]
+        public static extern bool IsIconic(IntPtr hWnd);
+        [DllImportAttribute("user32")]
+        public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        public const int SW_SHOW = 5;
+        public const int SW_MINIMIZE = 6;
+        public const int SW_RESTORE = 9;
+        [DllImport("user32.dll")]
+        public static extern bool BringWindowToTop(IntPtr hWnd);
+
+        public static string GetText(IntPtr hWnd)
+        {
+            // Allocate correct string length first
+            int length = GetWindowTextLength(hWnd);
+            StringBuilder sb = new StringBuilder(length + 1);
+            GetWindowText(hWnd, sb, sb.Capacity);
+            return sb.ToString();
+        }
     }
 }

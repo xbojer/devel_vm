@@ -32,7 +32,7 @@
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <DisallowUrlActivation>true</DisallowUrlActivation>
     <ApplicationRevision>200</ApplicationRevision>
-    <ApplicationVersion>3.0.1.200</ApplicationVersion>
+    <ApplicationVersion>3.0.2.200</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -113,6 +113,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\Hotkey.cs" />
     <Compile Include="Classes\Scanner.cs" />
     <Compile Include="Classes\SerialPipe.cs" />
     <Compile Include="Classes\SysLogd.cs" />
