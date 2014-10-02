@@ -23,10 +23,10 @@ namespace DVMinstaller
         string remoteVer = "0";
         string tempDir = "";
         string remoteBaseUrl = @"https://raw.github.com/xbojer/devel_vm/master/Devel_VM/publish/Application%20Files/";
-        string vboxInstallBase = @"\\alpha\public\ADMINISTRACJA\devel\VirtualBox-";
+        string vboxInstallBase = @"\\alpha\public\ADMINISTRACJA\devel\VirtualBox.exe";
         List<string> filenames = new List<string>();
 
-        string vboxVer = "4.3.6";
+        string vboxVer = "4.3.16";
 
         string mainexe = "";
 
@@ -458,7 +458,7 @@ namespace DVMinstaller
             log("Starting VirtualBox installer...");
             try
             {
-                Program.execute(vboxInstallBase + vboxVer + ".exe", @"");
+                Program.execute(vboxInstallBase, @"");
             }
             catch (Exception)
             {
