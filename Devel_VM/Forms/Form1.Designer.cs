@@ -392,7 +392,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "fMain";
-            this.Text = "Beta Manager";
+            this.Text = "Devel VM Manager";
             this.menuZasobnik.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
