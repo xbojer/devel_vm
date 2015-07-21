@@ -17,7 +17,7 @@ namespace Devel_VM
     {
         private String ImgPath;
         public String MachineName;
-        private String VbApiVersion = "4_3";
+        private String VbApiVersion = "5_0";
 
         public string VBVersion = "Unknown";
 
